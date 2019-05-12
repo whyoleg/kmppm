@@ -1,3 +1,5 @@
+include(":samples:mpp-lib")
+
 buildCache {
     local(DirectoryBuildCache::class) {
         directory = File(rootDir, "build-cache")

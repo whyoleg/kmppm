@@ -1,5 +1,7 @@
 @file:Suppress("FunctionName", "unused")
 
+package dev.whyoleg.kmppm
+
 object Module {
 
     fun <T> Project(block: Project.() -> T): T = block(Project)
