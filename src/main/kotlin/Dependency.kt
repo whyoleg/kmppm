@@ -4,12 +4,12 @@ import dev.whyoleg.kmppm.Target.Companion.JVM
 import dev.whyoleg.kmppm.Target.Companion.META
 
 data class Dependency(
-    val name: String,
+    val name: String? = null,
     val providers: Map<NamedTarget, DependencyProvider>
 )
 
 @Suppress("FunctionName")
-fun Dependency(name: String, configuration: DependencyBuilder.() -> Unit): Dependency =
+fun Dependency(name: String? = null, configuration: DependencyBuilder.() -> Unit): Dependency =
     Dependency(name, DependencyBuilder().apply(configuration).providers)
 
 operator fun Dependency.plus(other: Dependency): Set<Dependency> = setOf(this, other)

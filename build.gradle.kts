@@ -1,7 +1,10 @@
 plugins {
     id(Plugin.updates) version Version.updates
     `kotlin-dsl`
+    `maven-publish`
 }
+group = "dev.whyoleg.kmppm"
+version = "1.0.0"
 
 kotlinDslPluginOptions { experimentalWarning.set(false) }
 
@@ -14,6 +17,13 @@ repositories {
 
 dependencies {
     implementation(Dependencies.kotlinGradlePlugin)
-//    implementation("gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.0.2")
-//    implementation("com.github.jengelman.gradle.plugins:shadow:5.0.0")
+}
+
+gradlePlugin {
+    plugins {
+        create("kmppm") {
+            id = "dev.whyoleg.kmppm"
+            implementationClass = "dev.whyoleg.kmppm.KMPPMPlugin"
+        }
+    }
 }

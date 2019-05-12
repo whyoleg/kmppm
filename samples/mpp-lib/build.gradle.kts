@@ -1,56 +1,59 @@
+import dev.whyoleg.kmppm.*
+import dev.whyoleg.kmppm.Target.Companion.JS
+import dev.whyoleg.kmppm.Target.Companion.JVM
+import dev.whyoleg.kmppm.Target.Companion.LINUX_X64
+import dev.whyoleg.kmppm.Target.Companion.META
+
 plugins {
     id("kotlin-multiplatform")
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath("dev.whyoleg.kmppm:kmppm:1.0.0")
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 kotlin {
+    val linux = LINUX_X64.copy(name = "linux")
+    val kotlind = Dependency("kotlin") {
+        val common = Maven("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")
+        META with common.copy(postfix = "common")
+        JVM with common.copy(postfix = "jdk8")
+        JS with common.copy(postfix = "js")
+        linux with Ignored
+    }
 
+    val testd = Dependency("test") {
+        val common = Maven("org.jetbrains.kotlin", "kotlin-test", "1.3.31")
+        META with common.copy(postfix = "common")
+        JVM with common
+        JS with common.copy(postfix = "js")
+        linux with Ignored
+    }
+
+    sources(JVM + JS + linux) {
+        main {
+            implementation(kotlind)
+        }
+        test {
+            implementation {
+                +testd
+                +Maven("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31").on(META)
+            }
+        }
+        JVM.sources {
+            test {
+                implementation(Maven("org.jetbrains.kotlin", "kotlin-test-junit", "1.3.31").on(JVM))
+            }
+        }
+    }
 }
-//    jvm()
-//    js()
-//    // For ARM, should be changed to iosArm32 or iosArm64
-//    // For Linux, should be changed to e.g. linuxX64
-//    // For MacOS, should be changed to e.g. macosX64
-//    // For Windows, should be changed to e.g. mingwX64
-//    linuxX64("linux")
-//    sourceSets {
-//        commonMain {
-//            dependencies {
-//                implementation kotlin('stdlib-common')
-//            }
-//        }
-//        commonTest {
-//            dependencies {
-//                implementation kotlin('test-common')
-//                implementation kotlin('test-annotations-common')
-//            }
-//        }
-//        jvmMain {
-//            dependencies {
-//                implementation kotlin('stdlib-jdk8')
-//            }
-//        }
-//        jvmTest {
-//            dependencies {
-//                implementation kotlin('test')
-//                implementation kotlin('test-junit')
-//            }
-//        }
-//        jsMain {
-//            dependencies {
-//                implementation kotlin('stdlib-js')
-//            }
-//        }
-//        jsTest {
-//            dependencies {
-//                implementation kotlin('test-js')
-//            }
-//        }
-//        linuxMain {
-//        }
-//        linuxTest {
-//        }
-//    }
-//}

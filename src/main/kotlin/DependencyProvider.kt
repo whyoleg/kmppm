@@ -1,5 +1,6 @@
 package dev.whyoleg.kmppm
 
+import dev.whyoleg.kmppm.Target.Companion.ALL
 import org.gradle.api.artifacts.Dependency
 
 typealias DependencyProvider = DependencyHandler.() -> Dependency?
@@ -17,3 +18,8 @@ data class Maven(
 val Ignored: DependencyProvider = { null }
 
 fun Module(name: String, configuration: String? = null): DependencyProvider = { add(project(name, configuration)) }
+
+fun DependencyProvider.on(target: Target): dev.whyoleg.kmppm.Dependency = Dependency {
+    ALL with Ignored
+    target with this@on
+}

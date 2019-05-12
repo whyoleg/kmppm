@@ -1,19 +1,34 @@
 package dev.whyoleg.kmppm
 
-import org.jetbrains.kotlin.gradle.dsl.*
-import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
+@DslMarker
+annotation class DependencyContextMarker
+
+@DependencyContextMarker
 class SourceSetBuilder(
     private val target: NamedTarget,
     private val kotlin: KotlinMultiplatformExtension
 ) {
     private val main = kotlin.sourceSets.maybeCreate(target.name + "Main")
-    fun main(block: TargetDependencyBuilder.() -> Unit): Unit = TargetDependencyBuilder(target, main).block()
+    fun main(block: TargetDependencyBuilder.() -> Unit): Unit = TargetDependencyBuilder(main).block()
 
     private val test = kotlin.sourceSets.maybeCreate(target.name + "Test")
-    fun test(block: TargetDependencyBuilder.() -> Unit): Unit = TargetDependencyBuilder(target, test).block()
+    fun test(block: TargetDependencyBuilder.() -> Unit): Unit = TargetDependencyBuilder(test).block()
 
-    fun NamedTarget.configure(build: SourceSetBuilder.() -> Unit) {
+    init {
+        if (target is TargetSet) {
+            target.targets().forEach {
+                it.sources {
+                    this.main.dependsOn(this@SourceSetBuilder.main)
+                    this.test.dependsOn(this@SourceSetBuilder.test)
+                }
+            }
+        }
+    }
+
+    fun NamedTarget.sources(build: SourceSetBuilder.() -> Unit) {
         val newSet = SourceSetBuilder(this, kotlin)
         if (newSet.target.name != target.name) {
             newSet.main.dependsOn(main)
@@ -23,48 +38,49 @@ class SourceSetBuilder(
     }
 }
 
+@DependencyContextMarker
 class TargetDependencyBuilder(
-    private val target: NamedTarget,
     private val sourceSet: KotlinSourceSet
-) {
-    private inline fun internal(dependency: Dependency, crossinline dependencyHandler: KotlinDependencyHandler.() -> DependencyHandler) {
-        sourceSet.dependencies {
-            dependency.providers[target]?.invoke(dependencyHandler()) ?: error("No Target")
+) : DependencyHelper {
+
+    operator fun DependencyConverter.invoke(dependency: Dependency) {
+        dependency.providers.forEach { (target, provider) ->
+            if (sourceSet.name.endsWith("Main")) {
+            }
+        }
+
+        if (sourceSet.name.endsWith("Main")) {
+            sourceSet.dependencies {
+                println(dependency)
+                println(target)
+                println()
+                dependency.providers[target]?.invoke(this@invoke()) ?: error("No Target")
+            }
         }
     }
 
-    private inline fun internal(
-        dependencies: Set<Dependency>,
-        crossinline dependencyHandler: KotlinDependencyHandler.() -> DependencyHandler
-    ) {
-        dependencies.forEach { internal(it, dependencyHandler) }
+    operator fun DependencyConverter.invoke(dependencies: Set<Dependency>) {
+        dependencies.forEach { invoke(it) }
     }
 
-    private inline fun internal(
-        builder: MultipleDependencyBuilder.() -> Unit,
-        crossinline dependencyHandler: KotlinDependencyHandler.() -> DependencyHandler
-    ) {
-        internal(MultipleDependencyBuilder().apply(builder).dependencies, dependencyHandler)
+    operator fun DependencyConverter.invoke(vararg dependencies: Dependency) {
+        dependencies.forEach { invoke(it) }
     }
 
-    fun implementation(dependency: Dependency): Unit = internal(dependency) { implementation }
-    fun implementation(dependencies: Set<Dependency>): Unit = internal(dependencies) { implementation }
-    fun implementation(vararg dependencies: Dependency): Unit = internal(dependencies.toSet()) { implementation }
-    fun implementation(builder: MultipleDependencyBuilder.() -> Unit): Unit = internal(builder) { implementation }
-
-    fun api(dependency: Dependency): Unit = internal(dependency) { api }
-    fun api(builder: MultipleDependencyBuilder.() -> Unit): Unit = internal(builder) { api }
+    operator fun DependencyConverter.invoke(builder: MultipleDependencyBuilder.() -> Unit) {
+        invoke(MultipleDependencyBuilder().apply(builder).dependencies)
+    }
 }
 
-class MultipleDependencyBuilder {
-    internal val dependencies = mutableSetOf<Dependency>()
+inline class MultipleDependencyBuilder(internal val dependencies: MutableSet<Dependency> = mutableSetOf()) {
     operator fun Dependency.unaryPlus() {
         dependencies += this
     }
 }
 
-fun KotlinMultiplatformExtension.configure(build: SourceSetBuilder.() -> Unit) {
-    SourceSetBuilder(Target.META, this).build()
+fun KotlinMultiplatformExtension.sources(targets: Set<Target>, build: SourceSetBuilder.() -> Unit) {
+    targets.forEach { it.config(this) }
+    SourceSetBuilder(targets.named("common"), this).build()
 }
 
 val test: KotlinMultiplatformExtension.() -> Unit = {
@@ -76,13 +92,23 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
 
         Target.JVM with Ignored
     }
-    configure {
+    sources(setOf(Target.JVM)) {
         main {
             implementation(test)
             implementation(test + test)
             implementation(test, test)
             implementation {
                 +test
+            }
+        }
+        Target.JVM.sources {
+            main {
+                implementation(test)
+                implementation(test + test)
+                implementation(test, test)
+                implementation {
+                    +test
+                }
             }
         }
     }
