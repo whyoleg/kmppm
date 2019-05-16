@@ -1,42 +1,53 @@
 package dev.whyoleg.kmppm
 
-import org.gradle.api.artifacts.Dependency
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
-
-interface DependencyHandler : KotlinDependencyHandler {
-    fun add(dependencyNotation: Any): Dependency?
-}
 
 typealias DependencyConverter = KotlinDependencyHandler.() -> DependencyHandler
 
-interface DependencyHelper {
-    val api: DependencyConverter get() = Companion.api
-    val implementation: DependencyConverter get() = Companion.implementation
-    val runtimeOnly: DependencyConverter get() = Companion.runtimeOnly
-    val compileOnly: DependencyConverter get() = Companion.compileOnly
+interface DependencyHandler : KotlinDependencyHandler {
+    fun add(artifact: Any)
+}
+
+fun KotlinDependencyHandler.helper(): DependencyHelper = DependencyHelper(this)
+
+class DependencyHelper internal constructor(kotlin: KotlinDependencyHandler) {
+    val api: DependencyHandler = api(kotlin)
+    val implementation: DependencyHandler = implementation(kotlin)
+    val runtimeOnly: DependencyHandler = runtimeOnly(kotlin)
+    val compileOnly: DependencyHandler = compileOnly(kotlin)
+
+
 
     companion object {
-        val api: DependencyConverter = {
+        private val api: DependencyConverter = {
             object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(dependencyNotation: Any): Dependency? = api(dependencyNotation)
+                override fun add(artifact: Any) {
+                    api(artifact)
+                }
             }
         }
 
         private val implementation: DependencyConverter = {
             object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(dependencyNotation: Any): Dependency? = implementation(dependencyNotation)
+                override fun add(artifact: Any) {
+                    implementation(artifact)
+                }
             }
         }
 
         private val runtimeOnly: DependencyConverter = {
             object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(dependencyNotation: Any): Dependency? = runtimeOnly(dependencyNotation)
+                override fun add(artifact: Any) {
+                    runtimeOnly(artifact)
+                }
             }
         }
 
         private val compileOnly: DependencyConverter = {
             object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(dependencyNotation: Any): Dependency? = compileOnly(dependencyNotation)
+                override fun add(artifact: Any) {
+                    compileOnly(artifact)
+                }
             }
         }
     }

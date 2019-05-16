@@ -46,7 +46,7 @@ package dev.whyoleg.kmppm
 //    fun KotlinDependencyHandler.api() = api(jvm)
 //}
 //
-////object Dependencies {
+////object Dependency {
 ////
 ////    object Group {
 ////        const val kotlin = "org.jetbrains.kotlin"
