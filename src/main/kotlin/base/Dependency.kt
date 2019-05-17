@@ -2,51 +2,46 @@
 
 package dev.whyoleg.kmppm.base
 
-data class Dependency(
-    val name: String? = null,
-    val artifacts: Map<Target, Artifact>
-)
+data class Dependency(val name: String? = null, val artifacts: Map<Target, Artifact<out Target>?>)
 
-fun Dependency(
-    target: Target,
-    artifact: Artifact
-): Dependency = Dependency(null, target, artifact)
+fun <T : Target> Dependency(target: T, artifact: Artifact<T>): Dependency =
+    Dependency(null, target, artifact)
 
-fun Dependency(
-    name: String?,
-    target: Target,
-    artifact: Artifact
-): Dependency = Dependency(name, mapOf(target to artifact))
+fun <T : Target> Dependency(name: String?, target: T, artifact: Artifact<T>): Dependency =
+    Dependency(name, mapOf(target to artifact))
 
-inline fun Dependency(
-    name: String? = null,
-    configuration: DependencyBuilder.() -> Unit
-): Dependency = Dependency(name, DependencyBuilder().apply(configuration).artifacts)
+inline fun Dependency(name: String? = null, configuration: DependencyBuilder.() -> Unit): Dependency =
+    Dependency(name, DependencyBuilder().apply(configuration).artifacts)
 
-inline class DependencyBuilder(@PublishedApi internal val artifacts: MutableMap<Target, Artifact> = mutableMapOf()) {
-    infix fun Iterable<Target>.use(artifact: Artifact) {
+inline class DependencyBuilder(@PublishedApi internal val artifacts: MutableMap<Target, Artifact<out Target>?> = mutableMapOf()) {
+    infix fun <T : Target> Iterable<T>.use(artifact: Artifact<T>) {
         forEach { artifacts[it] = artifact }
     }
 
-    infix fun Target.use(artifact: Artifact) {
+    infix fun <T : Target> T.use(artifact: Artifact<T>) {
         artifacts[this] = artifact
     }
 
-    infix fun SourceSet.use(artifact: Artifact) {
-        targets.forEach { artifacts[it] = artifact }
+    fun ignore(vararg targets: Target) {
+        targets.forEach { artifacts[it] = null }
     }
+
+//    infix fun SourceSet.use(artifact: Artifact<*>) {
+//        targets.forEach { artifacts[it] = artifact }
+//    }
 }
 
 operator fun Dependency.plus(other: Dependency): Set<Dependency> = setOf(this, other)
 
 //fun main() {
 //    Dependency {
-//        val dep = MavenArtifact("", "")
-//        META use dep.copy(postfix = "common")
-//        JVM use dep
-//        (JVM + JVM + META) use dep
-//        (JVM + JVM).sourceSet("jvm") use dep
-//        JVM use IgnoredArtifact
+//        val dep = MavenArtifact<JvmBased>("", "")
+//        val depC = MavenArtifact<CommonTarget>("", "")
+//        CommonTarget use dep.copy(postfix = "common").t()
+//        JvmTarget use dep
+//        (JvmTarget + Android) use dep
+////        (JvmTarget + JvmTarget).sourceSet("jvm") use dep
+//        ignore(JvmTarget)
 //    }
 //}
 //

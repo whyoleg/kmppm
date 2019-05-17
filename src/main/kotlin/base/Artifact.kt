@@ -2,26 +2,26 @@ package dev.whyoleg.kmppm.base
 
 import dev.whyoleg.kmppm.DependencyHandler
 
-sealed class Artifact
+sealed class Artifact<T : Target>
 
-data class MavenArtifact(
+data class MavenArtifact<T : Target>(
     val group: String,
     val artifact: String,
     val version: String? = null,
     val postfix: String? = null
-) : Artifact()
+) : Artifact<T>()
 
-data class ModuleArtifact(
+fun <T : Target, R : Target> MavenArtifact<T>.t(): MavenArtifact<R> = MavenArtifact(group, artifact, version, postfix)
+
+data class ModuleArtifact<T : Target>(
     val name: String,
     val configuration: String? = null
-) : Artifact()
+) : Artifact<T>()
 
-object IgnoredArtifact : Artifact()
-
-fun DependencyHandler.artifact(art: Artifact): Unit = with(art) {
+fun DependencyHandler.artifact(art: Artifact<*>): Unit = with(art) {
     println("Add: $art")
     when (this) {
-        is MavenArtifact -> add("$group:$artifact${postfix?.let { "-$it" } ?: ""}${version?.let { ":$it" } ?: ""}")
-        is ModuleArtifact -> add(project(name, configuration))
+        is MavenArtifact<*> -> add("$group:$artifact${postfix?.let { "-$it" } ?: ""}${version?.let { ":$it" } ?: ""}")
+        is ModuleArtifact<*> -> add(project(name, configuration))
     }
 }
