@@ -13,6 +13,9 @@ data class MavenArtifact<T : Target>(
 
 fun <T : Target, R : Target> MavenArtifact<T>.t(): MavenArtifact<R> = MavenArtifact(group, artifact, version, postfix)
 
+fun <T : Target, R : Target> MavenArtifact<T>.postfix(postfix: String?): MavenArtifact<R> =
+    copy(postfix = postfix).t()
+
 data class ModuleArtifact<T : Target>(
     val name: String,
     val configuration: String? = null

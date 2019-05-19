@@ -1,5 +1,7 @@
 package dev.whyoleg.kmppm.base
 
+import dev.whyoleg.kmppm.MagicDSL
+
 @Suppress("EnumEntryName")
 enum class DependenciesConfigurationType { implementation, api, runtimeOnly, compileOnly }
 
@@ -8,6 +10,7 @@ data class DependenciesConfiguration(
     val dependencies: Set<Dependency>
 )
 
+@MagicDSL
 class DependenciesConfigurationBuilder {
     private val dependencies = mutableMapOf<DependenciesConfigurationType, MutableSet<Dependency>>()
 
@@ -35,6 +38,7 @@ class DependenciesConfigurationBuilder {
 
 }
 
+@MagicDSL
 inline class DependencyClosure(internal val dependencies: MutableSet<Dependency> = mutableSetOf()) {
     operator fun Dependency.unaryPlus() {
         dependencies += this

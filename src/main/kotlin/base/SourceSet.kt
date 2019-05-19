@@ -2,8 +2,8 @@
 
 package dev.whyoleg.kmppm.base
 
-data class SourceSet(val name: String? = null, val targets: Set<Target>)
+data class SourceSet<T : Target>(val name: String? = null, val targets: Set<T>)
 
-fun SourceSet(target: Target): SourceSet = SourceSet(target.name, setOf(target))
+fun <T : Target> SourceSet(target: T): SourceSet<T> = SourceSet(target.name, setOf(target))
 
-fun Set<Target>.sourceSet(name: String? = null): SourceSet = SourceSet(name, this)
+fun <T : Target> Set<T>.sourceSet(name: String): SourceSet<T> = SourceSet(name, this)

@@ -2,16 +2,8 @@ package dev.whyoleg.kmppm.base
 
 import dev.whyoleg.kmppm.MagicDSL
 
-@Suppress("EnumEntryName")
-enum class SourceType { main, test }
-
-data class SourceConfiguration(
-    val type: SourceType,
-    val dependencyConfigurations: List<DependenciesConfiguration>
-)
-
 @MagicDSL
-class SourceConfigurationBuilder {
+class TypedSourceConfigurationBuilder<T : Target>(private val targets: Set<T>) {
     private val sources = mutableMapOf<SourceType, MutableList<DependenciesConfiguration>>()
 
     private fun SourceType.list(): MutableList<DependenciesConfiguration> =
@@ -21,10 +13,12 @@ class SourceConfigurationBuilder {
         list() += configuration
     }
 
-    operator fun SourceType.invoke(builder: DependenciesConfigurationBuilder.() -> Unit) {
-        list() += DependenciesConfigurationBuilder().apply(builder).data()
+    @JvmName("inv2")
+    operator fun SourceType.invoke(builder: TypedDependenciesConfigurationBuilder<T>.() -> Unit) {
+        list() += TypedDependenciesConfigurationBuilder(targets).apply(builder).data()
     }
 
     fun data(): List<SourceConfiguration> =
         sources.map { (type, list) -> SourceConfiguration(type, list) }
+
 }

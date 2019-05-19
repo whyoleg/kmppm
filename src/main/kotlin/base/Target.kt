@@ -10,6 +10,8 @@ sealed class Target(open val name: String, val configure: TargetProvider) {
         val Common = CommonTarget()
         val Jvm = JvmTarget()
         val Android = AndroidTarget()
+        val JvmBased = Jvm + Android
+
         val Js = JsTarget()
         val LinuxX64 = LinuxX64Target()
     }
@@ -17,9 +19,9 @@ sealed class Target(open val name: String, val configure: TargetProvider) {
 
 data class CommonTarget(override val name: String = "common") : Target(name, { metadata() })
 
-sealed class JvmBased(name: String, configure: TargetProvider) : Target(name, configure)
-data class JvmTarget(override val name: String = "jvm") : JvmBased(name, { jvm(it.name) })
-data class AndroidTarget(override val name: String = "android") : JvmBased(name, { android(it.name) })
+sealed class JvmBasedTarget(name: String, configure: TargetProvider) : Target(name, configure)
+data class JvmTarget(override val name: String = "jvm") : JvmBasedTarget(name, { jvm(it.name) })
+data class AndroidTarget(override val name: String = "android") : JvmBasedTarget(name, { android(it.name) })
 
 data class JsTarget(override val name: String = "js") : Target(name, { js(it.name) })
 

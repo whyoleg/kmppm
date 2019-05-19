@@ -1,36 +1,45 @@
 package dev.whyoleg.kmppm.base
 
-data class Sources(
-    val sourceSet: SourceSet,
-    val dependentSources: List<Sources>,
+import dev.whyoleg.kmppm.MagicDSL
+
+data class Sources<T : Target>(
+    val sourceSet: SourceSet<T>,
     val sourceConfigurations: List<SourceConfiguration>
+//    val dependentSources: List<Sources>,
 )
 
-class SourcesBuilder {
-    private val dependantSources: MutableList<Sources> = mutableListOf<Sources>()
-    private val sourceConfigurations = mutableListOf<SourceConfiguration>()
+@MagicDSL
+open class SourcesBuilder {
+    private val sources = mutableListOf<Sources<*>>()
 
-    fun Target.sources(build: SourcesBuilder.() -> Unit = {}) = SourceSet(this).sources(build)
-    fun Target.sources(builder: SourcesBuilder) = SourceSet(this).sources(builder)
+    inline fun <reified T : Target> name(): String =
+        T::class.simpleName.orEmpty().substringBefore("Target").decapitalize()
 
-    fun Set<Target>.sources(build: SourcesBuilder.() -> Unit = {}): Unit = sourceSet().sources(build)
-    fun Set<Target>.sources(builder: SourcesBuilder): Unit = sourceSet().sources(builder)
+    operator fun <T : Target> T.invoke(build: TypedSourceConfigurationBuilder<T>.() -> Unit) =
+        SourceSet(this)(build)
 
-    fun SourceSet.sources(build: SourcesBuilder.() -> Unit = {}): Unit = sources(SourcesBuilder().apply(build))
-    fun SourceSet.sources(builder: SourcesBuilder) {
-        dependantSources += Sources(this, builder.dependantSources, builder.sourceConfigurations)
+    operator fun <T : Target> T.invoke(builder: TypedSourceConfigurationBuilder<T>) =
+        SourceSet(this)(builder)
+
+    inline operator fun <reified T : Target> Set<T>.invoke(crossinline build: TypedSourceConfigurationBuilder<T>.() -> Unit): Unit =
+        sourceSet(name()).invoke { build() }
+
+    inline operator fun <reified T : Target> Set<T>.invoke(builder: TypedSourceConfigurationBuilder<T>): Unit =
+        sourceSet(name())(builder)
+
+    operator fun <T : Target> SourceSet<T>.invoke(build: TypedSourceConfigurationBuilder<T>.() -> Unit) =
+        invoke(TypedSourceConfigurationBuilder(targets).apply(build))
+
+    operator fun <T : Target> SourceSet<T>.invoke(builder: TypedSourceConfigurationBuilder<T>) {
+        sources += Sources(this, builder.data())
     }
 
-    fun dependencies(builder: SourceConfigurationBuilder.() -> Unit) {
-        sourceConfigurations += SourceConfigurationBuilder().apply(builder).data()
-    }
-
-    fun sources(sourceSet: SourceSet): Sources = Sources(sourceSet, dependantSources, sourceConfigurations)
+    fun sources(): List<Sources<*>> = sources
 }
 
-fun Sources.targets(): Set<Target> {
-    val targets = mutableSetOf<Target>()
-    targets += sourceSet.targets
-    targets += dependentSources.flatMap(Sources::targets)
-    return targets
-}
+//fun Sources.targets(): Set<Target> {
+//    val targets = mutableSetOf<Target>()
+//    targets += sourceSet.targets
+//    targets += dependentSources.flatMap(Sources::targets)
+//    return targets
+//}
