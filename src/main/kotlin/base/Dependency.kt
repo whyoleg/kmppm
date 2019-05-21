@@ -2,9 +2,9 @@
 
 package dev.whyoleg.kmppm.base
 
-import dev.whyoleg.kmppm.base.Target.Companion.Android
-import dev.whyoleg.kmppm.base.Target.Companion.Common
-import dev.whyoleg.kmppm.base.Target.Companion.Jvm
+import dev.whyoleg.kmppm.base.Target.Companion.android
+import dev.whyoleg.kmppm.base.Target.Companion.common
+import dev.whyoleg.kmppm.base.Target.Companion.jvm
 
 data class Dependency(val name: String? = null, val artifacts: Map<Target, Artifact<out Target>?>)
 
@@ -41,10 +41,10 @@ fun main() {
     Dependency {
         val dep = MavenArtifact<JvmBasedTarget>("", "")
         val depC = MavenArtifact<CommonTarget>("", "")
-        Common use dep.postfix("common")
-        Jvm use dep
-        (Jvm + Android) use dep
-        ignore(Jvm)
+        common use dep.postfix("common")
+        jvm use dep
+        (jvm + android) use dep
+        ignore(jvm)
     }
 }
 

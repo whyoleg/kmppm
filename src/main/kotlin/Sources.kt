@@ -5,39 +5,48 @@ import dev.whyoleg.kmppm.base.DependenciesConfigurationType.*
 import dev.whyoleg.kmppm.base.SourceType.main
 import dev.whyoleg.kmppm.base.SourceType.test
 import dev.whyoleg.kmppm.base.Target
-import dev.whyoleg.kmppm.base.Target.Companion.Android
-import dev.whyoleg.kmppm.base.Target.Companion.Common
-import dev.whyoleg.kmppm.base.Target.Companion.Js
-import dev.whyoleg.kmppm.base.Target.Companion.Jvm
-import dev.whyoleg.kmppm.base.Target.Companion.LinuxX64
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import dev.whyoleg.kmppm.base.Target.Companion.android
+import dev.whyoleg.kmppm.base.Target.Companion.common
+import dev.whyoleg.kmppm.base.Target.Companion.js
+import dev.whyoleg.kmppm.base.Target.Companion.jvm
+import dev.whyoleg.kmppm.base.Target.Companion.linuxX64
+import org.gradle.kotlin.dsl.get
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
-
-//targets
-
-//common - deps
-//platform - deps + artifacts
 
 @DslMarker
 annotation class MagicDSL
 
 @MagicDSL
-fun KotlinMultiplatformExtension.targets(targets: Iterable<Target>) = targets.forEach { it.configure(this, it) }
+fun KMPPMExtension.targets(targets: Iterable<Target>): Unit = targets.forEach { it.configure(kotlin, it) }
 
 @MagicDSL
-fun KotlinMultiplatformExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
-    val data = SourceConfigurationBuilder().apply(builder).data()
+fun KMPPMExtension.targets(vararg targets: Target): Unit = targets(targets.toList())
 
-    val targets = data
+@MagicDSL
+fun KMPPMExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
+    val configurations = SourceConfigurationBuilder().apply(builder).data()
+
+    val targets = configurations
         .flatMap { it.dependencyConfigurations }
         .flatMap { it.dependencies }
         .flatMap { it.artifacts.keys }
+        .distinct()
 
-    targets(targets)
+    val unresolvedTargets =
+        targets.filter { it.name != common.name }.distinct().mapNotNull { target ->
+            target.runCatching { kotlin.targets[name] }.fold({ null }, { target })
+        }.sortedBy { it.name }
+    if (unresolvedTargets.isNotEmpty()) error(
+        "Unresolved targets: ${unresolvedTargets.joinToString(
+            "\n",
+            "[\n",
+            "\n]"
+        )}"
+    )
 
-    data.forEach { (sourceType, list) ->
+    configurations.forEach { (sourceType, list) ->
         val map = targets.associateWith {
-            sourceSets.maybeCreate(it.name + sourceType.name.capitalize())
+            kotlin.sourceSets.maybeCreate(it.name + sourceType.name.capitalize())
         }
         list.forEach { (type, dependencies) ->
             dependencies
@@ -45,14 +54,14 @@ fun KotlinMultiplatformExtension.common(builder: SourceConfigurationBuilder.() -
                 .groupBy { it.key }
                 .mapValues { it.value.mapNotNull { it.value } }
                 .forEach { (target, deps) ->
-                    (map[target] ?: error("No target")).dependencies { this[type] = deps }
+                    (map[target] ?: error("No sourceSet for target $target")).dependencies { this[type] = deps }
                 }
         }
     }
 }
 
 @MagicDSL
-fun KotlinMultiplatformExtension.sourceSets(builder: SourcesBuilder.() -> Unit) {
+fun KMPPMExtension.sourceSets(builder: SourcesBuilder.() -> Unit) {
 
 }
 
@@ -124,21 +133,21 @@ operator fun KotlinDependencyHandler.set(
     dependencies.forEach { handler.artifact(it) }
 }
 
-val test: KotlinMultiplatformExtension.() -> Unit = {
-    val linux = LinuxX64.copy(name = "linux")
+val test: KMPPMExtension.() -> Unit = {
+    val linux = linuxX64.copy(name = "linux")
     val kotlind = Dependency("kotlin") {
-        val common = MavenArtifact("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")
-        Common use common.copy(postfix = "common")
-        Jvm use common.copy(postfix = "jdk8")
-        Js use common.copy(postfix = "js")
+        val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")
+        common use cmn.copy(postfix = "common")
+        jvm use cmn.copy(postfix = "jdk8")
+        js use cmn.copy(postfix = "js")
         ignore(linux)
     }
 
     val testd = Dependency("test") {
-        val common = MavenArtifact("org.jetbrains.kotlin", "kotlin-test", "1.3.31")
-        Common use common.copy(postfix = "common")
-        Jvm use common
-        Js use common.copy(postfix = "js")
+        val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-test", "1.3.31")
+        common use cmn.copy(postfix = "common")
+        jvm use cmn
+        js use cmn.copy(postfix = "js")
         ignore(linux)
     }
     val k = MavenArtifact<JvmBasedTarget>("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
@@ -151,7 +160,7 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
             implementation {
                 +testd
                 +Dependency(
-                    Common,
+                    common,
                     MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
                 )
             }
@@ -159,9 +168,9 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
     }
 
     sourceSets {
-        Android {
+        android {
             main {
-                implementation(k)
+                DependenciesConfigurationType.implementation(k)
             }
             test {
                 api {
@@ -170,7 +179,7 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
             }
         }
 
-        val s = (Jvm + Android).sourceSet("jvm6")
+        val s = (jvm + android).sourceSet("jvm6")
         s {
             main {
                 implementation(k)
@@ -181,7 +190,7 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
                 }
             }
         }
-        Android {
+        android {
             main {
                 implementation(k)
             }
@@ -191,14 +200,14 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
                 }
             }
         }
-        (Jvm + Js) {
+        (jvm + js) {
             main {
 
             }
         }
     }
 
-//    sources(Jvm + Js + linux) {
+//    sources(jvm + js + linux) {
 //        dependencies {
 //            main {
 //                implementation(kotlind)
@@ -207,18 +216,18 @@ val test: KotlinMultiplatformExtension.() -> Unit = {
 //                implementation {
 //                    +testd
 //                    +Dependency(
-//                        Common,
+//                        common,
 //                        MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
 //                    )
 //                }
 //            }
 //        }
-//        Jvm.sources {
+//        jvm.sources {
 //            dependencies {
 //                test {
 //                    implementation(
 //                        Dependency(
-//                            Jvm,
+//                            jvm,
 //                            MavenArtifact("org.jetbrains.kotlin", "kotlin-test-junit", "1.3.31")
 //                        )
 //                    )

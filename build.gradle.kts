@@ -1,18 +1,18 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id(Plugin.updates) version Version.updates
     `kotlin-dsl`
     `maven-publish`
 }
 group = "dev.whyoleg.kmppm"
-version = "1.0.0"
-
-kotlinDslPluginOptions { experimentalWarning.set(false) }
+version = "0.1.0"
 
 repositories {
     jcenter()
     mavenCentral()
     maven { setUrl("https://kotlin.bintray.com/kotlinx") }
-    maven { setUrl("https://dl.bintray.com/kotlin/kotlinx") }
+    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
 }
 
 dependencies {
@@ -25,5 +25,16 @@ gradlePlugin {
             id = "dev.whyoleg.kmppm"
             implementationClass = "dev.whyoleg.kmppm.KMPPMPlugin"
         }
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    sourceCompatibility = Version.jdk
+    targetCompatibility = Version.jdk
+    kotlinOptions.jvmTarget = Version.jdk
+    kotlinOptions {
+        apiVersion = Version.kotlinApi
+        languageVersion = Version.kotlinLanguage
+        freeCompilerArgs = Compiler.all()
     }
 }

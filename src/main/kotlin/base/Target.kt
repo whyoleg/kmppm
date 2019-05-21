@@ -7,13 +7,13 @@ typealias TargetProvider = KotlinMultiplatformExtension.(Target) -> KotlinTarget
 
 sealed class Target(open val name: String, val configure: TargetProvider) {
     companion object {
-        val Common = CommonTarget()
-        val Jvm = JvmTarget()
-        val Android = AndroidTarget()
-        val JvmBased = Jvm + Android
+        val common = CommonTarget()
+        val jvm = JvmTarget()
+        val android = AndroidTarget()
+        val jvmBased = jvm + android
 
-        val Js = JsTarget()
-        val LinuxX64 = LinuxX64Target()
+        val js = JsTarget()
+        val linuxX64 = LinuxX64Target()
     }
 }
 
