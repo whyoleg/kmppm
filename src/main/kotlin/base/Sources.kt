@@ -3,9 +3,8 @@ package dev.whyoleg.kamp.base
 import dev.whyoleg.kamp.MagicDSL
 
 data class Sources<T : Target>(
-    val sourceSet: SourceSet<T>,
+    val targetSet: TargetSet<T>,
     val sourceConfigurations: List<SourceConfiguration>
-//    val dependentSources: List<Sources>,
 )
 
 @MagicDSL
@@ -15,31 +14,31 @@ open class SourcesBuilder {
     inline fun <reified T : Target> name(): String =
         T::class.simpleName.orEmpty().substringBefore("Target").decapitalize()
 
-    operator fun <T : Target> T.invoke(build: TypedSourceConfigurationBuilder<T>.() -> Unit) =
-        SourceSet(this)(build)
+    inline operator fun <reified T : Target> T.invoke(crossinline build: SourceConfigurationBuilder<T>.() -> Unit) =
+        TargetSet(this).invoke { build() }
 
-    operator fun <T : Target> T.invoke(builder: TypedSourceConfigurationBuilder<T>) =
-        SourceSet(this)(builder)
+    inline operator fun <reified T : Target> T.invoke(builder: SourceConfigurationBuilder<T>) =
+        TargetSet(this)(builder)
 
-    inline operator fun <reified T : Target> Set<T>.invoke(crossinline build: TypedSourceConfigurationBuilder<T>.() -> Unit): Unit =
-        sourceSet(name()).invoke { build() }
+    inline operator fun <reified T : Target> Set<T>.invoke(crossinline build: SourceConfigurationBuilder<T>.() -> Unit): Unit =
+        sourceSet(name<T>()).invoke { build() }
 
-    inline operator fun <reified T : Target> Set<T>.invoke(builder: TypedSourceConfigurationBuilder<T>): Unit =
-        sourceSet(name())(builder)
+    inline operator fun <reified T : Target> Set<T>.invoke(builder: SourceConfigurationBuilder<T>): Unit =
+        sourceSet(name<T>())(builder)
 
-    operator fun <T : Target> SourceSet<T>.invoke(build: TypedSourceConfigurationBuilder<T>.() -> Unit) =
-        invoke(TypedSourceConfigurationBuilder(targets).apply(build))
+    operator fun <T : Target> TargetSet<T>.invoke(build: SourceConfigurationBuilder<T>.() -> Unit) =
+        invoke(SourceConfigurationBuilder(targets).apply(build))
 
-    operator fun <T : Target> SourceSet<T>.invoke(builder: TypedSourceConfigurationBuilder<T>) {
+    operator fun <T : Target> TargetSet<T>.invoke(builder: SourceConfigurationBuilder<T>) {
         sources += Sources(this, builder.data())
     }
 
-    fun sources(): List<Sources<*>> = sources
+    fun data(): List<Sources<*>> = sources
 }
 
 //fun Sources.targets(): Set<Target> {
 //    val targets = mutableSetOf<Target>()
-//    targets += sourceSet.targets
+//    targets += targetSet.targets
 //    targets += dependentSources.flatMap(Sources::targets)
 //    return targets
 //}

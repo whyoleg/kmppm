@@ -16,8 +16,6 @@ class DependencyHelper internal constructor(kotlin: KotlinDependencyHandler) {
     val runtimeOnly: DependencyHandler = runtimeOnly(kotlin)
     val compileOnly: DependencyHandler = compileOnly(kotlin)
 
-
-
     companion object {
         private val api: DependencyConverter = {
             object : DependencyHandler, KotlinDependencyHandler by this {

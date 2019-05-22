@@ -22,101 +22,62 @@ fun KampExtension.targets(targets: Iterable<Target>): Unit = targets.forEach { i
 fun KampExtension.targets(vararg targets: Target): Unit = targets(targets.toList())
 
 @MagicDSL
-fun KampExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
-    val configurations = SourceConfigurationBuilder().apply(builder).data()
+fun KampExtension.sourceSets(builder: SourcesBuilder.() -> Unit) {
+    val sources = SourcesBuilder().apply(builder).data()
 
-    val targets = configurations
+    val targets = sources
+        .flatMap { it.sourceConfigurations }
         .flatMap { it.dependencyConfigurations }
         .flatMap { it.dependencies }
         .flatMap { it.artifacts.keys }
         .distinct()
 
-    val unresolvedTargets =
-        targets.filter { it.name != common.name }.distinct().mapNotNull { target ->
-            target.runCatching { kotlin.targets.getByName(name) }.fold({ null }, { target })
-        }.sortedBy { it.name }
-    if (unresolvedTargets.isNotEmpty()) error(
-        "Unresolved targets: ${unresolvedTargets.joinToString(
-            "\n",
-            "[\n",
-            "\n]"
-        )}"
-    )
+    println(targets)
+    println(sources.flatMap { it.targetSet.targets }.distinct())
 
-    configurations.forEach { (sourceType, list) ->
-        val map = targets.associateWith {
-            kotlin.sourceSets.maybeCreate(it.name + sourceType.name.capitalize())
+    targets
+        .filter { it.name != common.name }
+        .distinct()
+        .mapNotNull { t -> t.runCatching { kotlin.targets.getByName(name) }.fold({ null }, { t }) }
+        .sortedBy { it.name }
+        .takeIf { it.isNotEmpty() }
+        ?.let { error("Unresolved targets: ${it.joinToString("\n", "[\n", "\n]")}") }
+
+    sources
+        .groupBy { it.targetSet.name }
+        .mapValues { (name, sources) ->
+            require(sources.map { it.targetSet.targetCls }.toSet().size == 1)
+            val cls = sources.first().targetSet.targetCls
+            val ts = sources.flatMap { it.targetSet.targets }.toSet()
+            val cs = sources.flatMap { it.sourceConfigurations }
+            Sources(TargetSet(name, cls, ts), cs)
         }
-        list.forEach { (type, dependencies) ->
-            dependencies
-                .flatMap { it.artifacts.entries }
-                .groupBy { it.key }
-                .mapValues { it.value.mapNotNull { it.value } }
-                .forEach { (target, deps) ->
-                    (map[target] ?: error("No sourceSet for target $target")).dependencies { this[type] = deps }
+        .values
+        .forEach { (targetSet, configurations) ->
+            //TODO MOVE APPLY to end
+            println("Configure $targetSet")
+            configurations.forEach { (sourceType, list) ->
+                println("Configure sourceSet: ${targetSet.name}${sourceType.name.capitalize()}")
+                val map =
+                    (targetSet.targets.takeUnless { it.size == 1 && it.first() == common } ?: targets).associateWith {
+                        kotlin.sourceSets.maybeCreate(it.name + sourceType.name.capitalize())
+                    }
+                list.forEach { (type, dependencies) ->
+                    println("Configure dependencies $type")
+                    val deps = dependencies
+                        .flatMap { it.artifacts.entries }
+                        .groupBy { it.key }
+                        .mapValues { it.value.mapNotNull { it.value } }
+
+                    map.forEach { (target, sourceSet) ->
+                        val targetDeps = deps[target].orEmpty()
+                        println("Configure $target with ${targetDeps.joinToString(",", "[", "]")}")
+                        sourceSet.dependencies { this[type] = targetDeps }
+                    }
                 }
+            }
         }
-    }
 }
-
-@MagicDSL
-fun KampExtension.sourceSets(builder: SourcesBuilder.() -> Unit) {
-
-}
-
-//fun KotlinMultiplatformExtension.sources(preTargets: Set<Target>, builder: SourcesBuilder.() -> Unit) {
-//    val preSources = SourcesBuilder().apply(builder).sources(preTargets.sourceSet("common"))
-//    val allTargets = preSources.targets()
-//    val mainSources = preSources.copy(sourceSet = allTargets.sourceSet("common"))
-//    allTargets.forEach { it.configure(this, it) }
-//
-//    fun SourceSet.kotlin(type: SourceType): KotlinSourceSet =
-//        sourceSets.maybeCreate(name + type.name.capitalize())
-//
-//    fun Sources.sourceSet(type: SourceType): KotlinSourceSet? = sourceSet.name?.let { sourceSet.kotlin(type) }
-//
-//    fun Sources.resolveStructure() {
-//        values().forEach { type ->
-//            sourceSet(type)?.let { kotlinSourceSet ->
-//                dependentSources.forEach {
-//                    it.sourceSet(type)?.let { dependentKotlinSourceSet ->
-//                        if (dependentKotlinSourceSet.name != kotlinSourceSet.name)
-//                            dependentKotlinSourceSet.dependsOn(kotlinSourceSet)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun Sources.configure() {
-//        resolveStructure()
-//        sourceConfigurations.forEach { (type, configurations) ->
-//            val kotlinSourceSet = sourceSet(type)
-//            when {
-//                kotlinSourceSet == null || kotlinSourceSet.name == "common${type.name.capitalize()}" ->
-//                    configurations.forEach { (confType, deps) ->
-//                        deps.flatMap { it.artifacts.entries }
-//                            .groupBy { it.key }
-//                            .forEach { (target, artifacts) ->
-//                                SourceSet(target).kotlin(type)
-//                                    .dependencies { this[confType] = artifacts.mapNotNull { it.value } }
-//                            }
-//                    }
-//                else -> kotlinSourceSet.dependencies {
-//                    configurations.forEach { (confType, deps) ->
-//                        //                        if (sourceSet.targets.size > 1 &&
-////                            deps.flatMap { it.artifacts.keys }.distinctBy { it.type }.size > 1
-////                        ) error("Mixed dependencies for different platforms")
-//                        this[confType] = deps.flatMap { it.artifacts.values.filterNotNull() }
-//                    }
-//                }
-//            }
-//        }
-//        dependentSources.forEach(Sources::configure)
-//    }
-//
-//    mainSources.configure()
-//}
 
 operator fun KotlinDependencyHandler.set(
     type: DependenciesConfigurationType,
@@ -151,22 +112,21 @@ val test: KampExtension.() -> Unit = {
     }
     val k = MavenArtifact<JvmBasedTarget>("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
 
-    common {
-        main {
-            implementation(kotlind)
-        }
-        test {
-            implementation {
-                +testd
-                +Dependency(
-                    common,
-                    MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
-                )
+    sourceSets {
+        common {
+            main {
+                implementation(kotlind)
+            }
+            test {
+                implementation {
+                    +testd
+                    +Dependency(
+                        common,
+                        MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
+                    )
+                }
             }
         }
-    }
-
-    sourceSets {
         android {
             main {
                 DependenciesConfigurationType.implementation(k)
@@ -206,7 +166,7 @@ val test: KampExtension.() -> Unit = {
         }
     }
 
-//    sources(jvm + js + linux) {
+//    data(jvm + js + linux) {
 //        dependencies {
 //            main {
 //                implementation(kotlind)
@@ -221,7 +181,7 @@ val test: KampExtension.() -> Unit = {
 //                }
 //            }
 //        }
-//        jvm.sources {
+//        jvm.data {
 //            dependencies {
 //                test {
 //                    implementation(
