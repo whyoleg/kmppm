@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package dev.whyoleg.kmppm.base
+package dev.whyoleg.kamp.base
 
 data class SourceSet<T : Target>(val name: String? = null, val targets: Set<T>)
 

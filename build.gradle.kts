@@ -4,12 +4,11 @@ plugins {
     id(Plugin.updates) version Version.updates
     kotlin("jvm") version Version.kotlin
     `java-gradle-plugin`
-//    `kotlin-dsl`
     `maven-publish`
 }
 
-group = "dev.whyoleg.kmppm"
-version = "0.2.0"
+group = "dev.whyoleg.kamp"
+version = "0.1.0"
 
 repositories {
     jcenter()
@@ -24,9 +23,9 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("kmppm") {
-            id = "dev.whyoleg.kmppm"
-            implementationClass = "dev.whyoleg.kmppm.KMPPMPlugin"
+        create("kamp") {
+            id = "dev.whyoleg.kamp"
+            implementationClass = "dev.whyoleg.kamp.KampPlugin"
         }
     }
 }

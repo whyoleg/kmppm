@@ -1,6 +1,6 @@
-package dev.whyoleg.kmppm.base
+package dev.whyoleg.kamp.base
 
-import dev.whyoleg.kmppm.DependencyHandler
+import dev.whyoleg.kamp.DependencyHandler
 
 sealed class Artifact<T : Target>
 
@@ -22,7 +22,7 @@ data class ModuleArtifact<T : Target>(
 ) : Artifact<T>()
 
 fun DependencyHandler.artifact(art: Artifact<*>): Unit = with(art) {
-    println("Add33333333333: $art")
+    println("Add: $art")
     when (this) {
         is MavenArtifact<*> -> add("$group:$artifact${postfix?.let { "-$it" } ?: ""}${version?.let { ":$it" } ?: ""}")
         is ModuleArtifact<*> -> add(project(name, configuration))

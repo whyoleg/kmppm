@@ -1,6 +1,6 @@
-package dev.whyoleg.kmppm.base
+package dev.whyoleg.kamp.base
 
-import dev.whyoleg.kmppm.MagicDSL
+import dev.whyoleg.kamp.MagicDSL
 
 @Suppress("EnumEntryName")
 enum class SourceType { main, test }

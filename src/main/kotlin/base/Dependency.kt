@@ -1,10 +1,10 @@
 @file:Suppress("FunctionName")
 
-package dev.whyoleg.kmppm.base
+package dev.whyoleg.kamp.base
 
-import dev.whyoleg.kmppm.base.Target.Companion.android
-import dev.whyoleg.kmppm.base.Target.Companion.common
-import dev.whyoleg.kmppm.base.Target.Companion.jvm
+import dev.whyoleg.kamp.base.Target.Companion.android
+import dev.whyoleg.kamp.base.Target.Companion.common
+import dev.whyoleg.kamp.base.Target.Companion.jvm
 
 data class Dependency(val name: String? = null, val artifacts: Map<Target, Artifact<out Target>?>)
 

@@ -1,28 +1,28 @@
-package dev.whyoleg.kmppm
+package dev.whyoleg.kamp
 
-import dev.whyoleg.kmppm.base.*
-import dev.whyoleg.kmppm.base.DependenciesConfigurationType.*
-import dev.whyoleg.kmppm.base.SourceType.main
-import dev.whyoleg.kmppm.base.SourceType.test
-import dev.whyoleg.kmppm.base.Target
-import dev.whyoleg.kmppm.base.Target.Companion.android
-import dev.whyoleg.kmppm.base.Target.Companion.common
-import dev.whyoleg.kmppm.base.Target.Companion.js
-import dev.whyoleg.kmppm.base.Target.Companion.jvm
-import dev.whyoleg.kmppm.base.Target.Companion.linuxX64
+import dev.whyoleg.kamp.base.*
+import dev.whyoleg.kamp.base.DependenciesConfigurationType.*
+import dev.whyoleg.kamp.base.SourceType.main
+import dev.whyoleg.kamp.base.SourceType.test
+import dev.whyoleg.kamp.base.Target
+import dev.whyoleg.kamp.base.Target.Companion.android
+import dev.whyoleg.kamp.base.Target.Companion.common
+import dev.whyoleg.kamp.base.Target.Companion.js
+import dev.whyoleg.kamp.base.Target.Companion.jvm
+import dev.whyoleg.kamp.base.Target.Companion.linuxX64
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 @DslMarker
 annotation class MagicDSL
 
 @MagicDSL
-fun KMPPMExtension.targets(targets: Iterable<Target>): Unit = targets.forEach { it.configure(kotlin, it) }
+fun KampExtension.targets(targets: Iterable<Target>): Unit = targets.forEach { it.configure(kotlin, it) }
 
 @MagicDSL
-fun KMPPMExtension.targets(vararg targets: Target): Unit = targets(targets.toList())
+fun KampExtension.targets(vararg targets: Target): Unit = targets(targets.toList())
 
 @MagicDSL
-fun KMPPMExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
+fun KampExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
     val configurations = SourceConfigurationBuilder().apply(builder).data()
 
     val targets = configurations
@@ -60,7 +60,7 @@ fun KMPPMExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
 }
 
 @MagicDSL
-fun KMPPMExtension.sourceSets(builder: SourcesBuilder.() -> Unit) {
+fun KampExtension.sourceSets(builder: SourcesBuilder.() -> Unit) {
 
 }
 
@@ -132,7 +132,7 @@ operator fun KotlinDependencyHandler.set(
     dependencies.forEach { handler.artifact(it) }
 }
 
-val test: KMPPMExtension.() -> Unit = {
+val test: KampExtension.() -> Unit = {
     val linux = linuxX64.copy(name = "linux")
     val kotlind = Dependency("kotlin") {
         val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")

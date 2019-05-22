@@ -1,6 +1,6 @@
-package dev.whyoleg.kmppm.base
+package dev.whyoleg.kamp.base
 
-import dev.whyoleg.kmppm.MagicDSL
+import dev.whyoleg.kamp.MagicDSL
 
 data class Sources<T : Target>(
     val sourceSet: SourceSet<T>,

@@ -1,19 +1,18 @@
-import dev.whyoleg.kmppm.base.DependenciesConfigurationType.implementation
-import dev.whyoleg.kmppm.base.Dependency
-import dev.whyoleg.kmppm.base.MavenArtifact
-import dev.whyoleg.kmppm.base.SourceType.main
-import dev.whyoleg.kmppm.base.SourceType.test
-import dev.whyoleg.kmppm.base.Target.Companion.android
-import dev.whyoleg.kmppm.base.Target.Companion.common
-import dev.whyoleg.kmppm.base.Target.Companion.js
-import dev.whyoleg.kmppm.base.Target.Companion.jvm
-import dev.whyoleg.kmppm.base.Target.Companion.linuxX64
-import dev.whyoleg.kmppm.base.plus
-import dev.whyoleg.kmppm.common
-import dev.whyoleg.kmppm.mppm
-import dev.whyoleg.kmppm.sourceSets
-import dev.whyoleg.kmppm.targets
-import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
+import dev.whyoleg.kamp.base.DependenciesConfigurationType.implementation
+import dev.whyoleg.kamp.base.Dependency
+import dev.whyoleg.kamp.base.MavenArtifact
+import dev.whyoleg.kamp.base.SourceType.main
+import dev.whyoleg.kamp.base.SourceType.test
+import dev.whyoleg.kamp.base.Target.Companion.android
+import dev.whyoleg.kamp.base.Target.Companion.common
+import dev.whyoleg.kamp.base.Target.Companion.js
+import dev.whyoleg.kamp.base.Target.Companion.jvm
+import dev.whyoleg.kamp.base.Target.Companion.linuxX64
+import dev.whyoleg.kamp.base.plus
+import dev.whyoleg.kamp.common
+import dev.whyoleg.kamp.kamp
+import dev.whyoleg.kamp.sourceSets
+import dev.whyoleg.kamp.targets
 
 buildscript {
     repositories {
@@ -21,8 +20,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("dev.whyoleg.kmppm:kmppm:0.2.0")
-//        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21")
+        classpath("dev.whyoleg.kamp:kamp:0.1.0")
     }
 }
 
@@ -32,9 +30,7 @@ repositories {
 
 val linux = linuxX64.copy(name = "linux")
 
-println(getKotlinPluginVersion())
-
-mppm {
+kamp {
     targets(js, jvm, linux)
 
     val kotlind = Dependency("kotlin") {

@@ -1,4 +1,4 @@
-package dev.whyoleg.kmppm
+package dev.whyoleg.kamp
 
 //@file:Suppress("FunctionName", "unused")
 //

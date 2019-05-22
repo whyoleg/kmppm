@@ -1,4 +1,4 @@
-package dev.whyoleg.kmppm.base
+package dev.whyoleg.kamp.base
 
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
