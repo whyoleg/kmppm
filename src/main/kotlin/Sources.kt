@@ -10,7 +10,6 @@ import dev.whyoleg.kmppm.base.Target.Companion.common
 import dev.whyoleg.kmppm.base.Target.Companion.js
 import dev.whyoleg.kmppm.base.Target.Companion.jvm
 import dev.whyoleg.kmppm.base.Target.Companion.linuxX64
-import org.gradle.kotlin.dsl.get
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 @DslMarker
@@ -34,7 +33,7 @@ fun KMPPMExtension.common(builder: SourceConfigurationBuilder.() -> Unit) {
 
     val unresolvedTargets =
         targets.filter { it.name != common.name }.distinct().mapNotNull { target ->
-            target.runCatching { kotlin.targets[name] }.fold({ null }, { target })
+            target.runCatching { kotlin.targets.getByName(name) }.fold({ null }, { target })
         }.sortedBy { it.name }
     if (unresolvedTargets.isNotEmpty()) error(
         "Unresolved targets: ${unresolvedTargets.joinToString(

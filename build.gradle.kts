@@ -2,11 +2,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id(Plugin.updates) version Version.updates
-    `kotlin-dsl`
+    kotlin("jvm") version Version.kotlin
+    `java-gradle-plugin`
+//    `kotlin-dsl`
     `maven-publish`
 }
+
 group = "dev.whyoleg.kmppm"
-version = "0.1.0"
+version = "0.2.0"
 
 repositories {
     jcenter()

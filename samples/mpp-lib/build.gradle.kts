@@ -13,6 +13,7 @@ import dev.whyoleg.kmppm.common
 import dev.whyoleg.kmppm.mppm
 import dev.whyoleg.kmppm.sourceSets
 import dev.whyoleg.kmppm.targets
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 buildscript {
     repositories {
@@ -20,7 +21,8 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("dev.whyoleg.kmppm:kmppm:0.1.0")
+        classpath("dev.whyoleg.kmppm:kmppm:0.2.0")
+//        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21")
     }
 }
 
@@ -29,6 +31,8 @@ repositories {
 }
 
 val linux = linuxX64.copy(name = "linux")
+
+println(getKotlinPluginVersion())
 
 mppm {
     targets(js, jvm, linux)

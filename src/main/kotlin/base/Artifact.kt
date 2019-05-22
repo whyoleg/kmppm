@@ -22,7 +22,7 @@ data class ModuleArtifact<T : Target>(
 ) : Artifact<T>()
 
 fun DependencyHandler.artifact(art: Artifact<*>): Unit = with(art) {
-    println("Add: $art")
+    println("Add33333333333: $art")
     when (this) {
         is MavenArtifact<*> -> add("$group:$artifact${postfix?.let { "-$it" } ?: ""}${version?.let { ":$it" } ?: ""}")
         is ModuleArtifact<*> -> add(project(name, configuration))

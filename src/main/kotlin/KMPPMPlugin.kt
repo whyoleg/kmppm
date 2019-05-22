@@ -2,10 +2,9 @@ package dev.whyoleg.kmppm
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.configure
+import org.gradle.api.reflect.TypeOf
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 class KMPPMPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -20,8 +19,10 @@ class KMPPMExtension(val kotlin: KotlinMultiplatformExtension) {
 
 @MagicDSL
 fun Project.mppm(block: KMPPMExtension.() -> Unit) {
-    apply<KotlinMultiplatformPluginWrapper>()
-    extensions.configure<KotlinMultiplatformExtension> {
-        KMPPMExtension(this).apply(block)
+    println("HELLO")
+    apply { it.plugin("org.jetbrains.kotlin.jvm") }
+    println(this.getKotlinPluginVersion())
+    extensions.configure(object : TypeOf<KotlinMultiplatformExtension>() {}) {
+        KMPPMExtension(it).apply(block)
     }
 }
