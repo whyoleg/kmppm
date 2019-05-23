@@ -1,19 +1,16 @@
-import dev.whyoleg.kamp.base.DependenciesConfigurationType.api
-import dev.whyoleg.kamp.base.DependenciesConfigurationType.implementation
-import dev.whyoleg.kamp.base.Dependency
+import dev.whyoleg.kamp.base.*
 import dev.whyoleg.kamp.base.MavenArtifact
-import dev.whyoleg.kamp.base.SourceType.main
-import dev.whyoleg.kamp.base.SourceType.test
 import dev.whyoleg.kamp.base.Target.Companion.common
 import dev.whyoleg.kamp.base.Target.Companion.js
 import dev.whyoleg.kamp.base.Target.Companion.jvm
+import dev.whyoleg.kamp.base.Target.Companion.jvm6
 import dev.whyoleg.kamp.base.Target.Companion.jvmBased
 import dev.whyoleg.kamp.base.Target.Companion.linuxX64
-import dev.whyoleg.kamp.base.plus
-import dev.whyoleg.kamp.base.sourceSet
+import dev.whyoleg.kamp.dsl.DependencySetType.api
+import dev.whyoleg.kamp.dsl.DependencySetType.implementation
+import dev.whyoleg.kamp.dsl.SourceType.main
+import dev.whyoleg.kamp.dsl.SourceType.test
 import dev.whyoleg.kamp.kamp
-import dev.whyoleg.kamp.sourceSets
-import dev.whyoleg.kamp.targets
 
 buildscript {
     repositories {
@@ -32,11 +29,12 @@ repositories {
 val linux = linuxX64.copy(name = "linux")
 
 kamp {
-    targets(js, jvm, linux)
+    targets += js + jvm// + linux
 
     val kotlind = Dependency("kotlin") {
         val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")
         common use cmn.copy(postfix = "common")
+        jvmBased use cmn.copy(postfix = "")
         jvm use cmn.copy(postfix = "jdk8")
         js use cmn.copy(postfix = "js")
         linux use cmn.copy(postfix = "linux")
@@ -82,14 +80,14 @@ kamp {
             }
         }
         (jvm + js) {
-            //            main {
-//                implementation(kotlind)
-//            }
-        }
-        val s = setOf(jvm).sourceSet("jvm6")
-        s {
             main {
                 implementation(kotlind)
+            }
+        }
+        val s = setOf(jvm, jvm6).sourceSet("jvm6")
+        s {
+            main {
+                implementation(kotlind.copy { jvmBased use it[jvm6]!! })
             }
             test {
                 api {

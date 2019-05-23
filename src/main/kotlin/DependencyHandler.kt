@@ -1,51 +1,56 @@
 package dev.whyoleg.kamp
 
+import dev.whyoleg.kamp.base.Artifact
+import dev.whyoleg.kamp.base.Target
+import dev.whyoleg.kamp.base.artifact
+import dev.whyoleg.kamp.dsl.DependencySetType
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
-typealias DependencyConverter = KotlinDependencyHandler.() -> DependencyHandler
-
-interface DependencyHandler : KotlinDependencyHandler {
+internal interface DependencyHandler : KotlinDependencyHandler {
     fun add(artifact: Any)
 }
 
-fun KotlinDependencyHandler.helper(): DependencyHelper = DependencyHelper(this)
+operator fun KotlinDependencyHandler.set(type: DependencySetType, dependencies: Iterable<Artifact<out Target>>) {
+    val handler = when (type) {
+        DependencySetType.implementation -> Helper.implementation(this)
+        DependencySetType.api -> Helper.api(this)
+        DependencySetType.runtimeOnly -> Helper.runtimeOnly(this)
+        DependencySetType.compileOnly -> Helper.compileOnly(this)
+    }
+    dependencies.forEach { handler.artifact(it) }
+}
 
-class DependencyHelper internal constructor(kotlin: KotlinDependencyHandler) {
-    val api: DependencyHandler = api(kotlin)
-    val implementation: DependencyHandler = implementation(kotlin)
-    val runtimeOnly: DependencyHandler = runtimeOnly(kotlin)
-    val compileOnly: DependencyHandler = compileOnly(kotlin)
+private typealias DependencyConverter = KotlinDependencyHandler.() -> DependencyHandler
 
-    companion object {
-        private val api: DependencyConverter = {
-            object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(artifact: Any) {
-                    api(artifact)
-                }
+private object Helper {
+    val api: DependencyConverter = {
+        object : DependencyHandler, KotlinDependencyHandler by this {
+            override fun add(artifact: Any) {
+                api(artifact)
             }
         }
+    }
 
-        private val implementation: DependencyConverter = {
-            object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(artifact: Any) {
-                    implementation(artifact)
-                }
+    val implementation: DependencyConverter = {
+        object : DependencyHandler, KotlinDependencyHandler by this {
+            override fun add(artifact: Any) {
+                implementation(artifact)
             }
         }
+    }
 
-        private val runtimeOnly: DependencyConverter = {
-            object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(artifact: Any) {
-                    runtimeOnly(artifact)
-                }
+    val runtimeOnly: DependencyConverter = {
+        object : DependencyHandler, KotlinDependencyHandler by this {
+            override fun add(artifact: Any) {
+                runtimeOnly(artifact)
             }
         }
+    }
 
-        private val compileOnly: DependencyConverter = {
-            object : DependencyHandler, KotlinDependencyHandler by this {
-                override fun add(artifact: Any) {
-                    compileOnly(artifact)
-                }
+    val compileOnly: DependencyConverter = {
+        object : DependencyHandler, KotlinDependencyHandler by this {
+            override fun add(artifact: Any) {
+                compileOnly(artifact)
             }
         }
     }

@@ -21,7 +21,7 @@ data class ModuleArtifact<T : Target>(
     val configuration: String? = null
 ) : Artifact<T>()
 
-fun DependencyHandler.artifact(art: Artifact<*>): Unit = with(art) {
+internal fun DependencyHandler.artifact(art: Artifact<*>): Unit = with(art) {
     when (this) {
         is MavenArtifact<*> -> add("$group:$artifact${postfix?.let { "-$it" } ?: ""}${version?.let { ":$it" } ?: ""}")
         is ModuleArtifact<*> -> add(project(name, configuration))

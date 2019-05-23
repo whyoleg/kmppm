@@ -1,5 +1,6 @@
 package dev.whyoleg.kamp
 
+import dev.whyoleg.kamp.dsl.KampDSL
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.reflect.TypeOf
@@ -12,16 +13,11 @@ class KampPlugin : Plugin<Project> {
     }
 }
 
-@MagicDSL
-class KampExtension(val kotlin: KotlinMultiplatformExtension) {
-    fun kotlin(block: KotlinMultiplatformExtension.() -> Unit): Unit = kotlin.block()
-}
-
-@MagicDSL
+@KampDSL
 fun Project.kamp(block: KampExtension.() -> Unit) {
     apply { it.plugin("org.jetbrains.kotlin.multiplatform") }
     println(this.getKotlinPluginVersion())
     extensions.configure(object : TypeOf<KotlinMultiplatformExtension>() {}) {
-        KampExtension(it).apply(block)
+        KampExtension(it).apply(block).configure()
     }
 }
