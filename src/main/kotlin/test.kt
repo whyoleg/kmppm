@@ -7,10 +7,10 @@ import dev.whyoleg.kamp.base.Target.Companion.common
 import dev.whyoleg.kamp.base.Target.Companion.js
 import dev.whyoleg.kamp.base.Target.Companion.jvm
 import dev.whyoleg.kamp.base.Target.Companion.jvm6
-import dev.whyoleg.kamp.dsl.DependencySetType.api
-import dev.whyoleg.kamp.dsl.DependencySetType.implementation
-import dev.whyoleg.kamp.dsl.SourceType.main
-import dev.whyoleg.kamp.dsl.SourceType.test
+import dev.whyoleg.kamp.builder.DependencySetType.api
+import dev.whyoleg.kamp.builder.DependencySetType.implementation
+import dev.whyoleg.kamp.builder.SourceType.main
+import dev.whyoleg.kamp.builder.SourceType.test
 
 
 val test: KampExtension.() -> Unit = {

@@ -1,6 +1,6 @@
 package dev.whyoleg.kamp
 
-import dev.whyoleg.kamp.dsl.KampDSL
+import dev.whyoleg.kamp.builder.KampDSL
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.reflect.TypeOf

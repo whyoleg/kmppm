@@ -4,9 +4,9 @@ import dev.whyoleg.kamp.base.MetaTarget
 import dev.whyoleg.kamp.base.RealTarget
 import dev.whyoleg.kamp.base.Target
 import dev.whyoleg.kamp.base.TargetSet
-import dev.whyoleg.kamp.dsl.KampDSL
-import dev.whyoleg.kamp.dsl.Source
-import dev.whyoleg.kamp.dsl.SourceBuilder
+import dev.whyoleg.kamp.builder.KampDSL
+import dev.whyoleg.kamp.builder.Source
+import dev.whyoleg.kamp.builder.SourceBuilder
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 @KampDSL

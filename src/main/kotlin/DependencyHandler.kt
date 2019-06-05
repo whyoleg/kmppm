@@ -3,7 +3,7 @@ package dev.whyoleg.kamp
 import dev.whyoleg.kamp.base.Artifact
 import dev.whyoleg.kamp.base.Target
 import dev.whyoleg.kamp.base.artifact
-import dev.whyoleg.kamp.dsl.DependencySetType
+import dev.whyoleg.kamp.builder.DependencySetType
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 internal interface DependencyHandler : KotlinDependencyHandler {

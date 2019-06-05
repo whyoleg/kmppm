@@ -2,8 +2,8 @@ package dev.whyoleg.kamp
 
 //@file:Suppress("FunctionName", "unused")
 //
-//import org.gradle.api.artifacts.dsl.*
-//import org.gradle.kotlin.dsl.*
+//import org.gradle.api.artifacts.builder.*
+//import org.gradle.kotlin.builder.*
 //import org.jetbrains.kotlin.gradle.plugin.*
 //
 //interface JVMDependencyHelper {

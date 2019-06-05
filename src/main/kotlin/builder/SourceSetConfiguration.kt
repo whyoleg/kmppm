@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.dsl
+package dev.whyoleg.kamp.builder
 
 import dev.whyoleg.kamp.base.Target
 
