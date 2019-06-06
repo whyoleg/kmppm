@@ -6,11 +6,7 @@ import dev.whyoleg.kamp.base.Target.Companion.jvm
 import dev.whyoleg.kamp.base.Target.Companion.jvm6
 import dev.whyoleg.kamp.base.Target.Companion.jvmBased
 import dev.whyoleg.kamp.base.Target.Companion.linuxX64
-import dev.whyoleg.kamp.dsl.DependencySetType.api
-import dev.whyoleg.kamp.dsl.DependencySetType.implementation
-import dev.whyoleg.kamp.dsl.SourceType.main
-import dev.whyoleg.kamp.dsl.SourceType.test
-import dev.whyoleg.kamp.kamp
+import dev.whyoleg.kamp.dsl.kamp
 
 buildscript {
     repositories {
@@ -19,6 +15,7 @@ buildscript {
     }
     dependencies {
         classpath("dev.whyoleg.kamp:kamp:0.1.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.31")
     }
 }
 repositories {

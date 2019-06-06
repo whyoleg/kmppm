@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation(Dependencies.kotlinGradlePlugin)
+    compileOnly(Dependencies.kotlinGradlePlugin)
 }
 
 gradlePlugin {

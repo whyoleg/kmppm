@@ -1,29 +1,28 @@
-package dev.whyoleg.kamp
+package dev.whyoleg.kamp.ext
 
 import dev.whyoleg.kamp.base.MetaTarget
-import dev.whyoleg.kamp.base.RealTarget
+import dev.whyoleg.kamp.base.PlatformTarget
 import dev.whyoleg.kamp.base.Target
 import dev.whyoleg.kamp.base.TargetSet
 import dev.whyoleg.kamp.builder.KampDSL
 import dev.whyoleg.kamp.builder.Source
-import dev.whyoleg.kamp.builder.SourceBuilder
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import dev.whyoleg.kamp.builder.SourceType
+import dev.whyoleg.kamp.set
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 @KampDSL
-class KampExtension(private val ext: KotlinMultiplatformExtension) {
-    val targets = mutableSetOf<RealTarget>()
+abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext: KotlinExt) : Target.WithTargets {
+    protected open val targets: MutableSet<PlatformTarget> = mutableSetOf()
 
-    private val sources = mutableListOf<Source>()
-    private val blocks = mutableListOf<KotlinMultiplatformExtension.() -> Unit>()
+    internal val sources = mutableListOf<Source>()
+    protected val blocks = mutableListOf<KotlinExt.() -> Unit>()
 
-    fun kotlin(block: KotlinMultiplatformExtension.() -> Unit): Unit {
+    open fun kotlin(block: KotlinExt.() -> Unit): Unit {
         blocks += block
     }
 
-    fun sourceSets(builder: SourceBuilder.() -> Unit) {
-        sources += SourceBuilder().apply(builder).sources
-    }
-
+    @PublishedApi
     internal fun configure() {
         configureTargets()
         configureSources()
@@ -34,11 +33,11 @@ class KampExtension(private val ext: KotlinMultiplatformExtension) {
         blocks.forEach { ext.it() }
     }
 
-    private fun configureTargets() {
-        (targets + Target.common).forEach { it.configure(ext, it) }
-    }
+    protected abstract fun configureTargets()
 
-    private fun configureSources() {
+    protected abstract fun sourceTypeTargets(sourceType: SourceType): Map<Target, KotlinSourceSet>
+
+    fun configureSources() {
         sources
             .groupBy { it.targetSet.name }
             .mapValues { (name, sources) ->
@@ -61,9 +60,7 @@ class KampExtension(private val ext: KotlinMultiplatformExtension) {
                     configurations.forEach { (sourceType, list) ->
                         println()
                         println("Configure sourceSet: ${targetSet.name}${sourceType.name.capitalize()}")
-                        val targetSourceSets = (targets + Target.common).associateWith {
-                            ext.sourceSets.maybeCreate(it.name + sourceType.name.capitalize())
-                        }
+                        val targetSourceSets = sourceTypeTargets(sourceType)
                         list.forEach { (type, dependencies) ->
                             println()
                             println("Configure dependencies $type")

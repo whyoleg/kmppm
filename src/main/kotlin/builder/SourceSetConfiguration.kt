@@ -6,6 +6,10 @@ internal data class SourceSetConfiguration(val type: SourceType, val dependencie
 
 @KampDSL
 class SourceSetConfigurationBuilder<T : Target>(private val targets: Set<T>) {
+    //fast accessors
+    val main get() = SourceType.main
+    val test get() = SourceType.test
+
     private val sources = mutableMapOf<SourceType, MutableList<DependencySet>>()
 
     private fun SourceType.list(): MutableList<DependencySet> =

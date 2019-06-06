@@ -9,6 +9,13 @@ internal data class DependencySet(val type: DependencySetType, val dependencies:
 
 @KampDSL
 class DependencySetBuilder<T : Target>(private val targets: Set<T>) {
+    //fast accessors
+    val implementation get() = DependencySetType.implementation
+    val api get() = DependencySetType.api
+    val runtimeOnly get() = DependencySetType.runtimeOnly
+    val compileOnly get() = DependencySetType.compileOnly
+
+
     private val dependencies = mutableMapOf<DependencySetType, MutableSet<Dependency>>()
 
     private fun DependencySetType.set(): MutableSet<Dependency> = dependencies.getOrPut(this) { mutableSetOf() }

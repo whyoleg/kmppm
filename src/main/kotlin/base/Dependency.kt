@@ -31,7 +31,7 @@ inline class DependencyBuilder(@PublishedApi internal val artifacts: MutableMap<
         targets.forEach { artifacts[it] = null }
     }
 
-    infix fun <T : RealTarget> TargetSet<T>.use(artifact: Artifact<T>) {
+    infix fun <T : PlatformTarget> TargetSet<T>.use(artifact: Artifact<T>) {
         targets.forEach { artifacts[it] = artifact }
     }
 }

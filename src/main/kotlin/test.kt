@@ -1,20 +1,12 @@
 package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.base.*
-import dev.whyoleg.kamp.base.Target
-import dev.whyoleg.kamp.base.Target.Companion.android
-import dev.whyoleg.kamp.base.Target.Companion.common
-import dev.whyoleg.kamp.base.Target.Companion.js
-import dev.whyoleg.kamp.base.Target.Companion.jvm
-import dev.whyoleg.kamp.base.Target.Companion.jvm6
-import dev.whyoleg.kamp.builder.DependencySetType.api
-import dev.whyoleg.kamp.builder.DependencySetType.implementation
-import dev.whyoleg.kamp.builder.SourceType.main
-import dev.whyoleg.kamp.builder.SourceType.test
+import dev.whyoleg.kamp.dsl.kampJvm
+import dev.whyoleg.kamp.ext.KampMultiplatformExtension
+import org.gradle.api.Project
 
-
-val test: KampExtension.() -> Unit = {
-    val linux = Target.linuxX64.copy(name = "linux")
+val test: KampMultiplatformExtension.() -> Unit = {
+    val linux = linuxX64.copy(name = "linux")
     val kotlind = Dependency("kotlin") {
         val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")
         common use cmn.copy(postfix = "common")
@@ -34,6 +26,9 @@ val test: KampExtension.() -> Unit = {
 
     targets += linux + jvm + js
 
+    val kotlinTest =
+        Dependency(common, MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31"))
+
     sourceSets {
         common {
             main {
@@ -42,10 +37,7 @@ val test: KampExtension.() -> Unit = {
             test {
                 implementation {
                     +testd
-                    +Dependency(
-                        common,
-                        MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
-                    )
+                    +kotlinTest
                 }
             }
         }
@@ -116,4 +108,16 @@ val test: KampExtension.() -> Unit = {
 //            }
 //        }
 //    }
+}
+
+fun Project.m() {
+    kampJvm {
+        sourceSet {
+            main {
+                implementation {
+
+                }
+            }
+        }
+    }
 }
