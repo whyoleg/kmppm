@@ -5,6 +5,10 @@ import dev.whyoleg.kamp.base.target.*
 
 data class RawLibraryDependency(val group: Group, val name: String, val version: String?)
 
+data class LibraryVersionDependency(val group: Group, val version: String?)
+
+operator fun LibraryVersionDependency.invoke(name: String): RawLibraryDependency = RawLibraryDependency(group, name, version)
+
 abstract class LibraryDependency(
     open val raw: RawLibraryDependency,
     open val targets: Set<TargetWithPostfix<*>>

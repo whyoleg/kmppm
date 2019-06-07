@@ -12,9 +12,9 @@ val test: KampMultiPlatformExtension.() -> Unit = {
 
     val kotlin = Group("org.jetbrains.kotlin")
     val commonTargets = setOf(common("common"), jvm("jdk8"), js("js"))
-    val base = kotlin.base("1.3.31")(commonTargets)
-    val kotlind = base("kotlin-stdlib")
-    val testd = base("kotlin-test")
+    val base = kotlin.version("1.3.31")
+    val kotlind = base("kotlin-stdlib")(commonTargets)
+    val testd = base("kotlin-test")(common("common"), jvm(), js("js"))
 
     val k = kotlin.dependency("kotlin-test-annotations-common", "1.3.31")(jvm, jvm6)
 
