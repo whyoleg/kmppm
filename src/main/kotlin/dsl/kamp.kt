@@ -27,7 +27,9 @@ internal inline fun <reified Ext : KotlinProjectExtension, KampExt : KampExtensi
             }
         )
     }
-    println(getKotlinPluginVersion())
+    println()
+    println("Setup plugin with kotlin ${getKotlinPluginVersion()}")
+    println()
     extensions.configure(object : TypeOf<Ext>() {}) {
         (when (it) {
             is KotlinMultiplatformExtension -> (KampMultiPlatformExtension(it) as KampExt).apply(block)

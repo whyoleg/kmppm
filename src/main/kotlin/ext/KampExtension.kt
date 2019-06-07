@@ -53,7 +53,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
                 val isMeta = multiTarget.targets.singleOrNull() is MetaTarget
                 println("Configure $multiTarget")
                 configurations.forEach { (sourceType, list) ->
-                    println("Configure sourceSet: ${multiTarget.name}${sourceType.name.capitalize()}")
+                    println("SourceSet: ${multiTarget.name}${sourceType.name.capitalize()}")
 
                     val (sourceSet, targetSourceSets) = if (isMeta) {
                         val targetSourceSets = sourceTypeTargets(sourceType)
@@ -65,17 +65,17 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
                         sourceSet to targetSourceSets
                     }
                     list.forEach { (type, dependencies) ->
-                        println("Configure dependencies $type")
-
+                        println(type.name.capitalize())
                         val modules = dependencies.filterIsInstance<ModuleDependency>()
+                        println("Try modules: ${modules.joinToString(",", "[", "]")}")
                         sourceSet?.dependencies { modules(type, modules) }
 
                         val libraries = dependencies.filterIsInstance<LibraryDependency>()
                         targetSourceSets.forEach { (target, sourceSet) ->
-                            println("Configure $target with modules: ${modules.joinToString(",", "[", "]")}")
-                            println("Configure $target with libraries: ${libraries.joinToString(",", "[", "]")}")
+                            println("Try $target with libraries: ${libraries.joinToString(",", "[", "]")}")
                             sourceSet.dependencies { libraries(type, target, libraries) }
                         }
+                        println()
                     }
                 }
             }

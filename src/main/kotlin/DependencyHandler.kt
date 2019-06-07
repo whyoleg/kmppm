@@ -17,6 +17,7 @@ fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Itera
         DependencySetType.compileOnly    -> Helper.compileOnly(this)
     }
     dependencies.forEach {
+        println("Add ${it.name}")
         handler.add(handler.project(it.name))
     }
 }
@@ -33,7 +34,9 @@ fun KotlinDependencyHandler.libraries(type: DependencySetType, target: Target, d
         val (group, name, rawVersion) = dependency.raw
         val postfix = rawPostfix?.let { "-$it" } ?: ""
         val version = rawVersion?.let { ":$it" } ?: ""
-        handler.add("${group.name}:$name$postfix$version")
+        val dep = "${group.name}:$name$postfix$version"
+        println("Add '$dep'")
+        handler.add(dep)
     }
 }
 
