@@ -14,6 +14,7 @@ fun Project.kamp(block: KampMultiPlatformExtension.() -> Unit): Unit = internalK
 fun Project.kampJvm(block: KampJvmExtension.() -> Unit): Unit = internalKamp(block)
 
 
+@Suppress("UNCHECKED_CAST")
 internal inline fun <reified Ext : KotlinProjectExtension, KampExt : KampExtension<Ext>> Project.internalKamp(
     crossinline block: KampExt.() -> Unit
 ) {
@@ -21,8 +22,8 @@ internal inline fun <reified Ext : KotlinProjectExtension, KampExt : KampExtensi
         it.plugin(
             when (Ext::class) {
                 KotlinMultiplatformExtension::class -> "org.jetbrains.kotlin.multiplatform"
-                KotlinJvmProjectExtension::class -> "org.jetbrains.kotlin.jvm"
-                else -> error("Platform is not supported")
+                KotlinJvmProjectExtension::class    -> "org.jetbrains.kotlin.jvm"
+                else                                -> error("Platform is not supported")
             }
         )
     }
