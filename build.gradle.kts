@@ -1,5 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+group = "dev.whyoleg.kamp"
+version = "0.1.0"
+
 plugins {
     id(Plugin.updates) version Version.updates
     kotlin("jvm") version Version.kotlin
@@ -7,27 +10,10 @@ plugins {
     `maven-publish`
 }
 
-group = "dev.whyoleg.kamp"
-version = "0.1.0"
-
-repositories {
-    jcenter()
-    mavenCentral()
-    maven { setUrl("https://kotlin.bintray.com/kotlinx") }
-    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
-}
+repositories { mavenCentral() }
 
 dependencies {
-    compileOnly(Dependencies.kotlinGradlePlugin)
-}
-
-gradlePlugin {
-    plugins {
-        create("kamp") {
-            id = "dev.whyoleg.kamp"
-            implementationClass = "dev.whyoleg.kamp.KampPlugin"
-        }
-    }
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlin}")
 }
 
 tasks.withType<KotlinCompile> {
@@ -37,6 +23,6 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         apiVersion = Version.kotlinApi
         languageVersion = Version.kotlinLanguage
-        freeCompilerArgs = Compiler.all()
+        freeCompilerArgs = listOf("-progressive", "-XXLanguage:+InlineClasses", "-XXLanguage:+NewInference")
     }
 }

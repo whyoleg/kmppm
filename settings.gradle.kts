@@ -1,4 +1,4 @@
-include(":samples:mpp-lib")
+//include(":samples:mpp-lib")
 
 buildCache {
     local(DirectoryBuildCache::class) {

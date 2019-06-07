@@ -8,13 +8,6 @@ object Version {
 
     const val detekt = "1.0.0-RC14"
 
-
     const val jib = "1.0.2"
     const val shadow = "5.0.0"
-    const val dsl = "1.2.8"
-
-
-    const val coroutines = "1.2.1"
-    const val serialization = "0.11.0"
-    const val atomicfu = "0.12.6"
 }
