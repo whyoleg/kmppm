@@ -1,15 +1,13 @@
 package dev.whyoleg.kamp.ext
 
-import dev.whyoleg.kamp.base.PlatformTarget
-import dev.whyoleg.kamp.base.Target
-import dev.whyoleg.kamp.builder.KampDSL
-import dev.whyoleg.kamp.builder.SourceBuilder
-import dev.whyoleg.kamp.builder.SourceType
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import dev.whyoleg.kamp.base.target.*
+import dev.whyoleg.kamp.base.target.Target
+import dev.whyoleg.kamp.builder.*
+import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.*
 
 @KampDSL
-class KampMultiplatformExtension(
+class KampMultiPlatformExtension(
     private val ext: KotlinMultiplatformExtension
 ) : KampExtension<KotlinMultiplatformExtension>(ext) {
     public override val targets: MutableSet<PlatformTarget> = mutableSetOf()

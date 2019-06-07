@@ -1,8 +1,7 @@
 package dev.whyoleg.kamp.builder
 
-import dev.whyoleg.kamp.base.Artifact
-import dev.whyoleg.kamp.base.Dependency
-import dev.whyoleg.kamp.base.Target
+import dev.whyoleg.kamp.base.dependency.*
+import dev.whyoleg.kamp.base.target.Target
 
 @PublishedApi
 internal data class DependencySet(val type: DependencySetType, val dependencies: Set<Dependency>)
@@ -20,42 +19,48 @@ class DependencySetBuilder<T : Target>(private val targets: Set<T>) {
 
     private fun DependencySetType.set(): MutableSet<Dependency> = dependencies.getOrPut(this) { mutableSetOf() }
 
-    operator fun DependencySetType.invoke(dependency: Dependency) {
+    operator fun DependencySetType.invoke(dependency: MultiDependency) {
         set() += dependency
     }
 
-    @JvmName("invokeSetDependencies")
-    operator fun DependencySetType.invoke(dependencies: Set<Dependency>) {
+    @JvmName("invokeMulti")
+    operator fun DependencySetType.invoke(dependencies: Set<MultiDependency>) {
         set() += dependencies
     }
 
-    operator fun DependencySetType.invoke(vararg dependencies: Dependency) {
+    operator fun DependencySetType.invoke(vararg dependencies: MultiDependency) {
         set() += dependencies
     }
 
-    private fun Dependency(artifact: Artifact<in T>): Dependency = Dependency { targets.forEach { it use artifact } }
-
-    operator fun DependencySetType.invoke(artifact: Artifact<in T>) {
-        set() += Dependency(artifact)
+    operator fun DependencySetType.invoke(dependency: ModuleDependency) {
+        set() += dependency
     }
 
-    operator fun DependencySetType.invoke(dependencies: Set<Artifact<in T>>) {
-        set() += dependencies.map { Dependency(it) }
+    @JvmName("invokeModule")
+    operator fun DependencySetType.invoke(dependencies: Set<ModuleDependency>) {
+        set() += dependencies
     }
 
-    operator fun DependencySetType.invoke(vararg dependencies: Artifact<in T>) {
-        set() += dependencies.map { Dependency(it) }
+    operator fun DependencySetType.invoke(vararg dependencies: ModuleDependency) {
+        set() += dependencies
+    }
+
+    operator fun DependencySetType.invoke(dependency: TargetDependency<in T>) {
+        set() += dependency
+    }
+
+    @JvmName("invokeTarget")
+    operator fun DependencySetType.invoke(dependencies: Set<TargetDependency<in T>>) {
+        set() += dependencies
+    }
+
+    operator fun DependencySetType.invoke(vararg dependencies: TargetDependency<in T>) {
+        set() += dependencies
     }
 
     @Suppress("UNCHECKED_CAST")
     operator fun DependencySetType.invoke(closure: DependencyClosure<T>.() -> Unit) {
-        set() += DependencyClosure<T>().apply(closure).dependencies.mapNotNull {
-            when (it) {
-                is Dependency -> it
-                is Artifact<*> -> Dependency(it as Artifact<in T>)
-                else -> null
-            }
-        }
+        set() += DependencyClosure<T>().apply(closure).dependencies
     }
 
     internal fun data(): List<DependencySet> =
@@ -64,12 +69,16 @@ class DependencySetBuilder<T : Target>(private val targets: Set<T>) {
 }
 
 @KampDSL
-inline class DependencyClosure<T : Target>(internal val dependencies: MutableSet<Any> = mutableSetOf()) {
-    operator fun Artifact<in T>.unaryPlus() {
+inline class DependencyClosure<T : Target>(internal val dependencies: MutableSet<Dependency> = mutableSetOf()) {
+    operator fun TargetDependency<in T>.unaryPlus() {
         dependencies += this
     }
 
-    operator fun Dependency.unaryPlus() {
+    operator fun MultiDependency.unaryPlus() {
+        dependencies += this
+    }
+
+    operator fun ModuleDependency.unaryPlus() {
         dependencies += this
     }
 }

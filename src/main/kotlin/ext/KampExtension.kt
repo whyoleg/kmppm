@@ -1,18 +1,15 @@
 package dev.whyoleg.kamp.ext
 
-import dev.whyoleg.kamp.base.MetaTarget
-import dev.whyoleg.kamp.base.PlatformTarget
-import dev.whyoleg.kamp.base.Target
-import dev.whyoleg.kamp.base.TargetSet
-import dev.whyoleg.kamp.builder.KampDSL
-import dev.whyoleg.kamp.builder.Source
-import dev.whyoleg.kamp.builder.SourceType
-import dev.whyoleg.kamp.set
-import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.base.dependency.*
+import dev.whyoleg.kamp.base.target.*
+import dev.whyoleg.kamp.base.target.Target
+import dev.whyoleg.kamp.builder.*
+import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.*
 
 @KampDSL
-abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext: KotlinExt) : Target.WithTargets {
+abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext: KotlinExt) : MainTargets {
     protected open val targets: MutableSet<PlatformTarget> = mutableSetOf()
 
     internal val sources = mutableListOf<Source>()
@@ -43,7 +40,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
             .mapValues { (name, sources) ->
                 require(sources.map { it.targetSet.targetCls }.toSet().size == 1)
                 Source(
-                    TargetSet(
+                    MultiTarget(
                         name,
                         sources.first().targetSet.targetCls,
                         sources.flatMap { it.targetSet.targets }.toSet()
@@ -52,46 +49,32 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
                 )
             }
             .values
-            .forEach { (targetSet, configurations) ->
-                println()
-                println("Configure $targetSet")
-                if (targetSet.targets.singleOrNull() is MetaTarget) {
-                    println("Configure META")
-                    configurations.forEach { (sourceType, list) ->
-                        println()
-                        println("Configure sourceSet: ${targetSet.name}${sourceType.name.capitalize()}")
+            .forEach { (multiTarget, configurations) ->
+                val isMeta = multiTarget.targets.singleOrNull() is MetaTarget
+                println("Configure $multiTarget")
+                configurations.forEach { (sourceType, list) ->
+                    println("Configure sourceSet: ${multiTarget.name}${sourceType.name.capitalize()}")
+
+                    val (sourceSet, targetSourceSets) = if (isMeta) {
                         val targetSourceSets = sourceTypeTargets(sourceType)
-                        list.forEach { (type, dependencies) ->
-                            println()
-                            println("Configure dependencies $type")
-
-                            val deps =
-                                dependencies
-                                    .flatMap { it.artifacts.entries }
-                                    .groupBy { it.key }
-                                    .mapValues { it.value.mapNotNull { it.value } }
-
-                            targetSourceSets.forEach { (target, sourceSet) ->
-                                val targetDeps = deps[target].orEmpty()
-                                println("Configure $target with ${targetDeps.joinToString(",", "[", "]")}")
-                                sourceSet.dependencies { this[type] = targetDeps }
-                            }
-                        }
+                        val sourceSet = targetSourceSets[Target.common]
+                        sourceSet to targetSourceSets
+                    } else {
+                        val sourceSet = ext.sourceSets.maybeCreate(multiTarget.name + sourceType.name.capitalize())
+                        val targetSourceSets = multiTarget.targets.associateWith { sourceSet }
+                        sourceSet to targetSourceSets
                     }
-                } else {
-                    println("Configure SourceSet")
-                    configurations.forEach { (sourceType, list) ->
-                        println()
-                        println("Configure sourceSet: ${targetSet.name}${sourceType.name.capitalize()}")
-                        val sourceSet = ext.sourceSets.maybeCreate(targetSet.name + sourceType.name.capitalize())
-                        list.forEach { (type, dependencies) ->
-                            println()
-                            println("Configure dependencies $type")
-                            val targetDeps = dependencies.mapNotNull { (_, artifacts) ->
-                                targetSet.targets.map { artifacts[it] }.requireNoNulls().toSet().singleOrNull()
-                            }
-                            println("Configure with ${targetDeps.joinToString(",", "[", "]")}")
-                            sourceSet.dependencies { this[type] = targetDeps }
+                    list.forEach { (type, dependencies) ->
+                        println("Configure dependencies $type")
+
+                        val modules = dependencies.filterIsInstance<ModuleDependency>()
+                        sourceSet?.dependencies { modules(type, modules) }
+
+                        val libraries = dependencies.filterIsInstance<LibraryDependency>()
+                        targetSourceSets.forEach { (target, sourceSet) ->
+                            println("Configure $target with modules: ${modules.joinToString(",", "[", "]")}")
+                            println("Configure $target with libraries: ${libraries.joinToString(",", "[", "]")}")
+                            sourceSet.dependencies { libraries(type, target, libraries) }
                         }
                     }
                 }

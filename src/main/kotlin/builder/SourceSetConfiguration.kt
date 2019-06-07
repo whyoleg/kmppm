@@ -1,6 +1,6 @@
 package dev.whyoleg.kamp.builder
 
-import dev.whyoleg.kamp.base.Target
+import dev.whyoleg.kamp.base.target.Target
 
 internal data class SourceSetConfiguration(val type: SourceType, val dependencies: List<DependencySet>)
 

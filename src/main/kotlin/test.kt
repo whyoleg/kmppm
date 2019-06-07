@@ -1,35 +1,29 @@
 package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.base.*
-import dev.whyoleg.kamp.dsl.kampJvm
-import dev.whyoleg.kamp.ext.KampMultiplatformExtension
-import org.gradle.api.Project
+import dev.whyoleg.kamp.base.dependency.*
+import dev.whyoleg.kamp.base.target.*
+import dev.whyoleg.kamp.dsl.*
+import dev.whyoleg.kamp.ext.*
+import org.gradle.api.*
 
-val test: KampMultiplatformExtension.() -> Unit = {
+val test: KampMultiPlatformExtension.() -> Unit = {
     val linux = linuxX64.copy(name = "linux")
-    val kotlind = Dependency("kotlin") {
-        val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-stdlib", "1.3.31")
-        common use cmn.copy(postfix = "common")
-        jvm use cmn.copy(postfix = "jdk8")
-        js use cmn.copy(postfix = "js")
-        ignore(linux)
-    }
 
-    val testd = Dependency("test") {
-        val cmn = MavenArtifact("org.jetbrains.kotlin", "kotlin-test", "1.3.31")
-        common use cmn.copy(postfix = "common")
-        jvm use cmn
-        js use cmn.copy(postfix = "js")
-        ignore(linux)
-    }
-    val k = MavenArtifact<JvmBasedTarget>("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31")
+    val kotlin = Group("org.jetbrains.kotlin")
+    val commonTargets = setOf(common("common"), jvm("jdk8"), js("js"))
+    val base = kotlin.base("1.3.31")(commonTargets)
+    val kotlind = base("kotlin-stdlib")
+    val testd = base("kotlin-test")
+
+    val k = kotlin.dependency("kotlin-test-annotations-common", "1.3.31")(jvm, jvm6)
 
     targets += linux + jvm + js
 
-    val kotlinTest =
-        Dependency(common, MavenArtifact("org.jetbrains.kotlin", "kotlin-test-annotations-common", "1.3.31"))
+    val kotlinTest = kotlin.dependency("kotlin-test-annotations-common", "1.3.31")(common)
 
     sourceSets {
+        //common
         common {
             main {
                 implementation(kotlind)
@@ -41,6 +35,7 @@ val test: KampMultiplatformExtension.() -> Unit = {
                 }
             }
         }
+        //jvmbased for android
         android {
             main {
                 implementation(k)
@@ -52,18 +47,9 @@ val test: KampMultiplatformExtension.() -> Unit = {
             }
         }
 
-        val s = (jvm + android).sourceSet("jvm6")
+        val s = (jvm + android).named("jvm6")
+        //jvmbased
         s {
-            main {
-                implementation(k)
-            }
-            test {
-                api {
-                    +k
-                }
-            }
-        }
-        android {
             main {
                 implementation(k)
             }
