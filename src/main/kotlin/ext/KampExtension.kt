@@ -13,7 +13,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
     protected open val targets: MutableSet<PlatformTarget> = mutableSetOf()
 
     internal val sources = mutableListOf<Source>()
-    protected val blocks = mutableListOf<KotlinExt.() -> Unit>()
+    private val blocks = mutableListOf<KotlinExt.() -> Unit>()
 
     open fun kotlin(block: KotlinExt.() -> Unit): Unit {
         blocks += block
@@ -34,7 +34,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
 
     protected abstract fun sourceTypeTargets(sourceType: SourceType): Map<Target, KotlinSourceSet>
 
-    fun configureSources() {
+    private fun configureSources() {
         sources
             .groupBy { it.targetSet.name }
             .mapValues { (name, sources) ->

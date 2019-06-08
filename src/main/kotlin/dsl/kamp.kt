@@ -2,7 +2,9 @@ package dev.whyoleg.kamp.dsl
 
 import dev.whyoleg.kamp.builder.*
 import dev.whyoleg.kamp.ext.*
+import dev.whyoleg.kamp.plugin.*
 import org.gradle.api.*
+import org.gradle.api.initialization.*
 import org.gradle.api.reflect.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
@@ -21,8 +23,8 @@ internal inline fun <reified Ext : KotlinProjectExtension, KampExt : KampExtensi
     apply {
         it.plugin(
             when (Ext::class) {
-                KotlinMultiplatformExtension::class -> "org.jetbrains.kotlin.multiplatform"
-                KotlinJvmProjectExtension::class    -> "org.jetbrains.kotlin.jvm"
+                KotlinMultiplatformExtension::class -> PluginName.kotlinMpp
+                KotlinJvmProjectExtension::class    -> PluginName.kotlinJvm
                 else                                -> error("Platform is not supported")
             }
         )
@@ -37,4 +39,8 @@ internal inline fun <reified Ext : KotlinProjectExtension, KampExt : KampExtensi
             else                            -> error("Platform is not supported")
         }).configure()
     }
+}
+
+fun Settings.kamp(block: KampSettings.() -> Unit) {
+    KampSettings(this).apply(block).configure()
 }

@@ -31,10 +31,7 @@ fun KotlinDependencyHandler.libraries(type: DependencySetType, target: Target, d
     }
     dependencies.forEach { dependency ->
         val (_, rawPostfix) = dependency.targets.find { it.target.name == target.name } ?: return
-        val (group, name, rawVersion) = dependency.raw
-        val postfix = rawPostfix?.let { "-$it" } ?: ""
-        val version = rawVersion?.let { ":$it" } ?: ""
-        val dep = "${group.name}:$name$postfix$version"
+        val dep = dependency.raw.string(rawPostfix)
         println("Add '$dep'")
         handler.add(dep)
     }

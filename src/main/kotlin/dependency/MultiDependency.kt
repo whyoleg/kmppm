@@ -4,15 +4,15 @@ import dev.whyoleg.kamp.target.*
 import kotlin.reflect.*
 
 data class MultiDependency(
-    override val raw: RawLibraryDependency,
+    override val raw: RawDependency,
     override val targets: Set<TargetWithPostfix<*>>
 ) : LibraryDependency(raw, targets)
 
 
-operator fun RawLibraryDependency.invoke(targets: Set<TargetWithPostfix<*>>): MultiDependency =
+operator fun RawDependency.invoke(targets: Set<TargetWithPostfix<*>>): MultiDependency =
     MultiDependency(this, targets)
 
-operator fun RawLibraryDependency.invoke(vararg targets: TargetWithPostfix<*>): MultiDependency =
+operator fun RawDependency.invoke(vararg targets: TargetWithPostfix<*>): MultiDependency =
     invoke(targets.toSet())
 
 operator fun MultiDependency.invoke(name: String): MultiDependency =
