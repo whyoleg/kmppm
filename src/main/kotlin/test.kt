@@ -16,7 +16,7 @@ val test: KampMultiPlatformExtension.() -> Unit = {
     val kotlind = base("kotlin-stdlib")(commonTargets)
     val testd = base("kotlin-test")(common("common"), jvm(), js("js"))
 
-    val k = kotlin.dependency("kotlin-test-annotations-common", "1.3.31")(jvm, jvm6)
+    val k = kotlin.dependency("kotlin-test-annotations-common", "1.3.31")(jvm, jvm6, android)
 
     targets += linux + jvm + js
 
