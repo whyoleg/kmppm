@@ -22,9 +22,9 @@ fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Itera
 
 fun KotlinDependencyHandler.packages(type: DependencySetType, dependencies: Iterable<PackageDependency>, target: Target) {
     val handler = handler(type)
-    dependencies.forEach { (raw, targets) ->
-        val (_, rawPostfix) = targets.find { it.target.name == target.name } ?: return
-        val dep = raw.string(rawPostfix)
+    dependencies.forEach { dependency ->
+        val (_, rawPostfix) = dependency.targets.find { it.target.name == target.name } ?: return
+        val dep = dependency.raw.string(rawPostfix)
         println("Add '$dep'")
         handler.add(dep)
     }
