@@ -38,9 +38,9 @@ class KampSettings(private val settings: Settings) {
                 repositoryBlocks.forEach { handler.it() }
             }
             it.resolutionStrategy.eachPlugin { details ->
-                plugins.forEach { plugin ->
-                    if (details.requested.id.id == plugin.name) {
-                        details.useModule(plugin.classpath.string())
+                plugins.forEach { (name, classpath) ->
+                    classpath?.takeIf { details.requested.id.id == name }?.let { raw ->
+                        details.useModule(raw.string())
                     }
                 }
             }
