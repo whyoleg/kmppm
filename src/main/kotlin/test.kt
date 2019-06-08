@@ -101,9 +101,53 @@ fun Project.m() {
         sourceSet {
             main {
                 implementation {
+                    //                    +serialization("1.3.31")
+//                    +kotlin
+//                    +atmoicfu
 
                 }
             }
         }
     }
+
+//    kamp {
+//        serialization = true
+//        atomicfu = true
+//
+//        packaging {
+//            jvm {
+//
+//            }
+//            android {
+//
+//            }
+//            js {
+//
+//            }
+//        }
+//        publishing {
+//            jvm {
+//
+//            }
+//            android {
+//
+//            }
+//            js {
+//
+//            }
+//        }
+//        sourceSets {
+//            jvm {
+//                main {
+//                    implementation {
+//                        +serialization("1.3.31")
+//                        +kotlin
+//                        +atmoicfu
+//
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
+
