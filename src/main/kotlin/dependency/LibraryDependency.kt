@@ -1,11 +1,3 @@
 package dev.whyoleg.kamp.dependency
 
-import dev.whyoleg.kamp.target.*
-
-abstract class LibraryDependency(
-    open val raw: RawDependency,
-    open val targets: Set<TargetWithPostfix<*>>
-) : Dependency
-
-internal fun String.toSnakeCase() =
-    asIterable().joinToString("") { if (it.isUpperCase()) "-${it.toLowerCase()}" else it.toString() }
+data class LibraryDependency(val path: String, val isFolder: Boolean = true) : Dependency

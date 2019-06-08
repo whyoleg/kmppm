@@ -10,4 +10,8 @@ object BuiltInPlugins {
 
     val shadow = Plugin(PluginName.shadowJar, BuiltInDependencies.shadow)
     val updates = Plugin(PluginName.updates, BuiltInDependencies.updates)
+
+    val application = Plugin(PluginName.application, null)
+    val docker = Plugin(PluginName.docker, BuiltInDependencies.docker)
+
 }

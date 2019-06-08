@@ -8,9 +8,10 @@ object BuiltInVersions {
     const val kotlinLanguage = "1.3"
 
     const val updates = "0.21.0"
-    const val detekt = "1.0.0-RC15"
-    const val jib = "1.0.2"
+    const val docker = "1.0.2"
     const val shadow = "5.0.0"
+
+    const val detekt = "1.0.0-RC15"
 
     const val kotlin = "1.3.40-eap-67"
     const val coroutines = "1.3.0-M1"

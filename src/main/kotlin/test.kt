@@ -3,6 +3,7 @@ package dev.whyoleg.kamp
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dsl.*
 import dev.whyoleg.kamp.ext.*
+import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.target.*
 import org.gradle.api.*
 
@@ -97,6 +98,10 @@ val test: KampMultiPlatformExtension.() -> Unit = {
 
 fun Project.m() {
     kampJvm {
+        with(BuiltInPlugins) {
+            plugins(serialization, atomicfu)
+        }
+
         sourceSet {
             main {
                 implementation {
@@ -110,8 +115,8 @@ fun Project.m() {
     }
 
 //    kamp {
-//        serialization = true
-//        atomicfu = true
+//        with
+//        plugins(serialization, atomicfu)
 //
 //        packaging {
 //            jvm {

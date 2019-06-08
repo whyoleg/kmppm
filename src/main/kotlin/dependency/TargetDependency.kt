@@ -7,7 +7,7 @@ import kotlin.reflect.*
 data class TargetDependency<T : Target>(
     override val raw: RawDependency,
     override val targets: Set<TargetWithPostfix<T>>
-) : LibraryDependency(raw, targets)
+) : PackageDependency(raw, targets)
 
 
 operator fun <T : Target> RawDependency.invoke(vararg targets: T): TargetDependency<T> =

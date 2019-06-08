@@ -34,8 +34,8 @@ internal inline fun <reified Ext : KotlinProjectExtension, KampExt : KampExtensi
     println()
     extensions.configure(object : TypeOf<Ext>() {}) {
         (when (it) {
-            is KotlinMultiplatformExtension -> (KampMultiPlatformExtension(it) as KampExt).apply(block)
-            is KotlinJvmProjectExtension    -> (KampJvmExtension(it) as KampExt).apply(block)
+            is KotlinMultiplatformExtension -> (KampMultiPlatformExtension(it, this) as KampExt).apply(block)
+            is KotlinJvmProjectExtension    -> (KampJvmExtension(it, this) as KampExt).apply(block)
             else                            -> error("Platform is not supported")
         }).configure()
     }

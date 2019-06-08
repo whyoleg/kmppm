@@ -9,4 +9,4 @@ open class Group(val name: String) : MainTargets {
 fun Group.dependency(name: String, version: String? = null): RawDependency =
     RawDependency(this, name, version)
 
-fun Group.version(version: String? = null): LibraryVersionDependency = LibraryVersionDependency(this, version)
+fun Group.version(version: String? = null): NEEDCHANGEVersionDependency = NEEDCHANGEVersionDependency(this, version)

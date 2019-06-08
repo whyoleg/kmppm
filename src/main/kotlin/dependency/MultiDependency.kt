@@ -6,7 +6,7 @@ import kotlin.reflect.*
 data class MultiDependency(
     override val raw: RawDependency,
     override val targets: Set<TargetWithPostfix<*>>
-) : LibraryDependency(raw, targets)
+) : PackageDependency(raw, targets)
 
 
 operator fun RawDependency.invoke(targets: Set<TargetWithPostfix<*>>): MultiDependency =
