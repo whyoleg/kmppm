@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package dev.whyoleg.kamp.base.target
+package dev.whyoleg.kamp.target
 
 import kotlin.reflect.*
 

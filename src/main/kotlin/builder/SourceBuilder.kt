@@ -1,7 +1,7 @@
 package dev.whyoleg.kamp.builder
 
-import dev.whyoleg.kamp.base.target.*
-import dev.whyoleg.kamp.base.target.Target
+import dev.whyoleg.kamp.target.*
+import dev.whyoleg.kamp.target.Target
 
 @PublishedApi
 internal data class Source(val targetSet: MultiTarget<*>, val configurations: List<SourceSetConfiguration>)

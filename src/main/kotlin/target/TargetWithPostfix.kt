@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.base.target
+package dev.whyoleg.kamp.target
 
 data class TargetWithPostfix<T : Target>(val target: T, val postfix: String?)
 

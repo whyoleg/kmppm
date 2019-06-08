@@ -1,7 +1,7 @@
 package dev.whyoleg.kamp.builder
 
-import dev.whyoleg.kamp.base.dependency.*
-import dev.whyoleg.kamp.base.target.Target
+import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.target.Target
 
 @PublishedApi
 internal data class DependencySet(val type: DependencySetType, val dependencies: Set<Dependency>)

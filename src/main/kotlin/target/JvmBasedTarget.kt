@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.base.target
+package dev.whyoleg.kamp.target
 
 abstract class JvmBasedTarget(name: String, configure: TargetProvider) : PlatformTarget(name, configure)
 

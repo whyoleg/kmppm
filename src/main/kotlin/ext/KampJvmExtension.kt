@@ -1,8 +1,8 @@
 package dev.whyoleg.kamp.ext
 
-import dev.whyoleg.kamp.base.target.*
-import dev.whyoleg.kamp.base.target.Target
 import dev.whyoleg.kamp.builder.*
+import dev.whyoleg.kamp.target.*
+import dev.whyoleg.kamp.target.Target
 import org.jetbrains.kotlin.gradle.dsl.*
 
 @KampDSL

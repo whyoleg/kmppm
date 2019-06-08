@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.base.target
+package dev.whyoleg.kamp.target
 
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*

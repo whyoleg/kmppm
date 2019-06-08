@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.base.target
+package dev.whyoleg.kamp.target
 
 interface MainTargets {
     //fast accessors

@@ -1,7 +1,6 @@
-package dev.whyoleg.kamp.base
+package dev.whyoleg.kamp.dependency
 
-import dev.whyoleg.kamp.base.dependency.*
-import dev.whyoleg.kamp.base.target.*
+import dev.whyoleg.kamp.target.*
 
 open class Group(val name: String) : MainTargets {
     override fun toString(): String = "Group(name='$name')"

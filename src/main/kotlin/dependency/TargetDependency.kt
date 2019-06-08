@@ -1,8 +1,7 @@
-package dev.whyoleg.kamp.base.dependency
+package dev.whyoleg.kamp.dependency
 
-import dev.whyoleg.kamp.base.*
-import dev.whyoleg.kamp.base.target.*
-import dev.whyoleg.kamp.base.target.Target
+import dev.whyoleg.kamp.target.*
+import dev.whyoleg.kamp.target.Target
 import kotlin.reflect.*
 
 data class TargetDependency<T : Target>(
