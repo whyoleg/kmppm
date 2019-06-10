@@ -9,18 +9,17 @@ import org.gradle.api.*
 
 val test: KampMultiPlatformExtension.() -> Unit = {
     val linux = linuxX64.copy(name = "linux")
-
-    val kotlin = Group("org.jetbrains.kotlin")
+    val kotlin = object : GroupVersionClassifier {
+        override val group: String = "org.jetbrains.kotlin"
+        override val version: String = "1.3.31"
+    }
     val commonTargets = setOf(common("common"), jvm("jdk8"), js("js"))
-    val base = kotlin.version("1.3.31")
-    val kotlind = base("kotlin-stdlib")(commonTargets)
-    val testd = base("kotlin-test")(common("common"), jvm(), js("js"))
+    val kotlind = kotlin.dependency("kotlin-stdlib", commonTargets)
+    val testd = kotlin.dependency("kotlin-test", common("common"), jvm(), js("js"))
+    val k = kotlin.dependency("kotlin-test-annotations-common", jvm, jvm6, android)
+    val kotlinTest = kotlin.dependency("kotlin-test", common("annotations-common"), jvm("junit"))
 
-    val k = kotlin.dependency("kotlin-test-annotations-common", "1.3.31")(jvm, jvm6, android)
-
-    targets += linux + jvm + js
-
-    val kotlinTest = kotlin.dependency("kotlin-test", "1.3.31")(common("annotations-common"), jvm("junit"))
+    targets += jvm + js // + linux
 
     sourceSets {
         //common

@@ -4,7 +4,7 @@ import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
 
 @PublishedApi
-internal data class Source(val targetSet: MultiTarget<*>, val configurations: List<SourceSetConfiguration>)
+internal data class Source(val multiTarget: MultiTarget<*>, val configurations: List<SourceSetConfiguration>)
 
 @KampDSL
 class SourceBuilder : MainTargets {
@@ -15,7 +15,7 @@ class SourceBuilder : MainTargets {
         T::class.simpleName.orEmpty().substringBefore("Target").decapitalize()
 
     inline operator fun <reified T : Target> T.invoke(crossinline build: SourceSetConfigurationBuilder<T>.() -> Unit) =
-        invoke(SourceSetConfigurationBuilder(setOf(this)).apply(build))
+        invoke(SourceSetConfigurationBuilder<T>().apply(build))
 
     inline operator fun <reified T : Target> T.invoke(builder: SourceSetConfigurationBuilder<T>) {
         sources += Source(MultiTarget(this), builder.data())
@@ -28,7 +28,7 @@ class SourceBuilder : MainTargets {
         named(name<T>())(builder)
 
     operator fun <T : PlatformTarget> MultiTarget<T>.invoke(build: SourceSetConfigurationBuilder<T>.() -> Unit) =
-        invoke(SourceSetConfigurationBuilder(targets).apply(build))
+        invoke(SourceSetConfigurationBuilder<T>().apply(build))
 
     operator fun <T : PlatformTarget> MultiTarget<T>.invoke(builder: SourceSetConfigurationBuilder<T>) {
         sources += Source(this, builder.data())

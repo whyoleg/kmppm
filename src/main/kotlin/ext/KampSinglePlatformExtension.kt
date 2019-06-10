@@ -17,7 +17,7 @@ abstract class KampSinglePlatformExtension<EXTENSION : KotlinProjectExtension, T
     fun sourceSet(builder: SourceSetConfigurationBuilder<TARGET>.() -> Unit) {
         sources += Source(
             MultiTarget(target.name, target::class, setOf(target)),
-            SourceSetConfigurationBuilder(setOf(target)).apply(builder).data()
+            SourceSetConfigurationBuilder<TARGET>().apply(builder).data()
         )
     }
 

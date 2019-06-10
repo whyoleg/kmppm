@@ -7,7 +7,7 @@ import dev.whyoleg.kamp.target.Target
 internal data class DependencySet(val type: DependencySetType, val dependencies: Set<Dependency>)
 
 @KampDSL
-class DependencySetBuilder<T : Target>(private val targets: Set<T>) {
+class DependencySetBuilder<T : Target> {
     //fast accessors
     val implementation get() = DependencySetType.implementation
     val api get() = DependencySetType.api
@@ -16,69 +16,26 @@ class DependencySetBuilder<T : Target>(private val targets: Set<T>) {
 
 
     private val dependencies = mutableMapOf<DependencySetType, MutableSet<Dependency>>()
-
     private fun DependencySetType.set(): MutableSet<Dependency> = dependencies.getOrPut(this) { mutableSetOf() }
 
-    operator fun DependencySetType.invoke(dependency: MultiDependency) {
-        set() += dependency
-    }
+    @JvmName("invoke1")
+    operator fun DependencySetType.invoke(dependencies: Set<UnTypedDependency>): Unit = set().plusAssign(dependencies)
 
-    @JvmName("invokeMulti")
-    operator fun DependencySetType.invoke(dependencies: Set<MultiDependency>) {
-        set() += dependencies
-    }
-
-    operator fun DependencySetType.invoke(vararg dependencies: MultiDependency) {
-        set() += dependencies
-    }
-
-    operator fun DependencySetType.invoke(dependency: ModuleDependency) {
-        set() += dependency
-    }
-
-    @JvmName("invokeModule")
-    operator fun DependencySetType.invoke(dependencies: Set<ModuleDependency>) {
-        set() += dependencies
-    }
-
-    operator fun DependencySetType.invoke(vararg dependencies: ModuleDependency) {
-        set() += dependencies
-    }
-
-    operator fun DependencySetType.invoke(dependency: TargetDependency<in T>) {
-        set() += dependency
-    }
-
-    @JvmName("invokeTarget")
-    operator fun DependencySetType.invoke(dependencies: Set<TargetDependency<in T>>) {
-        set() += dependencies
-    }
-
-    operator fun DependencySetType.invoke(vararg dependencies: TargetDependency<in T>) {
-        set() += dependencies
-    }
+    operator fun DependencySetType.invoke(vararg dependencies: UnTypedDependency): Unit = set().plusAssign(dependencies)
+    operator fun DependencySetType.invoke(dependencies: Set<TypedDependency<in T>>): Unit = set().plusAssign(dependencies)
+    operator fun DependencySetType.invoke(vararg dependencies: TypedDependency<in T>): Unit = set().plusAssign(dependencies)
 
     @Suppress("UNCHECKED_CAST")
     operator fun DependencySetType.invoke(closure: DependencyClosure<T>.() -> Unit) {
         set() += DependencyClosure<T>().apply(closure).dependencies
     }
 
-    internal fun data(): List<DependencySet> =
-        dependencies.map { (type, list) -> DependencySet(type, list) }
+    internal fun data(): List<DependencySet> = dependencies.map { (type, list) -> DependencySet(type, list) }
 
 }
 
 @KampDSL
 inline class DependencyClosure<T : Target>(internal val dependencies: MutableSet<Dependency> = mutableSetOf()) {
-    operator fun TargetDependency<in T>.unaryPlus() {
-        dependencies += this
-    }
-
-    operator fun MultiDependency.unaryPlus() {
-        dependencies += this
-    }
-
-    operator fun ModuleDependency.unaryPlus() {
-        dependencies += this
-    }
+    operator fun TypedDependency<in T>.unaryPlus(): Unit = dependencies.plusAssign(this)
+    operator fun UnTypedDependency.unaryPlus(): Unit = dependencies.plusAssign(this)
 }

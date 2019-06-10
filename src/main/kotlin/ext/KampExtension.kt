@@ -60,14 +60,14 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
 
     private fun configureSources() {
         sources
-            .groupBy { it.targetSet.name }
+            .groupBy { it.multiTarget.name }
             .mapValues { (name, sources) ->
-                require(sources.map { it.targetSet.targetCls }.toSet().size == 1)
+                require(sources.map { it.multiTarget.targetCls }.toSet().size == 1)
                 Source(
                     MultiTarget(
                         name,
-                        sources.first().targetSet.targetCls,
-                        sources.flatMap { it.targetSet.targets }.toSet()
+                        sources.first().multiTarget.targetCls,
+                        sources.flatMap { it.multiTarget.targets }.toSet()
                     ),
                     sources.flatMap { it.configurations }
                 )

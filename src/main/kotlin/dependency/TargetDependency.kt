@@ -1,25 +1,19 @@
 package dev.whyoleg.kamp.dependency
 
 import dev.whyoleg.kamp.target.*
-import dev.whyoleg.kamp.target.Target
-import kotlin.reflect.*
 
-data class TargetDependency<T : Target>(
+data class TargetDependency<T : PlatformTarget>(
     override val raw: RawDependency,
     override val targets: Set<TargetWithPostfix<T>>
-) : PackageDependency(raw, targets)
+) : PackageDependency(raw, targets), TypedDependency<T>
 
+operator fun <T : PlatformTarget> RawDependency.invoke(target: T): TargetDependency<T> = TargetDependency(this, setOf(target()))
+operator fun <T : PlatformTarget> RawDependency.invoke(target: TargetWithPostfix<T>): TargetDependency<T> = TargetDependency(this, setOf(target))
 
-operator fun <T : Target> RawDependency.invoke(vararg targets: T): TargetDependency<T> =
-    TargetDependency(this, targets.map { it.invoke() }.toSet())
+operator fun <T : PlatformTarget> RawDependency.invoke(vararg targets: T): TargetDependency<T> = TargetDependency(this, targets.postfixed<T>())
+operator fun <T : PlatformTarget> RawDependency.invoke(vararg targets: TargetWithPostfix<T>): TargetDependency<T> = TargetDependency(this, targets.toSet())
 
-operator fun <T : Target> RawDependency.invoke(target: TargetWithPostfix<T>): TargetDependency<T> =
-    TargetDependency(this, setOf(target))
+@JvmName("invoke1")
+operator fun <T : PlatformTarget> RawDependency.invoke(targets: Set<T>): TargetDependency<T> = TargetDependency(this, targets.postfixed<T>())
 
-operator fun <T : Target> RawDependency.invoke(target: T): TargetDependency<T> = this(target())
-
-operator fun <T : Target> TargetDependency<T>.invoke(name: String): TargetDependency<T> =
-    copy(raw = raw.copy(name = name))
-
-operator fun <T : Target> TargetDependency<T>.getValue(thisRef: Group, property: KProperty<*>): TargetDependency<T> =
-    this(property.name.toSnakeCase())
+operator fun <T : PlatformTarget> RawDependency.invoke(targets: Set<TargetWithPostfix<T>>): TargetDependency<T> = TargetDependency(this, targets)
