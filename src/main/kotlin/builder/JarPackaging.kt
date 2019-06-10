@@ -1,26 +1,30 @@
 package dev.whyoleg.kamp.builder
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.*
+import dev.whyoleg.kamp.plugin.*
+import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
+import org.gradle.api.plugins.*
 
-class JarPackaging(val project: Project) {
-    //mainclassname
-    //name
-    var name = project.path.replace(":", "-").drop(1)
-    private val packageName = name.replace("-", ".")
-    var className = "${project.group}.$packageName"//.AppKt"
+@Suppress("UnstableApiUsage")
+class JarPackaging : Packaging {
+    var className: String? = null
+    var name: String? = null
+    var minimize: Boolean = false
 
-//    val mainClassFile = project.file("src/jvmMain/kotlin/App.kt")
-//                require(mainClassFile.exists()) { "Class \"$mainClassFile\" doesn't exists" }
+    override val plugins: Set<Plugin> = with(BuiltInPlugins) { setOf(shadow, application) }
 
-    //
-
-    //
-    //            extensions.configure<JavaApplication>("application") { mainClassName = "$group.$packageName.AppKt" }
-    //            tasks.withType<ShadowJar> {
-    //                baseName = appName
-    //                version = this@project.version.toString()
-    //                classifier = null
-    //                from(jvm.mainCompilation().output)
-    //                configurations = listOf(jvm.mainCompilation().runtimeDependencyFiles) as MutableList<Configuration>
-    //            }
+    override fun Project.configure() {
+        val plainName = path.replace(":", "-").drop(1)
+        val packageName = plainName.replace("-", ".")
+        val name = this@JarPackaging.name ?: plainName
+        val className = this@JarPackaging.className ?: "$group.$packageName.AppKt"
+        extensions.configure<JavaApplication>("application") { it.mainClassName = className }
+        tasks.withType(ShadowJar::class.java) {
+            it.baseName = name
+            it.version = this.version.toString()
+            it.classifier = null
+            if (minimize) it.minimize()
+        }
+    }
 }

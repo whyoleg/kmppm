@@ -1,0 +1,57 @@
+package dev.whyoleg.kamp.builder
+
+import com.google.cloud.tools.jib.gradle.*
+import dev.whyoleg.kamp.plugin.*
+import dev.whyoleg.kamp.plugin.Plugin
+import org.gradle.api.*
+
+@Suppress("UnstableApiUsage")
+class DockerPackaging : Packaging {
+    var baseImage: String? = null
+    var image: String? = null
+    var jdk: Int? = null
+    var tags: Set<String> = emptySet()
+    var ports: Set<String> = emptySet()
+    var versionTag: Boolean = true
+    var latestTag: Boolean = true
+    var className: String? = null
+    var jvmFlags: List<String> = emptyList()
+
+    //                    listOf(
+//                        "-server",
+//                        "-Djava.awt.headless=true",
+//                        "-XX:+UnlockExperimentalVMOptions",
+//                        "-XX:+UseG1GC",
+//                        "-XX:MaxGCPauseMillis=100",
+//                        "-XX:+UseStringDeduplication",
+//                        "-Djava.library.path=\"/app/libs:\${PATH}\""
+//                    )
+
+    override val plugins: Set<Plugin> = setOf(BuiltInPlugins.docker)
+
+    override fun Project.configure() {
+        val imageName = image ?: path.replace(":", "-").drop(1)
+        val packageName = imageName.replace("-", ".")
+        extensions.configure<JibExtension>("jib") { jib ->
+            jib.apply {
+                from {
+                    it.image = baseImage ?: "adoptopenjdk/openjdk$jdk:alpine-slim"
+                }
+                to {
+                    it.image = imageName
+                    val tags = mutableSetOf<String>()
+                    tags += this@DockerPackaging.tags
+                    if (versionTag) tags += version.toString()
+                    if (latestTag) tags += "latest"
+                    it.tags = tags
+                }
+                container {
+                    it.ports = ports.toList()
+                    it.mainClass = className ?: "$group.$packageName.AppKt"
+                    it.useCurrentTimestamp = true
+                    it.jvmFlags = jvmFlags
+                }
+            }
+        }
+    }
+}

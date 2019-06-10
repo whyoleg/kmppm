@@ -17,6 +17,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
     internal val sources = mutableListOf<Source>()
     private val blocks = mutableListOf<KotlinExt.() -> Unit>()
     private val plugins = mutableSetOf<Plugin>()
+    private val packagings = mutableListOf<Packaging>()
 
     open fun kotlin(block: KotlinExt.() -> Unit): Unit {
         blocks += block
@@ -30,21 +31,26 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
         this.plugins += plugins
     }
 
-    fun packaging(block: Packaging.() -> Unit) {
-
+    fun packaging(block: PackagingBuilder.() -> Unit) {
+        packagings += PackagingBuilder().apply(block).packaging
     }
 
     @PublishedApi
     internal fun configure() {
+        configurePlugins()
         configureTargets()
         configureSources()
+        configurePackaging()
         configureKotlin()
-        configurePlugins()
     }
 
     protected abstract fun sourceTypeTargets(sourceType: SourceType): Map<Target, KotlinSourceSet>
 
     protected abstract fun configureTargets()
+
+    private fun configurePackaging() {
+        packagings.forEach { it.run { project.configure() } }
+    }
 
     private fun configureKotlin() {
         blocks.forEach { ext.it() }
@@ -52,7 +58,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
 
     private fun configurePlugins() {
         project.apply {
-            plugins.forEach { plugin ->
+            (plugins + packagings.flatMap(Packaging::plugins)).toSet().forEach { plugin ->
                 it.plugin(plugin.name)
             }
         }

@@ -1,6 +1,5 @@
 package dev.whyoleg.kamp.ext
 
-import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.module.*
 import dev.whyoleg.kamp.plugin.*
 import org.gradle.api.artifacts.dsl.*
