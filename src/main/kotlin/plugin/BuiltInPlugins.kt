@@ -13,5 +13,5 @@ object BuiltInPlugins {
 
     val application = Plugin(PluginName.application, null)
     val docker = Plugin(PluginName.docker, BuiltInDependencies.docker)
-
+    val detekt = Plugin(PluginName.detekt, BuiltInDependencies.detekt)
 }

@@ -30,5 +30,6 @@ object BuiltInDependencies {
     val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", BuiltInVersions.shadow)
     val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", BuiltInVersions.updates)
     val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", BuiltInVersions.docker)
+    val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", BuiltInVersions.detekt)
 
 }

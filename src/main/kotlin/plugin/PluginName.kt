@@ -9,4 +9,5 @@ internal object PluginName {
     const val updates = "com.github.ben-manes.versions"
     const val application = "org.gradle.application"
     const val docker = "com.google.cloud.tools.jib"
+    const val detekt = "io.gitlab.arturbosch.detekt"
 }
