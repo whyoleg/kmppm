@@ -2,6 +2,7 @@ package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.builder.*
 import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.module.*
 import dev.whyoleg.kamp.target.Target
 import org.gradle.api.*
 import org.jetbrains.kotlin.gradle.plugin.*
@@ -12,7 +13,7 @@ interface DependencyHandler : KotlinDependencyHandler {
 
 private fun KotlinDependencyHandler.handler(type: DependencySetType) = DependencyHelper.byType(type, this)
 
-fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Iterable<ModuleDependency>) {
+fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Iterable<Module>) {
     val handler = handler(type)
     dependencies.forEach { (name) ->
         println("Add $name")

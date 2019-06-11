@@ -3,6 +3,7 @@ package dev.whyoleg.kamp.ext
 import dev.whyoleg.kamp.*
 import dev.whyoleg.kamp.builder.*
 import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.module.*
 import dev.whyoleg.kamp.plugin.Plugin
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
@@ -112,7 +113,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
 
                     list.forEach { (type, dependencies) ->
                         println(type.name.capitalize())
-                        val modules = dependencies.filterIsInstance<ModuleDependency>()
+                        val modules = dependencies.filterIsInstance<Module>()
                         println("Try modules: ${modules.joinToString(",", "[", "]")}")
                         sourceSet.dependencies { modules(type, modules) }
 
