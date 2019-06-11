@@ -19,12 +19,8 @@ class KampSettings(private val settings: Settings) {
         this.plugins += plugins
     }
 
-    fun modules(vararg modules: Module) {
-        this.modules += modules
-    }
-
-    fun modules(modules: Iterable<Module>) {
-        this.modules += modules
+    fun modules(root: RootModule) {
+        modules += root.also(RootModule::lazy).all()
     }
 
     fun repositories(block: RepositoryHandler.() -> Unit) {
