@@ -105,8 +105,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
                             languageVersion = settings.languageVersion
                             apiVersion = settings.apiVersion
                             progressiveMode = settings.progressiveMode
-                            settings.languageFeatures.forEach { enableLanguageFeature(it.value) }
-                            settings.experimentalAnnotations.forEach { useExperimentalAnnotation(it.value) }
+                            settings.allFeatures.forEach(this::enableLanguageFeature)
+                            settings.allAnnotations.forEach(this::useExperimentalAnnotation)
                         }
                     }
 
