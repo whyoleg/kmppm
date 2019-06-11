@@ -34,7 +34,7 @@ class KampSettings(private val settings: Settings) {
     fun configure() {
         settings.pluginManagement {
             it.repositories { handler ->
-                repositoryBlocks.forEach { handler.it() }
+                (repositoryBlocks + plugins.map(Plugin::repositoryProvider)).forEach { handler.it() }
             }
             it.resolutionStrategy.eachPlugin { details ->
                 plugins.forEach { (name, classpath) ->

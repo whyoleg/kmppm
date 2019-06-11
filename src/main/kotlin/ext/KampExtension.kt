@@ -18,6 +18,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
     private val blocks = mutableListOf<KotlinExt.() -> Unit>()
     private val plugins = mutableSetOf<Plugin>()
     private val packagings = mutableListOf<Packaging>()
+    private var settings = SettingsBuilder()
 
     open fun kotlin(block: KotlinExt.() -> Unit): Unit {
         blocks += block
@@ -33,6 +34,10 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
 
     fun packaging(block: PackagingBuilder.() -> Unit) {
         packagings += PackagingBuilder().apply(block).packaging
+    }
+
+    fun languageSettings(block: SettingsBuilder.() -> Unit) {
+        settings = SettingsBuilder().apply(block)
     }
 
     @PublishedApi
@@ -94,6 +99,17 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
                         val targetSourceSets = multiTarget.targets.associateWith { sourceSet }
                         sourceSet to targetSourceSets
                     }
+
+                    targetSourceSets.values.forEach { set ->
+                        set.languageSettings.apply {
+                            languageVersion = settings.languageVersion
+                            apiVersion = settings.apiVersion
+                            progressiveMode = settings.progressiveMode
+                            settings.languageFeatures.forEach { enableLanguageFeature(it.value) }
+                            settings.experimentalAnnotations.forEach { useExperimentalAnnotation(it.value) }
+                        }
+                    }
+
                     list.forEach { (type, dependencies) ->
                         println(type.name.capitalize())
                         val modules = dependencies.filterIsInstance<ModuleDependency>()

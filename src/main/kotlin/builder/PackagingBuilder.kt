@@ -3,11 +3,11 @@ package dev.whyoleg.kamp.builder
 class PackagingBuilder {
     internal val packaging: MutableList<Packaging> = mutableListOf()
 
-    fun jar(block: JarPackaging.() -> Unit) {
+    fun jar(block: JarPackaging.() -> Unit = {}) {
         packaging += JarPackaging().apply(block)
     }
 
-    fun docker(block: DockerPackaging.() -> Unit) {
+    fun docker(block: DockerPackaging.() -> Unit = {}) {
         packaging += DockerPackaging().apply(block)
     }
 
