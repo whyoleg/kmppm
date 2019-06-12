@@ -5,7 +5,7 @@ version = "0.1.0"
 
 plugins {
     id("com.github.ben-manes.versions") version "0.21.0"
-    kotlin("jvm") version "1.3.31"
+    kotlin("jvm")
     `java-gradle-plugin`
     `maven-publish`
 }
@@ -15,10 +15,12 @@ repositories {
     google()
     mavenCentral()
     maven { setUrl("https://plugins.gradle.org/m2/") }
+    maven { setUrl("https://kotlin.bintray.com/kotlinx") }
+    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.31")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.40-eap-105")
     compileOnly("com.github.jengelman.gradle.plugins:shadow:5.0.0")
     compileOnly("com.github.ben-manes:gradle-versions-plugin:0.21.0")
     compileOnly("gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.3.0")

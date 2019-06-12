@@ -1,11 +1,8 @@
 package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.dependency.*
-import dev.whyoleg.kamp.dsl.*
 import dev.whyoleg.kamp.ext.*
-import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.target.*
-import org.gradle.api.*
 
 val test: KampMultiPlatformExtension.() -> Unit = {
     val linux = linuxX64.copy(name = "linux")
@@ -94,63 +91,21 @@ val test: KampMultiPlatformExtension.() -> Unit = {
 //        }
 //    }
 }
-
-fun Project.m() {
-    kampJvm {
-        with(BuiltInPlugins) {
-            plugins(serialization, atomicfu)
-        }
-
-        sourceSet {
-            main {
-                implementation {
-                    //                    +serialization("1.3.31")
-//                    +kotlin
-//                    +atmoicfu
-
-                }
-            }
-        }
-    }
-
-//    kamp {
-//        with
-//        plugins(serialization, atomicfu)
 //
-//        packaging {
-//            jvm {
+//val depTest: KampMultiPlatformExtension.() -> Unit = {
+//    with(BuiltInPlugins) { plugins(serialization, atomicfu) }
 //
-//            }
-//            android {
+//    sourceSets {
+//        common {
+//            main {
+//                with(BuiltInDependencies.Kotlin) {
+//                    implementation(stdlib)
+//                }
 //
-//            }
-//            js {
-//
-//            }
-//        }
-//        publishing {
-//            jvm {
-//
-//            }
-//            android {
-//
-//            }
-//            js {
-//
-//            }
-//        }
-//        sourceSets {
-//            jvm {
-//                main {
-//                    implementation {
-//                        +serialization("1.3.31")
-//                        +kotlin
-//                        +atmoicfu
-//
-//                    }
+//                with(BuiltInDependencies.KotlinX) {
+//                    implementation(coroutines, atomicfu, serialization)
 //                }
 //            }
 //        }
 //    }
-}
-
+//}

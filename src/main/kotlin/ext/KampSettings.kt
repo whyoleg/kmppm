@@ -35,6 +35,7 @@ class KampSettings(private val settings: Settings) {
             it.resolutionStrategy.eachPlugin { details ->
                 plugins.forEach { (name, classpath) ->
                     classpath?.takeIf { details.requested.id.id == name }?.let { raw ->
+                        println(name to classpath)
                         details.useModule(raw.string())
                     }
                 }

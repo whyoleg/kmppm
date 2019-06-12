@@ -12,7 +12,7 @@ object BuiltInVersions {
     const val shadow = "5.0.0"
     const val detekt = "1.0.0-RC15"
 
-    const val kotlin = "1.3.31"
+    const val kotlin = "1.3.40-eap-105"
     const val coroutines = "1.3.0-M1"
     const val serialization = "0.11.1-1.3.40-eap-67-2"
     const val atomicfu = "0.12.8"
