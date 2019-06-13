@@ -14,9 +14,18 @@ class SourceSetConfigurationBuilder<T : Target> {
     private val sources = mutableMapOf<SourceType, MutableList<DependencySet>>()
     private fun SourceType.list(): MutableList<DependencySet> = sources.getOrPut(this) { mutableListOf() }
 
-    operator fun SourceType.invoke(builder: DependencySetBuilder<T>.() -> Unit) {
+    operator fun SourceType.invoke(
+        sources: List<String> = emptyList(),
+        resources: List<String> = emptyList(),
+        builder: DependencySetBuilder<T>.() -> Unit
+    ) {
         list() += DependencySetBuilder<T>().apply(builder).data()
     }
+
+    fun kotlinOptions(block: () -> Unit) {
+
+    }
+
 
     @PublishedApi
     internal fun data(): List<SourceSetConfiguration> = sources.map { (type, list) -> SourceSetConfiguration(type, list) }

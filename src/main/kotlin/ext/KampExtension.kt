@@ -38,7 +38,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
     }
 
     fun languageSettings(block: SettingsBuilder.() -> Unit) {
-        settings = SettingsBuilder().apply(block)
+        settings.apply(block)
     }
 
     @PublishedApi

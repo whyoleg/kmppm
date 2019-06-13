@@ -2,6 +2,7 @@ package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.ext.*
+import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.target.*
 
 val test: KampMultiPlatformExtension.() -> Unit = {
@@ -18,10 +19,18 @@ val test: KampMultiPlatformExtension.() -> Unit = {
 
     targets += jvm + js // + linux
 
+    languageSettings {
+
+    }
+
     sourceSets {
         //common
         common {
-            main {
+            kotlinOptions {
+
+            }
+
+            main(sources = listOf(), resources = listOf()) {
                 implementation(kotlind)
             }
             test {
@@ -91,21 +100,37 @@ val test: KampMultiPlatformExtension.() -> Unit = {
 //        }
 //    }
 }
-//
-//val depTest: KampMultiPlatformExtension.() -> Unit = {
-//    with(BuiltInPlugins) { plugins(serialization, atomicfu) }
-//
-//    sourceSets {
-//        common {
-//            main {
-//                with(BuiltInDependencies.Kotlin) {
-//                    implementation(stdlib)
-//                }
-//
-//                with(BuiltInDependencies.KotlinX) {
-//                    implementation(coroutines, atomicfu, serialization)
-//                }
-//            }
-//        }
-//    }
-//}
+
+val depTest: KampMultiPlatformExtension.() -> Unit = {
+    sourceSets {
+        common {
+            main {
+                with(BuiltInDependencies.Kotlin) {
+                    implementation(stdlib)
+                }
+            }
+            test {
+                with(BuiltInDependencies.Kotlin) {
+                    implementation(test, annotations)
+                }
+            }
+        }
+    }
+}
+
+val depTest2: KampMultiPlatformExtension.() -> Unit = {
+    with(BuiltInPlugins) { plugins(serialization, atomicfu) }
+
+    sourceSets {
+        common {
+            main {
+                with(BuiltInDependencies.Kotlin) {
+                    implementation(stdlib)
+                }
+                with(BuiltInDependencies.KotlinX) {
+                    implementation(coroutines, atomicfu, serialization)
+                }
+            }
+        }
+    }
+}
