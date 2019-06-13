@@ -23,3 +23,5 @@ fun <T : PlatformTarget> TargetClassifier<T>.dependency(
     name: String,
     version: String
 ): TargetDependency<T> = RawDependency(group, name, version)(targets)
+
+inline operator fun <C : Classifier> C.invoke(block: C.() -> Unit): Unit = block()

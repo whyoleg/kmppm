@@ -7,6 +7,7 @@ interface MainTargets {
     val jvm6 get() = Companion.jvm6
     val jvm8 get() = Companion.jvm8
     val android get() = Companion.android
+    val jvmOnly get() = Companion.jvmOnly
     val jvmBased get() = Companion.jvmBased
     val js get() = Companion.js
     val linuxX64 get() = Companion.linuxX64
@@ -20,7 +21,8 @@ interface MainTargets {
 
         val android = AndroidTarget()
 
-        val jvmBased = jvm + jvm6 + jvm8 + android
+        val jvmOnly = jvm + jvm6 + jvm8
+        val jvmBased = jvmOnly + android
 
         val js = JsTarget()
         val linuxX64 = LinuxX64Target()

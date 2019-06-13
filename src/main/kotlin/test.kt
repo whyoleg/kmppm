@@ -9,12 +9,12 @@ val test: KampMultiPlatformExtension.() -> Unit = {
     val linux = linuxX64.copy(name = "linux")
     val kotlin = object : GroupVersionClassifier {
         override val group: String = "org.jetbrains.kotlin"
-        override val version: String = "1.3.31"
+        override var version: String = "1.3.31"
     }
     val commonTargets = setOf(common("common"), jvm("jdk8"), js("js"))
     val kotlind = kotlin.dependency("kotlin-stdlib", commonTargets)
     val testd = kotlin.dependency("kotlin-test", common("common"), jvm(), js("js"))
-    val k = kotlin.dependency("kotlin-test-annotations-common", jvm, jvm6, android)
+    val k = kotlin.dependency("kotlin-test-annotations-common", jvm(), jvm6(), android())
     val kotlinTest = kotlin.dependency("kotlin-test", common("annotations-common"), jvm("junit"))
 
     targets += jvm + js // + linux
@@ -105,12 +105,12 @@ val depTest: KampMultiPlatformExtension.() -> Unit = {
     sourceSets {
         common {
             main {
-                with(BuiltInDependencies.Kotlin) {
+                BuiltInDependencies.kotlin {
                     implementation(stdlib)
                 }
             }
             test {
-                with(BuiltInDependencies.Kotlin) {
+                BuiltInDependencies.kotlin {
                     implementation(test, annotations)
                 }
             }
@@ -124,11 +124,16 @@ val depTest2: KampMultiPlatformExtension.() -> Unit = {
     sourceSets {
         common {
             main {
-                with(BuiltInDependencies.Kotlin) {
-                    implementation(stdlib)
-                }
-                with(BuiltInDependencies.KotlinX) {
-                    implementation(coroutines, atomicfu, serialization)
+                with(BuiltInDependencies) {
+                    kotlin {
+                        implementation(stdlib)
+                    }
+                    kotlinx {
+                        implementation(atomicfu, serialization)
+                        coroutines {
+                            implementation(core)
+                        }
+                    }
                 }
             }
         }

@@ -21,7 +21,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val ext
     private val packagings = mutableListOf<Packaging>()
     private var settings = SettingsBuilder()
 
-    open fun kotlin(block: KotlinExt.() -> Unit): Unit {
+    fun ext(block: KotlinExt.() -> Unit) {
         blocks += block
     }
 
