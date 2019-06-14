@@ -5,13 +5,13 @@ import dev.whyoleg.kamp.version.*
 
 object BuiltInDependencies {
 
-    val kotlin = Kotlin()
+    val kotlin by lazy(::Kotlin)
 
     class Kotlin : GroupVersionClassifier {
         override val group: String = "org.jetbrains.kotlin"
         override var version: String = BuiltInVersions.kotlin
 
-        val plugin = Plugin()
+        val plugin by lazy(::Plugin)
 
         inner class Plugin {
             val gradle = raw("kotlin-gradle-plugin")
@@ -24,18 +24,18 @@ object BuiltInDependencies {
         val reflect = dependency("kotlin-reflect", jvm())
     }
 
-    val kotlinx = Kotlinx()
+    val kotlinx by lazy(::Kotlinx)
 
     class Kotlinx : GroupClassifier {
         override val group: String = "org.jetbrains.kotlinx"
 
-        val plugin = Plugin()
+        val plugin by lazy(::Plugin)
 
         inner class Plugin {
             val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions.atomicfu)
         }
 
-        val coroutines = Coroutines()
+        val coroutines by lazy(::Coroutines)
 
         inner class Coroutines : GroupClassifier by kotlinx, VersionClassifier {
             override var version: String = BuiltInVersions.coroutines
@@ -49,14 +49,14 @@ object BuiltInDependencies {
         val atomicfu = dependency("atomicfu", BuiltInVersions.atomicfu, jvm(), common("common"))
     }
 
-    val ktor = Ktor()
+    val ktor by lazy(::Ktor)
 
     class Ktor : GroupVersionClassifier, MultiTargetClassifier {
         override val group: String = "org.jetbrains.kotlinx"
         override var version: String = BuiltInVersions.ktor
         override val targets: Set<TargetWithPostfix<*>> = setOf(jvm("jvm"), common())
 
-        val client = Client()
+        val client by lazy(::Client)
 
         inner class Client {
             val core = dependency("ktor-client-core")

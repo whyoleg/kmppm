@@ -28,12 +28,18 @@ class KampSettings(private val settings: Settings) {
     }
 
     fun configure() {
+        println("PLUGINS: \n${plugins.joinToString("\n")}")
         settings.pluginManagement {
             it.repositories { handler ->
-                (repositoryBlocks + plugins.map(Plugin::repositoryProvider)).forEach { handler.it() }
+                (repositoryBlocks + plugins.map(Plugin::repositoryProvider)).forEach {
+                    println(it)
+                    handler.it()
+                }
             }
             it.resolutionStrategy.eachPlugin { details ->
+                println("CONFIGURE: ${details.requested.id.id}")
                 plugins.forEach { (name, classpath) ->
+                    println("TRY: $name with $classpath")
                     classpath?.takeIf { details.requested.id.id == name }?.let { raw ->
                         println(name to classpath)
                         details.useModule(raw.string())
