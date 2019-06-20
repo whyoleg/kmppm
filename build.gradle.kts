@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.40-eap-105")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.40")
     compileOnly("com.github.jengelman.gradle.plugins:shadow:5.0.0")
     compileOnly("com.github.ben-manes:gradle-versions-plugin:0.21.0")
     compileOnly("gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.3.0")
