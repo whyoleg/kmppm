@@ -38,3 +38,12 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-progressive", "-XXLanguage:+InlineClasses", "-XXLanguage:+NewInference")
     }
 }
+
+gradlePlugin {
+    plugins {
+        create("kamp") {
+            id = "dev.whyoleg.kamp"
+            implementationClass = "dev.whyoleg.kamp.KampPlugin"
+        }
+    }
+}

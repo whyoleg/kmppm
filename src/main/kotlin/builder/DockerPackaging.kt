@@ -34,12 +34,12 @@ class DockerPackaging : Packaging {
         val imageName = image ?: iName
         val packageName = iName.replace("-", ".")
         val mainClassName = className ?: "$group.$packageName.AppKt"
-        val image = baseImage ?: "adoptopenjdk/openjdk$jdk:alpine-slim"
+        val dockerImage = baseImage ?: "adoptopenjdk/openjdk$jdk:alpine-slim"
         println("Setup dpcker '$imageName' with main class '$mainClassName'")
         extensions.configure<JibExtension>("jib") { jib ->
             jib.apply {
                 from {
-                    it.image = image
+                    it.image = dockerImage
                 }
                 to {
                     it.image = imageName

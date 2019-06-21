@@ -5,9 +5,7 @@ import dev.whyoleg.kamp.dependency.*
 object BuiltInPlugins {
     val kotlinMpp = Plugin(PluginName.kotlinMpp, BuiltInDependencies.kotlin.plugin.gradle)
     val kotlinJvm = Plugin(PluginName.kotlinJvm, BuiltInDependencies.kotlin.plugin.gradle)
-    val serialization = Plugin(PluginName.serialization, BuiltInDependencies.kotlin.plugin.serialization) {
-        maven { it.setUrl("https://dl.bintray.com/kotlin/kotlin-eap") } //TODO remove after 1.3.40 release
-    }
+    val serialization = Plugin(PluginName.serialization, BuiltInDependencies.kotlin.plugin.serialization)
     val atomicfu = Plugin(PluginName.atomicfu, BuiltInDependencies.kotlinx.plugin.atomicfu) {
         maven { it.setUrl("https://kotlin.bintray.com/kotlinx") }
     }
