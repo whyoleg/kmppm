@@ -10,4 +10,6 @@ internal object PluginName {
     const val application = "org.gradle.application"
     const val docker = "com.google.cloud.tools.jib"
     const val detekt = "io.gitlab.arturbosch.detekt"
+
+    internal const val kamp = "dev.whyoleg.kamp"
 }

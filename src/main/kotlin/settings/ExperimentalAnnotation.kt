@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp
+package dev.whyoleg.kamp.settings
 
 enum class ExperimentalAnnotation(val value: String) {
     ObsoleteCoroutinesApi("kotlinx.coroutines.ObsoleteCoroutinesApi"),

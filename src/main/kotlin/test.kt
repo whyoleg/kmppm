@@ -7,9 +7,9 @@ import dev.whyoleg.kamp.target.*
 
 val test: KampMultiPlatformExtension.() -> Unit = {
     val linux = linuxX64.copy(name = "linux")
-    val kotlin = object : GroupVersionClassifier {
+    val kotlin = object : GroupVersionClassifier, MavenCentralProviderClassifier {
         override val group: String = "org.jetbrains.kotlin"
-        override var version: String = "1.3.31"
+        override val version: String = "1.3.31"
     }
     val commonTargets = setOf(common("common"), jvm("jdk8"), js("js"))
     val kotlind = kotlin.dependency("kotlin-stdlib", commonTargets)
@@ -17,7 +17,7 @@ val test: KampMultiPlatformExtension.() -> Unit = {
     val k = kotlin.dependency("kotlin-test-annotations-common", jvm(), jvm6(), android())
     val kotlinTest = kotlin.dependency("kotlin-test", common("annotations-common"), jvm("junit"))
 
-    targets += jvm + js // + linux
+    targets(jvm, js) // + linux
 
     languageSettings {
 
@@ -130,9 +130,9 @@ val depTest2: KampMultiPlatformExtension.() -> Unit = {
                     }
                     kotlinx {
                         implementation(atomicfu, serialization)
-                        coroutines {
-                            implementation(core)
-                        }
+                    }
+                    coroutines {
+                        implementation(core)
                     }
                 }
             }

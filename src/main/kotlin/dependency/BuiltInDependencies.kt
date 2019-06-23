@@ -7,9 +7,9 @@ object BuiltInDependencies {
 
     val kotlin by lazy(::Kotlin)
 
-    class Kotlin : GroupVersionClassifier {
+    open class Kotlin : GroupVersionClassifier, MavenCentralProviderClassifier {
         override val group: String = "org.jetbrains.kotlin"
-        override var version: String = BuiltInVersions.kotlin
+        override val version: String = BuiltInVersions.kotlin
 
         val plugin by lazy(::Plugin)
 
@@ -26,7 +26,7 @@ object BuiltInDependencies {
 
     val kotlinx by lazy(::Kotlinx)
 
-    class Kotlinx : GroupClassifier {
+    open class Kotlinx : GroupClassifier, KotlinxProviderClassifier {
         override val group: String = "org.jetbrains.kotlinx"
 
         val plugin by lazy(::Plugin)
@@ -35,25 +35,26 @@ object BuiltInDependencies {
             val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions.atomicfu)
         }
 
-        val coroutines by lazy(::Coroutines)
-
-        inner class Coroutines : GroupClassifier by kotlinx, VersionClassifier {
-            override var version: String = BuiltInVersions.coroutines
-
-            val javaFX = dependency("kotlinx-coroutines-javafx", jvm())
-            val slf4j = dependency("kotlinx-coroutines-slf4j", jvm())
-            val core = dependency("kotlinx-coroutines", common("core-common"), jvm8("jdk8"), jvm("core"), android("android"))
-        }
-
         val serialization = dependency("kotlinx-serialization-runtime", BuiltInVersions.serialization, jvm(), common("common"))
         val atomicfu = dependency("atomicfu", BuiltInVersions.atomicfu, jvm(), common("common"))
     }
 
+    val coroutines by lazy(::Coroutines)
+
+    open class Coroutines : GroupVersionClassifier, KotlinxProviderClassifier {
+        override val group: String = "org.jetbrains.kotlinx"
+        override val version: String = BuiltInVersions.coroutines
+
+        val javaFX = dependency("kotlinx-coroutines-javafx", jvm())
+        val slf4j = dependency("kotlinx-coroutines-slf4j", jvm())
+        val core = dependency("kotlinx-coroutines", common("core-common"), jvm8("jdk8"), jvm("core"), android("android"))
+    }
+
     val ktor by lazy(::Ktor)
 
-    class Ktor : GroupVersionClassifier, MultiTargetClassifier {
+    open class Ktor : GroupVersionClassifier, KtorProviderClassifier, MultiTargetClassifier {
         override val group: String = "org.jetbrains.kotlinx"
-        override var version: String = BuiltInVersions.ktor
+        override val version: String = BuiltInVersions.ktor
         override val targets: Set<TargetWithPostfix<*>> = setOf(jvm("jvm"), common())
 
         val client by lazy(::Client)
@@ -65,9 +66,10 @@ object BuiltInDependencies {
         }
     }
 
-    val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", BuiltInVersions.shadow)
-    val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", BuiltInVersions.updates)
-    val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", BuiltInVersions.docker)
-    val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", BuiltInVersions.detekt)
+    val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", BuiltInVersions.shadow, DependencyProviders.gradlePluginPortal)
+    val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", BuiltInVersions.updates, DependencyProviders.gradlePluginPortal)
+    val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", BuiltInVersions.docker, DependencyProviders.google)
+    val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", BuiltInVersions.detekt, DependencyProviders.gradlePluginPortal)
 
+    val kamp = RawDependency("dev.whyoleg.kamp", "kamp", "0.1.0", DependencyProviders.mavenLocal)
 }

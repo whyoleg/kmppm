@@ -7,13 +7,14 @@ import dev.whyoleg.kamp.target.Target
 import org.gradle.api.*
 import org.jetbrains.kotlin.gradle.plugin.*
 
-interface DependencyHandler : KotlinDependencyHandler {
-    fun add(artifact: Any)
+operator fun DependencyProvider.plus(anotherProvider: DependencyProvider): DependencyProvider = {
+    this@plus()
+    anotherProvider()
 }
 
 private fun KotlinDependencyHandler.handler(type: DependencySetType) = DependencyHelper.byType(type, this)
 
-fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Iterable<Module>) {
+internal fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Iterable<Module>) {
     val handler = handler(type)
     dependencies.forEach { (name) ->
         println("Add $name")
@@ -21,7 +22,7 @@ fun KotlinDependencyHandler.modules(type: DependencySetType, dependencies: Itera
     }
 }
 
-fun KotlinDependencyHandler.packages(type: DependencySetType, dependencies: Iterable<PackageDependency>, target: Target) {
+internal fun KotlinDependencyHandler.packages(type: DependencySetType, dependencies: Iterable<PackageDependency>, target: Target) {
     val handler = handler(type)
     dependencies.forEach { dependency ->
         val (_, rawPostfix) = dependency.targets.find { it.target.name == target.name } ?: return
@@ -31,17 +32,17 @@ fun KotlinDependencyHandler.packages(type: DependencySetType, dependencies: Iter
     }
 }
 
-fun KotlinDependencyHandler.libraries(type: DependencySetType, dependencies: Iterable<LibraryDependency>, project: Project) {
+internal fun KotlinDependencyHandler.libraries(type: DependencySetType, dependencies: Iterable<LibraryDependency>, project: Project) {
     val handler = handler(type)
     dependencies.forEach { (path, isFolder) ->
         val folder = if (isFolder) "folder" else ""
         println("Add $folder $path")
-        if (isFolder) {
-            handler.add(project.fileTree(path))
-        } else {
-            handler.add(path)
-        }
+        if (isFolder) handler.add(project.fileTree(path)) else handler.add(path)
     }
+}
+
+private interface DependencyHandler : KotlinDependencyHandler {
+    fun add(artifact: Any)
 }
 
 private typealias DependencyConverter = KotlinDependencyHandler.() -> DependencyHandler

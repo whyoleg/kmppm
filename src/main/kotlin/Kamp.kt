@@ -4,7 +4,7 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.version.*
 
-object KampBuiltIn {
+object Kamp {
     val versions = BuiltInVersions
     val plugins = BuiltInPlugins
     val dependencies = BuiltInDependencies
