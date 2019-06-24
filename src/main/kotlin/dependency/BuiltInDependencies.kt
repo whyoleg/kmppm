@@ -29,14 +29,14 @@ object BuiltInDependencies {
     open class Kotlinx : GroupClassifier, KotlinxProviderClassifier {
         override val group: String = "org.jetbrains.kotlinx"
 
-        val plugin by lazy(::Plugin)
+        open val plugin by lazy(::Plugin)
 
-        inner class Plugin {
-            val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions.atomicfu)
+        open inner class Plugin {
+            open val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions.atomicfu)
         }
 
-        val serialization = dependency("kotlinx-serialization-runtime", BuiltInVersions.serialization, jvm(), common("common"))
-        val atomicfu = dependency("atomicfu", BuiltInVersions.atomicfu, jvm(), common("common"))
+        open val serialization = dependency("kotlinx-serialization-runtime", BuiltInVersions.serialization, jvm(), common("common"))
+        open val atomicfu = dependency("atomicfu", BuiltInVersions.atomicfu, jvm(), common("common"))
     }
 
     val coroutines by lazy(::Coroutines)
@@ -53,7 +53,7 @@ object BuiltInDependencies {
     val ktor by lazy(::Ktor)
 
     open class Ktor : GroupVersionClassifier, KtorProviderClassifier, MultiTargetClassifier {
-        override val group: String = "org.jetbrains.kotlinx"
+        override val group: String = "io.ktor"
         override val version: String = BuiltInVersions.ktor
         override val targets: Set<TargetWithPostfix<*>> = setOf(jvm("jvm"), common())
 

@@ -35,7 +35,12 @@ class DependencySetBuilder<T : Target> {
 }
 
 @KampDSL
-inline class DependencyClosure<T : Target>(internal val dependencies: MutableSet<Dependency> = mutableSetOf()) {
+class DependencyClosure<T : Target>(internal val dependencies: MutableSet<Dependency> = mutableSetOf()) {
     operator fun TypedDependency<in T>.unaryPlus(): Unit = dependencies.plusAssign(this)
     operator fun UnTypedDependency.unaryPlus(): Unit = dependencies.plusAssign(this)
+
+    operator fun Set<TypedDependency<in T>>.unaryPlus(): Unit = dependencies.plusAssign(this)
+
+    @JvmName("unaryPlus1")
+    operator fun Set<UnTypedDependency>.unaryPlus(): Unit = dependencies.plusAssign(this)
 }
