@@ -5,7 +5,7 @@ import dev.whyoleg.kamp.target.*
 data class TargetDependency<T : PlatformTarget>(
     override val raw: RawDependency,
     override val targets: Set<TargetWithPostfix<T>>
-) : PackageDependency(raw, targets), TypedDependency<T>
+) : PackageDependency, TypedDependency<T>
 
 
 operator fun <T : PlatformTarget> RawDependency.invoke(target: TargetWithPostfix<T>): TargetDependency<T> = TargetDependency(this, setOf(target))

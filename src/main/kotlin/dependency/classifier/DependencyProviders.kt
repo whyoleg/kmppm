@@ -1,4 +1,13 @@
-package dev.whyoleg.kamp.dependency
+package dev.whyoleg.kamp.dependency.classifier
+
+import org.gradle.api.artifacts.dsl.*
+
+typealias DependencyProvider = RepositoryHandler.() -> Unit
+
+operator fun DependencyProvider.plus(anotherProvider: DependencyProvider): DependencyProvider = {
+    this@plus()
+    anotherProvider()
+}
 
 interface DependencyProviders {
     val google get() = Companion.google
@@ -8,6 +17,7 @@ interface DependencyProviders {
     val gradlePluginPortal get() = Companion.gradlePluginPortal
     fun maven(url: String): DependencyProvider = Companion.maven(url)
 
+    @Suppress("UnstableApiUsage")
     companion object {
         val google: DependencyProvider = { google() }
         val mavenLocal: DependencyProvider = { mavenLocal() }

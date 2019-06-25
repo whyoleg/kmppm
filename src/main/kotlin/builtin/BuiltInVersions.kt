@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.version
+package dev.whyoleg.kamp.builtin
 
 object BuiltInVersions {
 

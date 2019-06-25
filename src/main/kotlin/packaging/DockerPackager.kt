@@ -1,12 +1,12 @@
-package dev.whyoleg.kamp.builder
+package dev.whyoleg.kamp.packaging
 
 import com.google.cloud.tools.jib.gradle.*
-import dev.whyoleg.kamp.plugin.*
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
 @Suppress("UnstableApiUsage")
-class DockerPackaging : Packaging {
+class DockerPackager : Packager {
     var baseImage: String? = null
     var image: String? = null
     var jdk: Int? = null
@@ -44,7 +44,7 @@ class DockerPackaging : Packaging {
                 to {
                     it.image = imageName
                     val tags = mutableSetOf<String>()
-                    tags += this@DockerPackaging.tags
+                    tags += this@DockerPackager.tags
                     if (versionTag) tags += version.toString()
                     if (latestTag) tags += "latest"
                     it.tags = tags

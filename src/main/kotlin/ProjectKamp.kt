@@ -1,6 +1,5 @@
 package dev.whyoleg.kamp
 
-import dev.whyoleg.kamp.builder.*
 import dev.whyoleg.kamp.ext.*
 import org.gradle.api.*
 import org.gradle.api.initialization.*

@@ -1,5 +1,7 @@
 package dev.whyoleg.kamp.dependency
 
+import dev.whyoleg.kamp.dependency.classifier.*
+
 data class RawDependency(val group: String, val name: String, val version: String?, val provider: DependencyProvider?) {
     fun string(rawPostfix: String? = null): String {
         val (group, name, rawVersion) = this

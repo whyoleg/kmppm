@@ -1,6 +1,4 @@
-package dev.whyoleg.kamp.builder
-
-import dev.whyoleg.kamp.settings.*
+package dev.whyoleg.kamp.settings
 
 class SettingsBuilder {
     var languageVersion: String = "1.3"

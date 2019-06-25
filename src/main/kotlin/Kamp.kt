@@ -1,8 +1,6 @@
 package dev.whyoleg.kamp
 
-import dev.whyoleg.kamp.dependency.*
-import dev.whyoleg.kamp.plugin.*
-import dev.whyoleg.kamp.version.*
+import dev.whyoleg.kamp.builtin.*
 
 object Kamp {
     val versions = BuiltInVersions

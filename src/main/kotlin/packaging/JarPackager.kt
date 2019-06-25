@@ -1,13 +1,13 @@
-package dev.whyoleg.kamp.builder
+package dev.whyoleg.kamp.packaging
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.*
-import dev.whyoleg.kamp.plugin.*
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 import org.gradle.api.plugins.*
 
 @Suppress("UnstableApiUsage")
-class JarPackaging : Packaging {
+class JarPackager : Packager {
     var className: String? = null
     var name: String? = null
     var minimize: Boolean = false
@@ -17,8 +17,8 @@ class JarPackaging : Packaging {
     override fun Project.configure() {
         val plainName = path.replace(":", "-").drop(1)
         val packageName = plainName.replace("-", ".")
-        val name = this@JarPackaging.name ?: plainName
-        val className = this@JarPackaging.className ?: "$group.$packageName.AppKt"
+        val name = this@JarPackager.name ?: plainName
+        val className = this@JarPackager.className ?: "$group.$packageName.AppKt"
         println("Setup jar '$name' with main class '$className'")
         extensions.configure<JavaApplication>("application") { it.mainClassName = className }
         tasks.withType(ShadowJar::class.java) {

@@ -1,8 +1,8 @@
 package dev.whyoleg.kamp
 
-import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.dependency.classifier.*
 import dev.whyoleg.kamp.ext.*
-import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.target.*
 
 val test: KampMultiPlatformExtension.() -> Unit = {
@@ -52,7 +52,7 @@ val test: KampMultiPlatformExtension.() -> Unit = {
             }
         }
 
-        val s = (jvm + android).named("jvm6")
+        val s = setOf(jvm, android).named("jvm6")
         //jvmbased
         s {
             main {
@@ -64,7 +64,7 @@ val test: KampMultiPlatformExtension.() -> Unit = {
                 }
             }
         }
-        (jvm + jvm6) {
+        setOf(jvm, jvm6).invoke {
             main {
                 implementation(k)
             }

@@ -1,5 +1,6 @@
-package dev.whyoleg.kamp.dependency
+package dev.whyoleg.kamp.dependency.classifier
 
+import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.target.*
 
 interface GroupClassifier : Classifier {
@@ -7,7 +8,8 @@ interface GroupClassifier : Classifier {
 }
 
 
-fun GroupClassifier.raw(name: String, version: String, provider: DependencyProvider): RawDependency = RawDependency(group, name, version, provider)
+fun GroupClassifier.raw(name: String, version: String, provider: DependencyProvider): RawDependency =
+    RawDependency(group, name, version, provider)
 
 fun <T : PlatformTarget> GroupClassifier.dependency(
     name: String,

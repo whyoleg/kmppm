@@ -5,7 +5,7 @@ import dev.whyoleg.kamp.target.*
 data class MultiDependency(
     override val raw: RawDependency,
     override val targets: Set<TargetWithPostfix<*>>
-) : PackageDependency(raw, targets), UnTypedDependency
+) : PackageDependency, UnTypedDependency
 
 
 operator fun RawDependency.invoke(target: TargetWithPostfix<*>): MultiDependency = MultiDependency(this, setOf(target))

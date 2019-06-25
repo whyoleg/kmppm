@@ -29,12 +29,17 @@ interface Module : UnTypedDependency {
 }
 
 abstract class RootModule : Module {
-    override val name: String = ""
-    override val path: String? = null
-    override val ignored: Boolean = false
-    override val childModules: MutableSet<Module> = mutableSetOf()
-    override fun named(childName: String, path: String?): Module = ModuleImpl("$name:$childName", path).also { childModules += it }
+    final override val name: String = ""
+    final override val path: String? = null
+    final override val ignored: Boolean = false
+    final override val childModules: MutableSet<Module> = mutableSetOf()
+    final override fun named(childName: String, path: String?): Module = ModuleImpl("$name:$childName", path).also { childModules += it }
+
+    /**
+     * Hack to initialize module structure based on delegation
+     */
     internal fun lazy(): Unit = lazy(this)
+
     private fun lazy(any: Any): Unit = any::class.nestedClasses.forEach { it.objectInstance?.let(this::lazy) }
 }
 
@@ -43,6 +48,9 @@ internal data class ModuleImpl(override val name: String, override val path: Str
     override fun named(childName: String, path: String?): Module = ModuleImpl("$name:$childName", path).also { childModules += it }
 }
 
+/**
+ * Hack classes for delegation
+ */
 inline class ModuleDelegate(private val path: String?) {
     operator fun provideDelegate(thisRef: Module, property: KProperty<*>): InternalModule = InternalModule(thisRef.named(property.name, path))
 }
