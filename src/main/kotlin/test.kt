@@ -17,20 +17,21 @@ val test: KampMultiPlatformExtension.() -> Unit = {
     val k = kotlin.dependency("kotlin-test-annotations-common", jvm(), jvm6(), android())
     val kotlinTest = kotlin.dependency("kotlin-test", common("annotations-common"), jvm("junit"))
 
-    targets(jvm, js) // + linux
+    targets {
+        jvm {
+            jvmTarget = "1.8"
+        }
+        js()
+    }
 
     languageSettings {
 
     }
 
-    sourceSets {
+    sources {
         //common
         common {
-            kotlinOptions {
-
-            }
-
-            main(sources = listOf(), resources = listOf()) {
+            main(src = listOf(), res = listOf()) {
                 implementation(kotlind)
             }
             test {
@@ -102,7 +103,7 @@ val test: KampMultiPlatformExtension.() -> Unit = {
 }
 
 val depTest: KampMultiPlatformExtension.() -> Unit = {
-    sourceSets {
+    sources {
         common {
             main {
                 BuiltInDependencies.kotlin {
@@ -121,7 +122,7 @@ val depTest: KampMultiPlatformExtension.() -> Unit = {
 val depTest2: KampMultiPlatformExtension.() -> Unit = {
     with(BuiltInPlugins) { plugins(serialization, atomicfu) }
 
-    sourceSets {
+    sources {
         common {
             main {
                 with(BuiltInDependencies) {

@@ -5,19 +5,27 @@ import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
+import dev.whyoleg.kamp.target.configuration.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 
 @KampDSL
-abstract class KampSinglePlatformExtension<KotlinExt : KotlinProjectExtension, T : PlatformTarget>(private val target: T) : KampExtension<KotlinExt>() {
+abstract class KampSinglePlatformExtension<KotlinExt : KotlinSingleTargetExtension, T : PlatformTarget, TO : TargetOptions>(
+    private val target: T,
+    private val options: TO
+) : KampExtension<KotlinExt>() {
 
-    fun sourceSet(builder: SourceSetBuilder<T>.() -> Unit) {
-        val (options, sourceSets) = SourceSetBuilder<T>().apply(builder).data()
-        sources += Source(MultiTarget(target), options, sourceSets)
+    fun source(builder: SourceSetBuilder<T>.() -> Unit) {
+        sources += Source(MultiTarget(target), SourceSetBuilder<T>().apply(builder).data())
+    }
+
+    fun options(block: TO.() -> Unit) {
+        options.apply(block)
     }
 
     override fun configureTargets(ext: KotlinExt) {
-        targets += target
+        targetConfigurations += TargetConfiguration(target, options)
+        configureTarget(ext.target, options)
     }
 
     override fun sourceTypeTargets(ext: KotlinExt, sourceType: SourceSetType): Map<Target, KotlinSourceSet> =

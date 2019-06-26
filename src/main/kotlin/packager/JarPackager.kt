@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.packaging
+package dev.whyoleg.kamp.packager
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.*
 import dev.whyoleg.kamp.builtin.*

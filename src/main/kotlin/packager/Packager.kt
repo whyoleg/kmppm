@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.packaging
+package dev.whyoleg.kamp.packager
 
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*

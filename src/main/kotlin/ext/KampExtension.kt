@@ -3,31 +3,33 @@ package dev.whyoleg.kamp.ext
 import dev.whyoleg.kamp.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.configuration.*
-import dev.whyoleg.kamp.packaging.*
+import dev.whyoleg.kamp.packager.*
 import dev.whyoleg.kamp.plugin.Plugin
 import dev.whyoleg.kamp.settings.*
 import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
+import dev.whyoleg.kamp.target.configuration.*
 import org.gradle.api.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.reflect.*
 
 @KampDSL
 abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
-    abstract val extPlugin: Plugin
-    abstract val extPluginClass: KClass<KotlinExt>
+    protected abstract val extPlugin: Plugin
+    protected abstract val extPluginClass: KClass<KotlinExt>
 
-    protected val targets = mutableSetOf<PlatformTarget>()
-
-
+    internal val targetConfigurations = mutableSetOf<TargetConfiguration>()
     internal val sources = mutableListOf<Source>()
     private val extensionBlocks = mutableListOf<KotlinExt.() -> Unit>()
     private val plugins = mutableSetOf<Plugin>()
     private val packagers = mutableListOf<Packager>()
-    private val settings = SettingsBuilder()
+    private val settings = LanguageSettings()
+
+    //builders
 
     fun ext(block: KotlinExt.() -> Unit) {
         extensionBlocks += block
@@ -45,9 +47,11 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
         packagers += PackagersBuilder().apply(block).packagers
     }
 
-    fun languageSettings(block: SettingsBuilder.() -> Unit) {
+    fun languageSettings(block: LanguageSettings.() -> Unit) {
         settings.apply(block)
     }
+
+    //configuration
 
     internal fun configure(project: Project) {
         project.apply { it.plugin(extPlugin.name) }
@@ -71,11 +75,34 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
 
     protected abstract fun configureTargets(ext: KotlinExt)
 
+    internal fun configureTarget(kotlinTarget: KotlinTarget, options: TargetOptions) {
+        kotlinTarget.compilations.all {
+            it.kotlinOptions {
+                allWarningsAsErrors = settings.allWarningsAsErrors
+                suppressWarnings = settings.suppressWarnings
+
+                //TODO generalize configuration
+                when {
+                    this is KotlinJvmOptions && options is JvmTargetOptions -> {
+                        options.configure(this)
+                        kotlinTarget.project.tasks.withType(KotlinCompile::class.java) {
+                            it.sourceCompatibility = options.sourceCompatibility
+                            it.targetCompatibility = options.targetCompatibility
+                        }
+                    }
+                    this is KotlinJsOptions && options is JsTargetOptions   -> options.configure(this)
+                    else                                                    -> error("")
+                }
+            }
+        }
+    }
+
     private fun configureDependencyProviders(project: Project) {
         val repositories = project.repositories
         sources
             .flatMap(Source::sourceSets)
-            .flatMap(SourceSet::dependencyConfigurations)
+            .map(SourceSet::configuration)
+            .flatMap(SourceSetConfiguration::dependencyConfigurations)
             .flatMap(DependencyConfiguration::dependencies)
             .filterIsInstance<PackageDependency>()
             .map(PackageDependency::raw)
@@ -118,14 +145,15 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
         source: Source,
         ext: KotlinExt
     ): List<Triple<KotlinSourceSet, Map<Target, KotlinSourceSet>, List<DependencyConfiguration>>> {
-        val (multiTarget, options, configurations) = source
+        val (multiTarget, configurations) = source
         val isMeta = multiTarget.targets.singleOrNull() is MetaTarget
 
         println("Configure $multiTarget")
 
-        return configurations.map { (sourceSetType, list) ->
+        return configurations.map { (sourceSetType, config) ->
+            val (srcFolders, resFolders, list) = config
             println("SourceSet: ${multiTarget.name}${sourceSetType.name.capitalize()}")
-            if (isMeta) {
+            val triple = if (isMeta) {
                 val targetSourceSets = sourceTypeTargets(ext, sourceSetType)
                 val sourceSet = targetSourceSets[Target.common]!!
                 Triple(sourceSet, targetSourceSets, list)
@@ -134,6 +162,11 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
                 val targetSourceSets = multiTarget.targets.associateWith { sourceSet }
                 Triple(sourceSet, targetSourceSets, list)
             }
+            triple.first.run {
+                kotlin.srcDirs(*srcFolders.toTypedArray())
+                resources.srcDirs(*resFolders.toTypedArray())
+            }
+            triple
         }
     }
 
@@ -144,7 +177,6 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
                 require(sources.map { it.multiTarget.targetCls }.toSet().size == 1)
                 Source(
                     MultiTarget(name, sources.first().multiTarget.targetCls, sources.flatMap { it.multiTarget.targets }.toSet()),
-                    sources.first().kotlinOption, //TODO merge options
                     sources.flatMap(Source::sourceSets)
                 )
             }.values.toList()

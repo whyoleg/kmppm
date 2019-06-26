@@ -5,8 +5,8 @@ import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
-import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
+import dev.whyoleg.kamp.target.configuration.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 import kotlin.reflect.*
@@ -16,23 +16,24 @@ class KampMultiPlatformExtension : KampExtension<KotlinMultiplatformExtension>()
     override val extPlugin: Plugin = BuiltInPlugins.kotlinMpp
     override val extPluginClass: KClass<KotlinMultiplatformExtension> = KotlinMultiplatformExtension::class
 
-    fun targets(vararg targets: PlatformTarget) {
-        this.targets += targets
-    }
-
-    fun targets(targets: Iterable<PlatformTarget>) {
-        this.targets += targets
-    }
-
-    fun sourceSets(builder: SourceBuilder.() -> Unit) {
+    fun sources(builder: SourceBuilder.() -> Unit) {
         sources += SourceBuilder().apply(builder).sources
     }
 
+    fun targets(builder: TargetConfigurationBuilder.() -> Unit) {
+        targetConfigurations += TargetConfigurationBuilder().apply(builder).data()
+    }
+
+    private fun targets(): List<Target> = targetConfigurations.map(TargetConfiguration::target) + Target.common
+
     override fun configureTargets(ext: KotlinMultiplatformExtension) {
-        (targets + Target.common).forEach { it.provider(ext) }
+        Target.common.provider(ext)
+        targetConfigurations.forEach { (target, options) ->
+            configureTarget(target.provider(ext), options)
+        }
     }
 
     override fun sourceTypeTargets(ext: KotlinMultiplatformExtension, sourceType: SourceSetType): Map<Target, KotlinSourceSet> =
-        (targets + Target.common).associateWith { ext.sourceSets.maybeCreate(it.name + sourceType.name.capitalize()) }
+        targets().associateWith { ext.sourceSets.maybeCreate(it.name + sourceType.name.capitalize()) }
 
 }

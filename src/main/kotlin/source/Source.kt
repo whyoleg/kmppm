@@ -1,7 +1,6 @@
 package dev.whyoleg.kamp.source
 
 import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.settings.*
 import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
@@ -9,7 +8,6 @@ import dev.whyoleg.kamp.target.Target
 @PublishedApi
 internal data class Source(
     val multiTarget: MultiTarget<*>,
-    val kotlinOption: KotlinOptionsBuilder<*>,
     val sourceSets: List<SourceSet>
 )
 
@@ -28,8 +26,7 @@ class SourceBuilder : MainTargets {
 
     @PublishedApi
     internal fun <T : Target> MultiTarget<T>.internal(build: SourceSetBuilder<T>.() -> Unit) {
-        val (options, sourceSets) = SourceSetBuilder<T>().apply(build).data()
-        sources += Source(this, options, sourceSets)
+        sources += Source(this, SourceSetBuilder<T>().apply(build).data())
     }
 
 }

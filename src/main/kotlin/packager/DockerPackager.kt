@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.packaging
+package dev.whyoleg.kamp.packager
 
 import com.google.cloud.tools.jib.gradle.*
 import dev.whyoleg.kamp.builtin.*

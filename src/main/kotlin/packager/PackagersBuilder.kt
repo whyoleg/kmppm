@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.packaging
+package dev.whyoleg.kamp.packager
 
 class PackagersBuilder {
     internal val packagers: MutableList<Packager> = mutableListOf()
