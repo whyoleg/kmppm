@@ -4,7 +4,7 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.classifier.*
 import dev.whyoleg.kamp.target.*
 
-class BuiltInDependencies(val versions: BuiltInVersions) {
+open class BuiltInDependencies(private val versions: BuiltInVersions) {
 
     val kotlin by lazy(::Kotlin)
 

@@ -2,11 +2,11 @@ package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.builtin.*
 
-class BuiltIn(val versions: BuiltInVersions = BuiltInVersions()) {
+internal class BuiltIn(val versions: BuiltInVersions = BuiltInVersions()) {
     val dependencies = BuiltInDependencies(versions)
     val plugins = BuiltInPlugins(dependencies)
 
-    companion object {
+    internal companion object {
         val Default: BuiltIn = BuiltIn()
     }
 }

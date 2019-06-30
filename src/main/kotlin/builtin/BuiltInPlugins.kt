@@ -2,7 +2,7 @@ package dev.whyoleg.kamp.builtin
 
 import dev.whyoleg.kamp.plugin.*
 
-class BuiltInPlugins(dependencies: BuiltInDependencies) {
+open class BuiltInPlugins(dependencies: BuiltInDependencies) {
     val kotlinMpp = Plugin("kotlin-multiplatform", dependencies.kotlin.plugin.gradle)
     val kotlinJvm = Plugin("org.jetbrains.kotlin.jvm", dependencies.kotlin.plugin.gradle)
     val serialization = Plugin("kotlinx-serialization", dependencies.kotlin.plugin.serialization)

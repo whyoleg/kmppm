@@ -7,7 +7,7 @@ import org.gradle.api.*
 import org.gradle.api.plugins.*
 
 @Suppress("UnstableApiUsage")
-class JarPackager(builtIn: BuiltIn) : Packager {
+class JarPackager internal constructor(builtIn: BuiltIn) : Packager {
     var className: String? = null
     var name: String? = null
     var minimize: Boolean = false

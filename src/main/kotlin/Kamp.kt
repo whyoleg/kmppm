@@ -6,7 +6,8 @@ import org.gradle.api.*
 import org.gradle.api.initialization.*
 
 @KampDSL
-fun Settings.kamp(block: KampSettings.() -> Unit): Unit = KampSettings().apply(block).configure(this)
+fun Settings.kamp(block: KampSettings.() -> Unit): Unit =
+    KampSettings().apply(block).configure(this)
 
 @KampDSL
 fun Project.kampBuild(versions: BuiltInVersions = BuiltIn.Default.versions, block: KampBuild.() -> Unit): Unit =

@@ -4,5 +4,5 @@ import dev.whyoleg.kamp.*
 import dev.whyoleg.kamp.builtin.*
 
 abstract class KampBase(versions: BuiltInVersions) {
-    val builtIn: BuiltIn = BuiltIn(versions)
+    internal val builtIn: BuiltIn = BuiltIn(versions)
 }

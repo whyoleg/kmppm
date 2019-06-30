@@ -2,7 +2,7 @@ package dev.whyoleg.kamp.packager
 
 import dev.whyoleg.kamp.*
 
-class PackagersBuilder(val builtIn: BuiltIn) {
+class PackagersBuilder internal constructor(private val builtIn: BuiltIn) {
     internal val packagers: MutableList<Packager> = mutableListOf()
 
     fun jar(block: JarPackager.() -> Unit = {}) {

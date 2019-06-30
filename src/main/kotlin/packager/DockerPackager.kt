@@ -6,7 +6,7 @@ import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
 @Suppress("UnstableApiUsage")
-class DockerPackager(builtIn: BuiltIn) : Packager {
+class DockerPackager internal constructor(builtIn: BuiltIn) : Packager {
     var baseImage: String? = null
     var image: String? = null
     var jdk: Int? = null
