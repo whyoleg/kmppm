@@ -20,7 +20,7 @@ private fun DependencyConfigurationType.handler(): KotlinDependencyHandler.(Any)
 internal fun KotlinDependencyHandler.modules(type: DependencyConfigurationType, dependencies: Iterable<ModuleDependency>) {
     val handler = type.handler()
     dependencies.forEach { (name) ->
-        println("Add $name")
+        //println("Add $name")
         handler(project(name))
     }
 }
@@ -30,7 +30,7 @@ internal fun KotlinDependencyHandler.packages(type: DependencyConfigurationType,
     dependencies.forEach { dependency ->
         val (_, rawPostfix) = dependency.targets.find { it.target.name == target.name } ?: return
         val dep = dependency.raw.string(rawPostfix)
-        println("Add '$dep'")
+        //println("Add '$dep'")
         handler(dep)
     }
 }
@@ -39,7 +39,7 @@ internal fun KotlinDependencyHandler.libraries(type: DependencyConfigurationType
     val handler = type.handler()
     dependencies.forEach { (path, isFolder) ->
         val folder = if (isFolder) "folder" else ""
-        println("Add $folder $path")
+        //println("Add $folder $path")
         if (isFolder) handler(project.fileTree(path)) else handler(path)
     }
 }

@@ -19,7 +19,7 @@ class JarPackager(builtIn: BuiltIn) : Packager {
         val packageName = plainName.replace("-", ".")
         val name = this@JarPackager.name ?: plainName
         val className = this@JarPackager.className ?: "$group.$packageName.AppKt"
-        println("Setup jar '$name' with main class '$className'")
+        //println("Setup jar '$name' with main class '$className'")
         extensions.configure<JavaApplication>("application") { it.mainClassName = className }
         tasks.withType(ShadowJar::class.java) {
             it.baseName = name

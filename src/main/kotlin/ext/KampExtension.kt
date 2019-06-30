@@ -120,22 +120,22 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
             .forEach { (mainSourceSet, targetSourceSets, list) ->
                 configureLanguageSettings(targetSourceSets.values)
                 list.forEach { (type, dependencies) ->
-                    println()
-                    println(type.name.capitalize())
+                    //println()
+                    //println(type.name.capitalize())
 
                     val modules = dependencies.filterIsInstance<ModuleDependency>()
                     val libraries = dependencies.filterIsInstance<LibraryDependency>()
                     mainSourceSet.dependencies {
-                        println("Try modules: ${modules.joinToString(",", "[", "]")}")
+                        //println("Try modules: ${modules.joinToString(",", "[", "]")}")
                         modules(type, modules)
 
-                        println("Try libraries: ${libraries.joinToString(",", "[", "]")}")
+                        //println("Try libraries: ${libraries.joinToString(",", "[", "]")}")
                         libraries(type, libraries, project)
                     }
 
                     val packages = dependencies.filterIsInstance<PackageDependency>()
                     targetSourceSets.forEach { (target, sourceSet) ->
-                        println("Try $target with packages: ${packages.joinToString(",", "[", "]")}")
+                        //println("Try $target with packages: ${packages.joinToString(",", "[", "]")}")
                         sourceSet.dependencies { packages(type, packages, target) }
                     }
                 }
@@ -149,11 +149,11 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
         val (multiTarget, configurations) = source
         val isMeta = multiTarget.targets.singleOrNull() is MetaTarget
 
-        println("Configure $multiTarget")
+        //println("Configure $multiTarget")
 
         return configurations.map { (sourceSetType, config) ->
             val (srcFolders, resFolders, list) = config
-            println("SourceSet: ${multiTarget.name}${sourceSetType.name.capitalize()}")
+            //println("SourceSet: ${multiTarget.name}${sourceSetType.name.capitalize()}")
             val triple = if (isMeta) {
                 val targetSourceSets = sourceTypeTargets(ext, sourceSetType)
                 val sourceSet = targetSourceSets[Target.common]!!
