@@ -1,18 +1,18 @@
 package dev.whyoleg.kamp.packager
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.*
-import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 import org.gradle.api.plugins.*
 
 @Suppress("UnstableApiUsage")
-class JarPackager : Packager {
+class JarPackager(builtIn: BuiltIn) : Packager {
     var className: String? = null
     var name: String? = null
     var minimize: Boolean = false
 
-    override val plugins: Set<Plugin> = with(BuiltInPlugins) { setOf(shadow, application) }
+    override val plugins: Set<Plugin> = with(builtIn.plugins) { setOf(shadow, application) }
 
     override fun Project.configure() {
         val plainName = path.replace(":", "-").drop(1)

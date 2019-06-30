@@ -4,13 +4,13 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.classifier.*
 import dev.whyoleg.kamp.target.*
 
-object BuiltInDependencies {
+class BuiltInDependencies(val versions: BuiltInVersions) {
 
     val kotlin by lazy(::Kotlin)
 
-    open class Kotlin : GroupVersionClassifier, MavenCentralProviderClassifier {
+    inner class Kotlin : GroupVersionClassifier, MavenCentralProviderClassifier {
         override val group: String = "org.jetbrains.kotlin"
-        override val version: String = BuiltInVersions.kotlin
+        override val version: String = versions.kotlin
 
         val plugin by lazy(::Plugin)
 
@@ -27,24 +27,24 @@ object BuiltInDependencies {
 
     val kotlinx by lazy(::Kotlinx)
 
-    open class Kotlinx : GroupClassifier, KotlinxProviderClassifier {
+    inner class Kotlinx : GroupClassifier, KotlinxProviderClassifier {
         override val group: String = "org.jetbrains.kotlinx"
 
-        open val plugin by lazy(::Plugin)
+        val plugin by lazy(::Plugin)
 
-        open inner class Plugin {
-            open val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions.atomicfu)
+        inner class Plugin {
+            val atomicfu = raw("atomicfu-gradle-plugin", versions.atomicfu)
         }
 
-        open val serialization = dependency("kotlinx-serialization-runtime", BuiltInVersions.serialization, jvm(), common("common"))
-        open val atomicfu = dependency("atomicfu", BuiltInVersions.atomicfu, jvm(), common("common"))
+        val serialization = dependency("kotlinx-serialization-runtime", versions.serialization, jvm(), common("common"))
+        val atomicfu = dependency("atomicfu", versions.atomicfu, jvm(), common("common"))
     }
 
     val coroutines by lazy(::Coroutines)
 
-    open class Coroutines : GroupVersionClassifier, KotlinxProviderClassifier {
+    inner class Coroutines : GroupVersionClassifier, KotlinxProviderClassifier {
         override val group: String = "org.jetbrains.kotlinx"
-        override val version: String = BuiltInVersions.coroutines
+        override val version: String = versions.coroutines
 
         val javaFX = dependency("kotlinx-coroutines-javafx", jvm())
         val slf4j = dependency("kotlinx-coroutines-slf4j", jvm())
@@ -53,9 +53,9 @@ object BuiltInDependencies {
 
     val ktor by lazy(::Ktor)
 
-    open class Ktor : GroupVersionClassifier, KtorProviderClassifier, MultiTargetClassifier {
+    inner class Ktor : GroupVersionClassifier, KtorProviderClassifier, MultiTargetClassifier {
         override val group: String = "io.ktor"
-        override val version: String = BuiltInVersions.ktor
+        override val version: String = versions.ktor
         override val targets: Set<TargetWithPostfix<*>> = setOf(jvm("jvm"), common())
 
         val client by lazy(::Client)
@@ -67,10 +67,10 @@ object BuiltInDependencies {
         }
     }
 
-    val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", BuiltInVersions.shadow, DependencyProviders.gradlePluginPortal)
-    val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", BuiltInVersions.updates, DependencyProviders.gradlePluginPortal)
-    val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", BuiltInVersions.docker, DependencyProviders.google)
-    val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", BuiltInVersions.detekt, DependencyProviders.gradlePluginPortal)
+    val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", versions.shadow, DependencyProviders.gradlePluginPortal)
+    val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", versions.updates, DependencyProviders.gradlePluginPortal)
+    val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", versions.docker, DependencyProviders.google)
+    val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", versions.detekt, DependencyProviders.gradlePluginPortal)
 
     val kamp = RawDependency("dev.whyoleg.kamp", "kamp", "0.1.0", DependencyProviders.mavenLocal)
 }

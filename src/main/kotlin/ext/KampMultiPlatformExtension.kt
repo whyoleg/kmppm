@@ -12,8 +12,8 @@ import org.jetbrains.kotlin.gradle.plugin.*
 import kotlin.reflect.*
 
 @KampDSL
-class KampMultiPlatformExtension : KampExtension<KotlinMultiplatformExtension>() {
-    override val extPlugin: Plugin = BuiltInPlugins.kotlinMpp
+class KampMultiPlatformExtension(versions: BuiltInVersions) : KampExtension<KotlinMultiplatformExtension>(versions) {
+    override val extPlugin: Plugin = builtIn.plugins.kotlinMpp
     override val extPluginClass: KClass<KotlinMultiplatformExtension> = KotlinMultiplatformExtension::class
 
     fun sources(builder: SourceBuilder.() -> Unit) {

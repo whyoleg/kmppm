@@ -5,9 +5,9 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
-class KampBuild {
+class KampBuild(versions: BuiltInVersions) : KampBase(versions) {
 
-    private val plugins: MutableSet<Plugin> = mutableSetOf(BuiltInPlugins.kamp)
+    private val plugins: MutableSet<Plugin> = mutableSetOf(builtIn.plugins.kamp)
     private val dependencies: MutableSet<RawDependency> = mutableSetOf()
 
     fun dependencies(vararg dependencies: RawDependency) {

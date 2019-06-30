@@ -1,6 +1,7 @@
 package dev.whyoleg.kamp.ext
 
 import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*
@@ -11,9 +12,10 @@ import org.jetbrains.kotlin.gradle.plugin.*
 
 @KampDSL
 abstract class KampSinglePlatformExtension<KotlinExt : KotlinSingleTargetExtension, T : PlatformTarget, TO : TargetOptions>(
+    versions: BuiltInVersions,
     private val target: T,
     private val options: TO
-) : KampExtension<KotlinExt>() {
+) : KampExtension<KotlinExt>(versions) {
 
     fun source(builder: SourceSetBuilder<T>.() -> Unit) {
         sources += Source(MultiTarget(target), SourceSetBuilder<T>().apply(builder).data())

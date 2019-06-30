@@ -1,6 +1,7 @@
 package dev.whyoleg.kamp.ext
 
 import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.configuration.*
 import dev.whyoleg.kamp.packager.*
@@ -18,7 +19,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.reflect.*
 
 @KampDSL
-abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
+abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: BuiltInVersions) : KampBase(versions), MainTargets {
     protected abstract val extPlugin: Plugin
     protected abstract val extPluginClass: KClass<KotlinExt>
 
@@ -44,7 +45,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension> : MainTargets {
     }
 
     fun packagers(block: PackagersBuilder.() -> Unit) {
-        packagers += PackagersBuilder().apply(block).packagers
+        packagers += PackagersBuilder(builtIn).apply(block).packagers
     }
 
     fun languageSettings(block: LanguageSettings.() -> Unit) {

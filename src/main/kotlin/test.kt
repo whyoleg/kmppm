@@ -1,6 +1,5 @@
 package dev.whyoleg.kamp
 
-import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.classifier.*
 import dev.whyoleg.kamp.ext.*
 import dev.whyoleg.kamp.target.*
@@ -106,12 +105,12 @@ val depTest: KampMultiPlatformExtension.() -> Unit = {
     sources {
         common {
             main {
-                BuiltInDependencies.kotlin {
+                BuiltIn.Default.dependencies.kotlin {
                     implementation(stdlib)
                 }
             }
             test {
-                BuiltInDependencies.kotlin {
+                BuiltIn.Default.dependencies.kotlin {
                     implementation(test, annotations)
                 }
             }
@@ -120,12 +119,12 @@ val depTest: KampMultiPlatformExtension.() -> Unit = {
 }
 
 val depTest2: KampMultiPlatformExtension.() -> Unit = {
-    with(BuiltInPlugins) { plugins(serialization, atomicfu) }
+    with(BuiltIn.Default.plugins) { plugins(serialization, atomicfu) }
 
     sources {
         common {
             main {
-                with(BuiltInDependencies) {
+                with(BuiltIn.Default.dependencies) {
                     kotlin {
                         implementation(stdlib)
                     }
