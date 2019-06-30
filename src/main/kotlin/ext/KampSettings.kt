@@ -36,7 +36,7 @@ class KampSettings {
         val moduleNames = modules.map(Module::name)
         settings.include(*moduleNames.toTypedArray())
         modules.forEach { (name, path) ->
-            path?.let { settings.project(name).projectDir = File(it) }
+            path?.let { settings.project(name).projectDir = File("${settings.rootDir.absolutePath}/$it") }
         }
 
     }
