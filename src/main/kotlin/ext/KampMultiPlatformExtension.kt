@@ -5,6 +5,7 @@ import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
+import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
 import dev.whyoleg.kamp.target.configuration.*
 import org.jetbrains.kotlin.gradle.dsl.*
@@ -35,5 +36,8 @@ class KampMultiPlatformExtension(versions: BuiltInVersions) : KampExtension<Kotl
 
     override fun sourceTypeTargets(ext: KotlinMultiplatformExtension, sourceType: SourceSetType): Map<Target, KotlinSourceSet> =
         targets().associateWith { ext.sourceSets.maybeCreate(it.name + sourceType.name.capitalize()) }
+
+    override fun createSourceSet(ext: KotlinMultiplatformExtension, multiTarget: MultiTarget<*>, sourceSetType: SourceSetType): KotlinSourceSet =
+        ext.sourceSets.maybeCreate(multiTarget.name + sourceSetType.name.capitalize())
 
 }

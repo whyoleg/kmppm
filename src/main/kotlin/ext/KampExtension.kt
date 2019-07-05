@@ -114,6 +114,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
 
     protected abstract fun sourceTypeTargets(ext: KotlinExt, sourceType: SourceSetType): Map<Target, KotlinSourceSet>
 
+    protected abstract fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceType: SourceSetType): KotlinSourceSet
+
     private fun configureSources(ext: KotlinExt, project: Project) {
         distinctSources()
             .flatMap { createSourceSets(it, ext) }
@@ -159,13 +161,15 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
                 val sourceSet = targetSourceSets[Target.common]!!
                 Triple(sourceSet, targetSourceSets, list)
             } else {
-                val sourceSet = ext.sourceSets.maybeCreate(multiTarget.name + sourceSetType.name.capitalize())
+                val sourceSet = createSourceSet(ext, multiTarget, sourceSetType)
                 val targetSourceSets = multiTarget.targets.associateWith { sourceSet }
                 Triple(sourceSet, targetSourceSets, list)
             }
             triple.first.run {
                 kotlin.srcDirs(*srcFolders.toTypedArray())
+                //println(kotlin.srcDirs)
                 resources.srcDirs(*resFolders.toTypedArray())
+                //println(resources.srcDirs)
             }
             triple
         }
