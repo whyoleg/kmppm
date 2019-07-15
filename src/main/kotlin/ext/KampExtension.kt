@@ -114,7 +114,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
 
     protected abstract fun sourceTypeTargets(ext: KotlinExt, sourceType: SourceSetType): Map<Target, KotlinSourceSet>
 
-    protected abstract fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceType: SourceSetType): KotlinSourceSet
+    protected abstract fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceSetType: SourceSetType): KotlinSourceSet
 
     private fun configureSources(ext: KotlinExt, project: Project) {
         distinctSources()

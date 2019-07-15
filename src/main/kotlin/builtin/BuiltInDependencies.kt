@@ -38,6 +38,8 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
 
         val serialization = dependency("kotlinx-serialization-runtime", versions.serialization, jvm(), common("common"))
         val atomicfu = dependency("atomicfu", versions.atomicfu, jvm(), common("common"))
+
+        val configParser = dependency("kotlinx-serialization-runtime-configparser", versions.serialization, jvmOnly.postfixed())
     }
 
     val coroutines by lazy(::Coroutines)
@@ -65,6 +67,34 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
             val websockets = dependency("ktor-client-websockets")
             val cio = dependency("ktor-client-cio", jvm())
         }
+    }
+
+    val koin by lazy(::Koin)
+
+    inner class Koin : GroupVersionClassifier, TargetClassifier<JvmBasedTarget>, JcenterProviderClassifier {
+        override val group: String = "org.koin"
+        override var version: String = versions.koin
+        override val targets: Set<TargetWithPostfix<JvmBasedTarget>> = jvmBased.postfixed()
+
+        val core = dependency("koin-core")
+        val ext = dependency("koin-core-ext")
+        val slf4j = dependency("koin-logger-slf4j")
+    }
+
+    val logging by lazy(::Logging)
+
+    inner class Logging : TargetClassifier<JvmBasedTarget> {
+        override val targets: Set<TargetWithPostfix<JvmBasedTarget>> = jvmBased.postfixed()
+
+        val slf4j = dependency("org.slf4j", "slf4j-api", versions.slf4j, DependencyProviders.mavenCentral)
+        val logback = dependency("ch.qos.logback", "logback-classic", versions.logback, DependencyProviders.mavenCentral)
+
+        val logging = RawDependency(
+            "io.github.microutils",
+            "kotlin-logging",
+            versions.logging,
+            DependencyProviders.mavenCentral
+        )(common("common"), jvm())
     }
 
     val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", versions.shadow, DependencyProviders.gradlePluginPortal)

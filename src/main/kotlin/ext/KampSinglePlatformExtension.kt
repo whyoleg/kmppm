@@ -33,6 +33,6 @@ abstract class KampSinglePlatformExtension<KotlinExt : KotlinSingleTargetExtensi
     override fun sourceTypeTargets(ext: KotlinExt, sourceType: SourceSetType): Map<Target, KotlinSourceSet> =
         mapOf(target to ext.sourceSets.maybeCreate(sourceType.name))
 
-    override fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceType: SourceSetType): KotlinSourceSet =
-        ext.sourceSets.maybeCreate(sourceType.name)
+    override fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceSetType: SourceSetType): KotlinSourceSet =
+        ext.sourceSets.maybeCreate(sourceSetType.name)
 }
