@@ -8,5 +8,6 @@ enum class ExperimentalAnnotation(val value: String) {
     ImplicitReflectionSerializer("kotlinx.serialization.ImplicitReflectionSerializer"),
     KtorExperimentalAPI("io.ktor.util.KtorExperimentalAPI"),
     Experimental("kotlin.Experimental"),
-    ExperimentalUnsignedTypes("kotlin.ExperimentalUnsignedTypes")
+    ExperimentalUnsignedTypes("kotlin.ExperimentalUnsignedTypes"),
+    ExperimentalContracts("kotlin.contracts.ExperimentalContracts")
 }
