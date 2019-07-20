@@ -81,6 +81,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
             it.kotlinOptions {
                 allWarningsAsErrors = settings.allWarningsAsErrors
                 suppressWarnings = settings.suppressWarnings
+                freeCompilerArgs = settings.allCompilerArguments.map { "-X$it" }
 
                 //TODO generalize configuration
                 when {
@@ -193,8 +194,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
                 languageVersion = settings.languageVersion
                 apiVersion = settings.apiVersion
                 progressiveMode = settings.progressiveMode
-                settings.allFeatures.forEach(this::enableLanguageFeature)
-                settings.allAnnotations.forEach(this::useExperimentalAnnotation)
+                settings.allLanguageFeatures.forEach(this::enableLanguageFeature)
+                settings.allExperimentalAnnotations.forEach(this::useExperimentalAnnotation)
             }
         }
     }
