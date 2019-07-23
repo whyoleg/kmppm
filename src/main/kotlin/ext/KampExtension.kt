@@ -100,7 +100,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
     }
 
     private fun configureDependencyProviders(project: Project) {
-        val repositories = project.repositories
+        val repositories = project.rootProject.subprojects.map(Project::getRepositories)
+
         sources
             .flatMap(Source::sourceSets)
             .map(SourceSet::configuration)
@@ -110,7 +111,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
             .map(PackageDependency::raw)
             .mapNotNull(RawDependency::provider)
             .toSet()
-            .forEach { it(repositories) }
+            .forEach { provider -> repositories.forEach { provider(it) } }
     }
 
     protected abstract fun sourceTypeTargets(ext: KotlinExt, sourceType: SourceSetType): Map<Target, KotlinSourceSet>
