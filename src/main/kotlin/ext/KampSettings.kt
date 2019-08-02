@@ -1,11 +1,12 @@
 package dev.whyoleg.kamp.ext
 
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.module.*
 import dev.whyoleg.kamp.plugin.*
 import org.gradle.api.initialization.*
 import java.io.*
 
-class KampSettings {
+class KampSettings(versions: BuiltInVersions) : KampBase(versions) {
     private val plugins: MutableSet<Plugin> = mutableSetOf()
     private val modules: MutableSet<Module> = mutableSetOf()
 
