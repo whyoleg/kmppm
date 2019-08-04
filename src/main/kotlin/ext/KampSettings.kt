@@ -25,7 +25,13 @@ class KampSettings(versions: BuiltInVersions) : KampBase(versions) {
     internal fun configure(settings: Settings) {
         settings.pluginManagement {
             it.repositories { handler -> plugins.forEach { it.classpath?.provider?.invoke(handler) } }
-            it.plugins { spec -> plugins.forEach { spec.id(it.name).version(it.classpath?.version) } }
+            it.resolutionStrategy.eachPlugin { details ->
+                //println("CONFIGURE: ${details.requested.id.id}")
+                plugins.find { it.name == details.requested.id.id }?.classpath?.let {
+                    //println("Found: $it")
+                    details.useModule(it.string())
+                }
+            }
         }
 
         val moduleNames = modules.map(Module::name)

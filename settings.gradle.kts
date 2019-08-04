@@ -10,8 +10,8 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    plugins {
-        kotlin("jvm") version "1.3.41"
+    resolutionStrategy.eachPlugin {
+        if (requested.id.id == "org.jetbrains.kotlin.jvm") useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.40")
     }
 }
 
