@@ -16,6 +16,7 @@ class DockerPackager internal constructor(builtIn: BuiltIn) : Packager {
     var latestTag: Boolean = true
     var className: String? = null
     var jvmFlags: List<String> = emptyList()
+    var raw: JibExtension.() -> Unit = {}
 
     //                    listOf(
 //                        "-server",
@@ -56,6 +57,7 @@ class DockerPackager internal constructor(builtIn: BuiltIn) : Packager {
                     it.jvmFlags = jvmFlags
                 }
             }
+            raw(jib)
         }
     }
 }
