@@ -14,6 +14,7 @@ open class BuiltInPlugins(dependencies: BuiltInDependencies) {
     val application = Plugin("org.gradle.application", null)
     val docker = Plugin("com.google.cloud.tools.jib", dependencies.docker)
     val detekt = Plugin("io.gitlab.arturbosch.detekt", dependencies.detekt)
+    val mavenPublish = Plugin("org.gradle.maven-publish", null)
 
     internal val kamp = Plugin("dev.whyoleg.kamp", dependencies.kamp)
 }
