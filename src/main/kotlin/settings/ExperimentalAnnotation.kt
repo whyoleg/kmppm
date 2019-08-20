@@ -9,5 +9,6 @@ enum class ExperimentalAnnotation(val value: String) {
     KtorExperimentalAPI("io.ktor.util.KtorExperimentalAPI"),
     Experimental("kotlin.Experimental"),
     ExperimentalUnsignedTypes("kotlin.ExperimentalUnsignedTypes"),
-    ExperimentalContracts("kotlin.contracts.ExperimentalContracts")
+    ExperimentalContracts("kotlin.contracts.ExperimentalContracts"),
+    ExperimentalTime("kotlin.time.ExperimentalTime")
 }
