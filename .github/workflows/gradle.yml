@@ -10,7 +10,6 @@ jobs:
           java-version: 11
       - name: Build and publish using gradle
         env:
-          bintray_user: ""
-          bintray_key: ""
+          bintray_user: secrets.bintray_user
+          bintray_key: secrets.bintray_key
         run: ./gradlew bintrayUpload
-
