@@ -1,9 +1,9 @@
-package dev.whyoleg.kamp.packager
+package dev.whyoleg.kamp.publishing
 
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
-interface Packager {
+interface Publisher {
     val plugins: Set<Plugin>
     fun Project.configure()
 }

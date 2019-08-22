@@ -15,6 +15,10 @@ open class BuiltInPlugins(dependencies: BuiltInDependencies) {
     val docker = Plugin("com.google.cloud.tools.jib", dependencies.docker)
     val detekt = Plugin("io.gitlab.arturbosch.detekt", dependencies.detekt)
     val mavenPublish = Plugin("org.gradle.maven-publish", null)
+    val versioning = Plugin("net.nemerosa.versioning", dependencies.versioning)
+    val bintray = Plugin("com.jfrog.bintray", dependencies.bintray)
+    val javaPlugin = Plugin("org.gradle.java-gradle-plugin", null)
+    val buildScan = Plugin("com.gradle.build-scan", null) //check vesision
 
     internal val kamp = Plugin("dev.whyoleg.kamp", dependencies.kamp)
 }

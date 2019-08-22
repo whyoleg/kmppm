@@ -6,6 +6,8 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.configuration.*
 import dev.whyoleg.kamp.packager.*
 import dev.whyoleg.kamp.plugin.Plugin
+import dev.whyoleg.kamp.publishing.*
+import dev.whyoleg.kamp.publishing.Publication
 import dev.whyoleg.kamp.settings.*
 import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
@@ -13,22 +15,31 @@ import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
 import dev.whyoleg.kamp.target.configuration.*
 import org.gradle.api.*
+import org.gradle.api.plugins.*
+import org.gradle.api.publish.*
+import org.gradle.api.publish.maven.*
+import org.gradle.api.tasks.bundling.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.reflect.*
 
 @KampDSL
-abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: BuiltInVersions) : KampBase(versions), MainTargets {
+abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
+    private val configuration: ProjectConfiguration,
+    versions: BuiltInVersions
+) : KampBase(versions), MainTargets {
     protected abstract val extPlugin: Plugin
     protected abstract val extPluginClass: KClass<KotlinExt>
 
     internal val targetConfigurations = mutableSetOf<TargetConfiguration>()
     internal val sources = mutableListOf<Source>()
     private val extensionBlocks = mutableListOf<KotlinExt.() -> Unit>()
-    private val plugins = mutableSetOf<Plugin>()
+    private val plugins = mutableSetOf<Plugin>(builtIn.plugins.versioning)
     private val packagers = mutableListOf<Packager>()
     private val settings = LanguageSettings()
+    private val publishers = mutableListOf<Publisher>()
+    private val publications = mutableSetOf<Publication>()
 
     //builders
 
@@ -52,6 +63,12 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
         settings.apply(block)
     }
 
+    fun publishing(block: PublishersBuilder.() -> Unit) {
+        val builder = PublishersBuilder(configuration, builtIn).apply(block)
+        publishers += builder.publishers
+        publications += builder.publications
+    }
+
     //configuration
 
     internal fun configure(project: Project) {
@@ -61,15 +78,21 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
 
     private fun configure(ext: KotlinExt, project: Project) {
         configurePlugins(project)
+
+        project.group = configuration.group
+        project.version = configuration.version(project.versioning)
+
         configureTargets(ext)
         configureDependencyProviders(project)
         configureSources(ext, project)
         configurePackagers(project)
+        configurePublications(project)
+        configurePublishers(project)
         configureKotlin(ext)
     }
 
     private fun configurePlugins(project: Project) {
-        val allPlugins = (plugins + packagers.flatMap(Packager::plugins)).toSet()
+        val allPlugins = (plugins + packagers.flatMap(Packager::plugins) + publishers.flatMap(Publisher::plugins)).toSet()
         project.repositories.apply { allPlugins.forEach { it.classpath?.provider?.invoke(this) } }
         project.apply { allPlugins.forEach { plugin -> it.plugin(plugin.name) } }
     }
@@ -203,6 +226,65 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(versions: Built
 
     private fun configurePackagers(project: Project) {
         packagers.forEach { it.run { project.configure() } }
+    }
+
+    private fun configurePublications(project: Project) {
+        if (publications.isNotEmpty()) {
+            val sourcesJar = project.tasks.create("sourcesJar", Jar::class.java) {
+                it.dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+                it.archiveClassifier.set("sources")
+                it.from((project.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer).getByName("main").allSource)
+            }
+
+            project.extensions.configure<PublishingExtension>("publishing") { ext ->
+                ext.publications { pub ->
+                    publications.forEach { publication ->
+                        pub.create(publication.name, MavenPublication::class.java) { mp ->
+                            mp.apply {
+                                groupId = configuration.group
+                                artifactId = configuration.artifact
+                                version = configuration.version(project.versioning)
+
+                                from(project.components.getByName("java"))
+                                artifact(sourcesJar)
+
+                                pom.withXml {
+                                    it.asNode().apply {
+                                        appendNode("description", publication.description)
+                                        appendNode("name", publication.name)
+                                        appendNode("url", publication.websiteUrl)
+                                        val licenses = appendNode("licenses")
+                                        publication.licenses.forEach {
+                                            licenses.appendNode("license").apply {
+                                                appendNode("name", it.name)
+                                                appendNode("url", it.url)
+                                                appendNode("distribution", it.disrtribution)
+                                            }
+                                        }
+                                        val developers = appendNode("developers")
+                                        publication.developers.forEach {
+                                            developers.appendNode("developer").apply {
+                                                appendNode("id", it.id)
+                                                appendNode("name", it.name)
+                                                appendNode("email", it.email)
+                                            }
+                                        }
+                                        appendNode("scm").apply {
+                                            appendNode("url", publication.vcsUrl)
+                                            appendNode("connection", publication.scmConnections)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun configurePublishers(project: Project) {
+        publishers.forEach { it.run { project.configure() } }
     }
 
     private fun configureKotlin(ext: KotlinExt) {

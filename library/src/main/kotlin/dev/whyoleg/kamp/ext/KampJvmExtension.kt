@@ -10,7 +10,11 @@ import org.jetbrains.kotlin.gradle.dsl.*
 import kotlin.reflect.*
 
 @KampDSL
-class KampJvmExtension(versions: BuiltInVersions) : KampSinglePlatformExtension<KotlinJvmProjectExtension, JvmTarget, JvmTargetOptions>(
+class KampJvmExtension(
+    configuration: ProjectConfiguration,
+    versions: BuiltInVersions
+) : KampSinglePlatformExtension<KotlinJvmProjectExtension, JvmTarget, JvmTargetOptions>(
+    configuration,
     versions,
     Target.jvm,
     JvmTargetOptions()

@@ -12,10 +12,11 @@ import org.jetbrains.kotlin.gradle.plugin.*
 
 @KampDSL
 abstract class KampSinglePlatformExtension<KotlinExt : KotlinSingleTargetExtension, T : PlatformTarget, TO : TargetOptions>(
+    configuration: ProjectConfiguration,
     versions: BuiltInVersions,
     private val target: T,
     private val options: TO
-) : KampExtension<KotlinExt>(versions) {
+) : KampExtension<KotlinExt>(configuration, versions) {
 
     fun source(builder: SourceSetBuilder<T>.() -> Unit) {
         sources += Source(MultiTarget(target), SourceSetBuilder<T>().apply(builder).data())

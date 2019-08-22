@@ -102,6 +102,8 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
     val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", versions.updates, DependencyProviders.gradlePluginPortal)
     val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", versions.docker, DependencyProviders.google)
     val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", versions.detekt, DependencyProviders.gradlePluginPortal)
+    val versioning = RawDependency("gradle.plugin.net.nemerosa", "versioning", versions.versioning, DependencyProviders.gradlePluginPortal)
+    val bintray = RawDependency("com.jfrog.bintray.gradle", "gradle-bintray-plugin", versions.bintray, DependencyProviders.jcenter)
 
-    val kamp = RawDependency("dev.whyoleg.kamp", "kamp", "0.1.0", DependencyProviders.mavenLocal)
+    val kamp = RawDependency("dev.whyoleg.kamp", "kamp", "0.1.1", DependencyProviders.maven("https://dl.bintray.com/whyoleg/kamp"))
 }

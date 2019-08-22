@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm")
     `java-gradle-plugin`
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray")
     id("net.nemerosa.versioning")
 }
 
@@ -13,16 +13,19 @@ repositories {
     jcenter()
     google()
     mavenCentral()
+    gradlePluginPortal()
     maven { setUrl("https://plugins.gradle.org/m2/") }
     maven { setUrl("https://kotlin.bintray.com/kotlinx") }
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
     compileOnly("com.github.jengelman.gradle.plugins:shadow:5.1.0")
     compileOnly("com.github.ben-manes:gradle-versions-plugin:0.22.0")
     compileOnly("gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.5.0")
     compileOnly("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0")
+    compileOnly("gradle.plugin.net.nemerosa:versioning:2.8.2")
+    compileOnly("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
 }
 
 tasks.withType<KotlinCompile> {
@@ -43,16 +46,17 @@ val sourcesJar by tasks.creating(Jar::class) {
     from(sourceSets.getByName("main").allSource)
 }
 
+group = "dev.whyoleg.kamp"
+version = "0.1.1-${versioning.info.build}"
+
 publishing {
     publications {
         create<MavenPublication>("bintray") {
             groupId = "dev.whyoleg.kamp"
             artifactId = "kamp"
-            // version is gotten from an external plugin
-            version = "0.1.0-${versioning.info.build}"
-            // This is the main artifact
+            version = "0.1.1-${versioning.info.build}"
+
             from(components["java"])
-            // And sources
             artifact(sourcesJar)
 
             pom.withXml {
@@ -87,6 +91,7 @@ bintray {
 
     // Automatic publication enabled
     publish = true
+    override = true
 
     // Set maven publication onto bintray plugin
     setPublications("bintray")
@@ -104,7 +109,7 @@ bintray {
 
         // Configure version
         version.apply {
-            name = "0.1.0-${versioning.info.build}"
+            name = "0.1.1-${versioning.info.build}"
             desc = "Gradle plugin for kotlin MPP"
             released = Date().toString()
 //            vcsTag = project.versioning.info.tag

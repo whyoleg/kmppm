@@ -1,7 +1,7 @@
 plugins {
     id("com.github.ben-manes.versions")
     `build-scan`
-    id("net.nemerosa.versioning") version "2.8.2"
+    id("net.nemerosa.versioning")
 }
 
 repositories {
@@ -18,6 +18,3 @@ buildScan {
 
     publishAlways()
 }
-
-group = "dev.whyoleg.kamp"
-version = "0.1.0-${versioning.info.build}"

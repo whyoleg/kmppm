@@ -3,15 +3,3 @@ import dev.whyoleg.kamp.*
 kamp {
     modules(Modules)
 }
-
-
-//pluginManagement {
-//    repositories {
-//        mavenCentral()
-//        gradlePluginPortal()
-//        jcenter()
-//    }
-//    resolutionStrategy.eachPlugin {
-//        if (requested.id.id == "org.jetbrains.kotlin.jvm") useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41")
-//    }
-//}
