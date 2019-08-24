@@ -1,20 +1,16 @@
-plugins {
-    id("com.github.ben-manes.versions")
-    `build-scan`
-    id("net.nemerosa.versioning")
-}
+import dev.whyoleg.kamp.*
 
-repositories {
-    jcenter()
-    google()
-    mavenCentral()
-    maven { setUrl("https://plugins.gradle.org/m2/") }
-    maven { setUrl("https://kotlin.bintray.com/kotlinx") }
+//plugins {
+//    `build-scan`
+//}
+kampRoot {
+    with(Plugins) {
+        plugins(updates)
+    }
 }
-
-buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
-
-    publishAlways()
-}
+//extensions.configure<com.gradle.scan.plugin.internal.api.j>("buildScan") {
+//    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+//    termsOfServiceAgree = "yes"
+//
+//    publishAlways()
+//}

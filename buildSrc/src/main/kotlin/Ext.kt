@@ -3,9 +3,9 @@ import dev.whyoleg.kamp.ext.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") { "0.1.1" }
+val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") { "0.1.3" }
 
-fun Project.kampJvmCommon(block: KampJvmExtension.() -> Unit) = kampJvm(Versions.builtIn, configuration) {
+fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
     options {
         jvmTarget = Versions.jdk
         sourceCompatibility = Versions.jdk

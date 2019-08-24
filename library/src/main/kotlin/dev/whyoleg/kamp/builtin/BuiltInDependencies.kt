@@ -117,4 +117,6 @@ open class BuiltInDependencies {
 
     val kamp =
         RawDependency("dev.whyoleg.kamp", "kamp", BuiltInVersions::kamp, DependencyProviders.maven("https://dl.bintray.com/whyoleg/kamp"))
+
+    val buildScan = RawDependency("com.gradle", "build-scan-plugin", BuiltInVersions::buildScan, DependencyProviders.gradlePluginPortal)
 }

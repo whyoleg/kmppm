@@ -8,11 +8,10 @@ plugins {
     `maven-publish`
     id("com.jfrog.bintray")
     id("net.nemerosa.versioning")
-    id("kotlinx-serialization")
 }
 
-val v = "0.1.2-${versioning.info.build}"
-//val v = "0.1.2"
+val v = "0.1.3-${versioning.info.build}"
+//val v = "0.1.3"
 
 repositories {
     jcenter()
@@ -23,7 +22,6 @@ repositories {
     maven { setUrl("https://kotlin.bintray.com/kotlinx") }
 }
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41")
     compileOnly("com.github.jengelman.gradle.plugins:shadow:5.1.0")
     compileOnly("com.github.ben-manes:gradle-versions-plugin:0.22.0")
@@ -41,7 +39,8 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         apiVersion = "1.3"
         languageVersion = "1.3"
-        freeCompilerArgs = listOf("-progressive", "-XXLanguage:+InlineClasses", "-XXLanguage:+NewInference")
+        freeCompilerArgs =
+            listOf("-progressive", "-XXLanguage:+InlineClasses", "-XXLanguage:+NewInference", "-Xuse-experimental=kotlin.Experimental")
     }
 }
 

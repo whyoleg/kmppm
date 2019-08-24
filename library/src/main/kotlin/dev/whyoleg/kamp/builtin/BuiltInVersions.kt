@@ -1,12 +1,10 @@
 package dev.whyoleg.kamp.builtin
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 import org.gradle.api.*
+import kotlin.reflect.full.*
 
-@Serializable
 data class BuiltInVersions(
-    val kamp: String = "0.1.2",
+    val kamp: String = "0.1.3",
     val kotlin: String = "1.3.50",
     val coroutines: String = "1.3.0",
     val serialization: String = "0.12.0",
@@ -21,14 +19,22 @@ data class BuiltInVersions(
     val logback: String = "1.2.3",
     val slf4j: String = "1.7.26",
     val versioning: String = "2.8.2",
-    val bintray: String = "1.8.4"
+    val bintray: String = "1.8.4",
+    val buildScan: String = "2.4.1"
 )
 
-private val json = Json(JsonConfiguration.Stable)
-
-fun Project.readVersions(): BuiltInVersions =
-    json.parse(BuiltInVersions.serializer(), rootDir.resolve("buildSrc/build/versions.json").readText())
+fun Project.readVersions(): BuiltInVersions {
+    val file = rootDir.resolve("buildSrc/build/versions.properties")
+    println("Read versions from: ${file.absoluteFile}")
+    val constructor = BuiltInVersions::class.primaryConstructor!!
+    val parameters = constructor.parameters.associateBy { it.name!! }.toMap()
+    val arguments = file.readLines().map { it.split("=") }.associate { (name, value) -> parameters.getValue(name) to value }
+    return constructor.callBy(arguments)
+}
 
 fun Project.writeVersions(versions: BuiltInVersions) {
-    buildDir.resolve("versions.json").writeText(json.stringify(BuiltInVersions.serializer(), versions))
+    val file = buildDir.resolve("versions.properties")
+    println("Write versions to: ${file.absoluteFile}")
+    val text = BuiltInVersions::class.memberProperties.joinToString("\n") { "${it.name}=${it.get(versions)}" }
+    file.writeText(text)
 }

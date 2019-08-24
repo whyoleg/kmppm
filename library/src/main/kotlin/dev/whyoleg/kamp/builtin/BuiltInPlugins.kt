@@ -20,7 +20,7 @@ open class BuiltInPlugins {
     val versioning = Plugin("net.nemerosa.versioning", BuiltInDependencies.versioning)
     val bintray = Plugin("com.jfrog.bintray", BuiltInDependencies.bintray)
     val javaPlugin = Plugin("org.gradle.java-gradle-plugin", null)
-    val buildScan = Plugin("com.gradle.build-scan", null) //check version
+    val buildScan = Plugin("com.gradle.build-scan", BuiltInDependencies.buildScan)
 
     internal val kamp = Plugin("dev.whyoleg.kamp", BuiltInDependencies.kamp)
 }

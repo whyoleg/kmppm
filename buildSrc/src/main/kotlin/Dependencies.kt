@@ -2,6 +2,4 @@
 
 import dev.whyoleg.kamp.builtin.*
 
-object Dependencies : BuiltInDependencies(Versions.builtIn) {
-
-}
+object Dependencies : BuiltInDependencies()
