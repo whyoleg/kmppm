@@ -35,6 +35,7 @@ fun Project.readVersions(): BuiltInVersions {
 fun Project.writeVersions(versions: BuiltInVersions) {
     val file = buildDir.resolve("versions.properties")
     println("Write versions to: ${file.absoluteFile}")
+    buildDir.mkdirs()
     val text = BuiltInVersions::class.memberProperties.joinToString("\n") { "${it.name}=${it.get(versions)}" }
     file.writeText(text)
 }

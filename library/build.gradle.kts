@@ -95,7 +95,7 @@ bintray {
 
     // Automatic publication enabled
     publish = true
-    override = true
+//    override = true
 
     // Set maven publication onto bintray plugin
     setPublications("bintray")
