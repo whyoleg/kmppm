@@ -5,8 +5,8 @@ import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
 val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") {
-    "0.1.4"
-//    "0.1.4-${versioning.info.build}"
+    //    "0.1.4"
+    "0.1.4-${versioning.info.build}"
 }
 
 @KampDSL

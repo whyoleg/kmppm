@@ -13,7 +13,7 @@ kampJvm {
     publishing {
         bintray(publication) {
             repo = "kamp"
-            override = true
+            override = false
         }
     }
 }
