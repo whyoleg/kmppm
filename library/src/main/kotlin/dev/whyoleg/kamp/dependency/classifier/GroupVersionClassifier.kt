@@ -1,10 +1,11 @@
 package dev.whyoleg.kamp.dependency.classifier
 
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.target.*
 
 interface GroupVersionClassifier : GroupClassifier {
-    val version: String
+    val version: (BuiltInVersions) -> String
 }
 
 fun GroupVersionClassifier.raw(name: String, provider: DependencyProvider): RawDependency = raw(name, version, provider)

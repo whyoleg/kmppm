@@ -4,13 +4,14 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.classifier.*
 import dev.whyoleg.kamp.target.*
 
-open class BuiltInDependencies(private val versions: BuiltInVersions) {
+open class BuiltInDependencies {
+    companion object : BuiltInDependencies()
 
     val kotlin by lazy(::Kotlin)
 
     inner class Kotlin : GroupVersionClassifier, MavenCentralProviderClassifier {
         override val group: String = "org.jetbrains.kotlin"
-        override val version: String = versions.kotlin
+        override val version: (BuiltInVersions) -> String = BuiltInVersions::kotlin
 
         val plugin by lazy(::Plugin)
 
@@ -33,20 +34,20 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
         val plugin by lazy(::Plugin)
 
         inner class Plugin {
-            val atomicfu = raw("atomicfu-gradle-plugin", versions.atomicfu)
+            val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions::atomicfu)
         }
 
-        val serialization = dependency("kotlinx-serialization-runtime", versions.serialization, jvm(), common("common"))
-        val atomicfu = dependency("atomicfu", versions.atomicfu, jvm(), common("common"))
+        val serialization = dependency("kotlinx-serialization-runtime", BuiltInVersions::serialization, jvm(), common("common"))
+        val atomicfu = dependency("atomicfu", BuiltInVersions::atomicfu, jvm(), common("common"))
 
-        val configParser = dependency("kotlinx-serialization-runtime-configparser", versions.serialization, jvmOnly.postfixed())
+        val configParser = dependency("kotlinx-serialization-runtime-configparser", BuiltInVersions::serialization, jvmOnly.postfixed())
     }
 
     val coroutines by lazy(::Coroutines)
 
     inner class Coroutines : GroupVersionClassifier, KotlinxProviderClassifier {
         override val group: String = "org.jetbrains.kotlinx"
-        override val version: String = versions.coroutines
+        override val version: (BuiltInVersions) -> String = BuiltInVersions::coroutines
 
         val javaFX = dependency("kotlinx-coroutines-javafx", jvm())
         val slf4j = dependency("kotlinx-coroutines-slf4j", jvm())
@@ -57,7 +58,7 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
 
     inner class Ktor : GroupVersionClassifier, KtorProviderClassifier, MultiTargetClassifier {
         override val group: String = "io.ktor"
-        override val version: String = versions.ktor
+        override val version: (BuiltInVersions) -> String = BuiltInVersions::ktor
         override val targets: Set<TargetWithPostfix<*>> = setOf(jvm("jvm"), common())
 
         val client by lazy(::Client)
@@ -73,7 +74,7 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
 
     inner class Koin : GroupVersionClassifier, TargetClassifier<JvmBasedTarget>, JcenterProviderClassifier {
         override val group: String = "org.koin"
-        override var version: String = versions.koin
+        override var version: (BuiltInVersions) -> String = BuiltInVersions::koin
         override val targets: Set<TargetWithPostfix<JvmBasedTarget>> = jvmBased.postfixed()
 
         val core = dependency("koin-core")
@@ -86,24 +87,34 @@ open class BuiltInDependencies(private val versions: BuiltInVersions) {
     inner class Logging : TargetClassifier<JvmBasedTarget> {
         override val targets: Set<TargetWithPostfix<JvmBasedTarget>> = jvmBased.postfixed()
 
-        val slf4j = dependency("org.slf4j", "slf4j-api", versions.slf4j, DependencyProviders.mavenCentral)
-        val julToSlf4j = dependency("org.slf4j", "jul-to-slf4j", versions.slf4j, DependencyProviders.mavenCentral)
-        val logback = dependency("ch.qos.logback", "logback-classic", versions.logback, DependencyProviders.mavenCentral)
+        val slf4j = dependency("org.slf4j", "slf4j-api", BuiltInVersions::slf4j, DependencyProviders.mavenCentral)
+        val julToSlf4j = dependency("org.slf4j", "jul-to-slf4j", BuiltInVersions::slf4j, DependencyProviders.mavenCentral)
+        val logback = dependency("ch.qos.logback", "logback-classic", BuiltInVersions::logback, DependencyProviders.mavenCentral)
 
         val logging = RawDependency(
             "io.github.microutils",
             "kotlin-logging",
-            versions.logging,
+            BuiltInVersions::logging,
             DependencyProviders.mavenCentral
         )(common("common"), jvm())
     }
 
-    val shadow = RawDependency("com.github.jengelman.gradle.plugins", "shadow", versions.shadow, DependencyProviders.gradlePluginPortal)
-    val updates = RawDependency("com.github.ben-manes", "gradle-versions-plugin", versions.updates, DependencyProviders.gradlePluginPortal)
-    val docker = RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", versions.docker, DependencyProviders.google)
-    val detekt = RawDependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", versions.detekt, DependencyProviders.gradlePluginPortal)
-    val versioning = RawDependency("gradle.plugin.net.nemerosa", "versioning", versions.versioning, DependencyProviders.gradlePluginPortal)
-    val bintray = RawDependency("com.jfrog.bintray.gradle", "gradle-bintray-plugin", versions.bintray, DependencyProviders.jcenter)
+    val shadow =
+        RawDependency("com.github.jengelman.gradle.plugins", "shadow", BuiltInVersions::shadow, DependencyProviders.gradlePluginPortal)
+    val updates =
+        RawDependency("com.github.ben-manes", "gradle-versions-plugin", BuiltInVersions::updates, DependencyProviders.gradlePluginPortal)
+    val docker =
+        RawDependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", BuiltInVersions::docker, DependencyProviders.google)
+    val detekt = RawDependency(
+        "io.gitlab.arturbosch.detekt",
+        "detekt-gradle-plugin",
+        BuiltInVersions::detekt,
+        DependencyProviders.gradlePluginPortal
+    )
+    val versioning =
+        RawDependency("gradle.plugin.net.nemerosa", "versioning", BuiltInVersions::versioning, DependencyProviders.gradlePluginPortal)
+    val bintray = RawDependency("com.jfrog.bintray.gradle", "gradle-bintray-plugin", BuiltInVersions::bintray, DependencyProviders.jcenter)
 
-    val kamp = RawDependency("dev.whyoleg.kamp", "kamp", "0.1.1", DependencyProviders.maven("https://dl.bintray.com/whyoleg/kamp"))
+    val kamp =
+        RawDependency("dev.whyoleg.kamp", "kamp", BuiltInVersions::kamp, DependencyProviders.maven("https://dl.bintray.com/whyoleg/kamp"))
 }

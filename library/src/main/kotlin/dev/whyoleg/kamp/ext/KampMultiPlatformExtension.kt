@@ -13,11 +13,8 @@ import org.jetbrains.kotlin.gradle.plugin.*
 import kotlin.reflect.*
 
 @KampDSL
-class KampMultiPlatformExtension(
-    configuration: ProjectConfiguration,
-    versions: BuiltInVersions
-) : KampExtension<KotlinMultiplatformExtension>(configuration, versions) {
-    override val extPlugin: Plugin = builtIn.plugins.kotlinMpp
+class KampMultiPlatformExtension(configuration: ProjectConfiguration) : KampExtension<KotlinMultiplatformExtension>(configuration) {
+    override val extPlugin: Plugin = BuiltInPlugins.kotlinMpp
     override val extPluginClass: KClass<KotlinMultiplatformExtension> = KotlinMultiplatformExtension::class
 
     fun sources(builder: SourceBuilder.() -> Unit) {
@@ -40,7 +37,11 @@ class KampMultiPlatformExtension(
     override fun sourceTypeTargets(ext: KotlinMultiplatformExtension, sourceType: SourceSetType): Map<Target, KotlinSourceSet> =
         targets().associateWith { ext.sourceSets.maybeCreate(it.name + sourceType.name.capitalize()) }
 
-    override fun createSourceSet(ext: KotlinMultiplatformExtension, multiTarget: MultiTarget<*>, sourceSetType: SourceSetType): KotlinSourceSet =
+    override fun createSourceSet(
+        ext: KotlinMultiplatformExtension,
+        multiTarget: MultiTarget<*>,
+        sourceSetType: SourceSetType
+    ): KotlinSourceSet =
         ext.sourceSets.maybeCreate(multiTarget.name + sourceSetType.name.capitalize())
 
 }

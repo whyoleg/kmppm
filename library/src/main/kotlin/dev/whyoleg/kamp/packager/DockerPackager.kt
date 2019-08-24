@@ -1,12 +1,12 @@
 package dev.whyoleg.kamp.packager
 
 import com.google.cloud.tools.jib.gradle.*
-import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
 @Suppress("UnstableApiUsage")
-class DockerPackager internal constructor(builtIn: BuiltIn) : Packager {
+class DockerPackager : Packager {
     var baseImage: String? = null
     var image: String? = null
     var jdk: Int? = null
@@ -28,7 +28,7 @@ class DockerPackager internal constructor(builtIn: BuiltIn) : Packager {
 //                        "-Djava.library.path=\"/app/libs:\${PATH}\""
 //                    )
 
-    override val plugins: Set<Plugin> = setOf(builtIn.plugins.docker)
+    override val plugins: Set<Plugin> = setOf(BuiltInPlugins.docker)
 
     override fun Project.configure() {
         val iName = path.replace(":", "-").drop(1)

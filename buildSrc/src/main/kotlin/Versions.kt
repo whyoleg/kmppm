@@ -7,7 +7,7 @@ object Versions {
         coroutines = "1.3.0-RC2",
         detekt = "1.0.0-RC16",
         docker = "1.3.0",
-        kotlin = "1.3.50",
+        kotlin = "1.3.41",
         ktor = "1.2.2",
         serialization = "0.11.1",
         shadow = "5.1.0",

@@ -2,16 +2,16 @@ package dev.whyoleg.kamp.publishing
 
 import com.jfrog.bintray.gradle.*
 import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 import java.util.*
 
 class BintrayPublisher internal constructor(
     private val publication: Publication,
-    private val configuration: ProjectConfiguration,
-    builtIn: BuiltIn
+    private val configuration: ProjectConfiguration
 ) : Publisher {
-    override val plugins: Set<Plugin> = with(builtIn.plugins) { setOf(bintray, mavenPublish, javaPlugin) }
+    override val plugins: Set<Plugin> = with(BuiltInPlugins) { setOf(bintray, mavenPublish, javaPlugin) }
 
     var user: String? = null
     var key: String? = null
@@ -43,7 +43,7 @@ class BintrayPublisher internal constructor(
                 githubRepo = publication.githubUrl
 
                 version.apply {
-                    name = configuration.version(versioning)
+                    name = configuration.version(this@configure)
                     desc = publication.description
                     released = Date().toString()
                     val tag = versioning.info.tag

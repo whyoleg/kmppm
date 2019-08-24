@@ -11,14 +11,8 @@ import kotlin.reflect.*
 
 @KampDSL
 class KampJvmExtension(
-    configuration: ProjectConfiguration,
-    versions: BuiltInVersions
-) : KampSinglePlatformExtension<KotlinJvmProjectExtension, JvmTarget, JvmTargetOptions>(
-    configuration,
-    versions,
-    Target.jvm,
-    JvmTargetOptions()
-) {
-    override val extPlugin: Plugin = builtIn.plugins.kotlinJvm
+    configuration: ProjectConfiguration
+) : KampSinglePlatformExtension<KotlinJvmProjectExtension, JvmTarget, JvmTargetOptions>(configuration, Target.jvm, JvmTargetOptions()) {
+    override val extPlugin: Plugin = BuiltInPlugins.kotlinJvm
     override val extPluginClass: KClass<KotlinJvmProjectExtension> = KotlinJvmProjectExtension::class
 }

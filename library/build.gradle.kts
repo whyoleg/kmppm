@@ -1,3 +1,4 @@
+import dev.whyoleg.kamp.*
 import org.jetbrains.kotlin.gradle.tasks.*
 import java.util.*
 
@@ -7,7 +8,11 @@ plugins {
     `maven-publish`
     id("com.jfrog.bintray")
     id("net.nemerosa.versioning")
+    id("kotlinx-serialization")
 }
+
+val v = "0.1.2-${versioning.info.build}"
+//val v = "0.1.2"
 
 repositories {
     jcenter()
@@ -17,9 +22,9 @@ repositories {
     maven { setUrl("https://plugins.gradle.org/m2/") }
     maven { setUrl("https://kotlin.bintray.com/kotlinx") }
 }
-
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41")
     compileOnly("com.github.jengelman.gradle.plugins:shadow:5.1.0")
     compileOnly("com.github.ben-manes:gradle-versions-plugin:0.22.0")
     compileOnly("gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.5.0")
@@ -47,14 +52,14 @@ val sourcesJar by tasks.creating(Jar::class) {
 }
 
 group = "dev.whyoleg.kamp"
-version = "0.1.1-${versioning.info.build}"
+version = v
 
 publishing {
     publications {
         create<MavenPublication>("bintray") {
             groupId = "dev.whyoleg.kamp"
             artifactId = "kamp"
-            version = "0.1.1-${versioning.info.build}"
+            version = v
 
             from(components["java"])
             artifact(sourcesJar)
@@ -109,7 +114,7 @@ bintray {
 
         // Configure version
         version.apply {
-            name = "0.1.1-${versioning.info.build}"
+            name = v
             desc = "Gradle plugin for kotlin MPP"
             released = Date().toString()
 //            vcsTag = project.versioning.info.tag

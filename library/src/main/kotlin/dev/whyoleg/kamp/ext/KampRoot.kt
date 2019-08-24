@@ -6,7 +6,7 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
-class KampRoot(versions: BuiltInVersions) : KampBase(versions) {
+class KampRoot {
 
     private val plugins: MutableSet<Plugin> = mutableSetOf()
 
@@ -25,7 +25,7 @@ class KampRoot(versions: BuiltInVersions) : KampBase(versions) {
     }
 
     internal fun configure(project: Project) {
-        if (rejects.isNotEmpty()) plugins += builtIn.plugins.updates
+        if (rejects.isNotEmpty()) plugins += BuiltInPlugins.updates
         project.repositories.apply { plugins.forEach { it.classpath?.provider?.invoke(this) } }
         project.apply { plugins.forEach { plugin -> it.plugin(plugin.name) } }
 
@@ -34,7 +34,7 @@ class KampRoot(versions: BuiltInVersions) : KampBase(versions) {
                 it.componentSelection {
                     it.all { component ->
                         val candidate = component.candidate
-                        val raw = RawDependency(candidate.group, candidate.module, candidate.version, null)
+                        val raw = RawDependency(candidate.group, candidate.module, { candidate.version }, null)
                         rejects.forEach { if (it(raw)) component.reject("") }
                     }
                 }

@@ -1,16 +1,14 @@
 package dev.whyoleg.kamp.packager
 
-import dev.whyoleg.kamp.*
-
-class PackagersBuilder internal constructor(private val builtIn: BuiltIn) {
+class PackagersBuilder {
     internal val packagers: MutableList<Packager> = mutableListOf()
 
     fun jar(block: JarPackager.() -> Unit = {}) {
-        packagers += JarPackager(builtIn).apply(block)
+        packagers += JarPackager().apply(block)
     }
 
     fun docker(block: DockerPackager.() -> Unit = {}) {
-        packagers += DockerPackager(builtIn).apply(block)
+        packagers += DockerPackager().apply(block)
     }
 
 //    fun webpack(block: JarPackaging.() -> Unit) {

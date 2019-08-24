@@ -1,5 +1,6 @@
 package dev.whyoleg.kamp.dependency.classifier
 
+import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.target.*
 
@@ -18,13 +19,13 @@ interface TargetClassifier<T : PlatformTarget> : Classifier {
 fun MultiTargetClassifier.dependency(
     group: String,
     name: String,
-    version: String,
+    version: (BuiltInVersions) -> String,
     provider: DependencyProvider
 ): MultiDependency = RawDependency(group, name, version, provider)(targets)
 
 fun <T : PlatformTarget> TargetClassifier<T>.dependency(
     group: String,
     name: String,
-    version: String,
+    version: (BuiltInVersions) -> String,
     provider: DependencyProvider
 ): TargetDependency<T> = RawDependency(group, name, version, provider)(targets)

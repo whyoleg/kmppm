@@ -5,9 +5,9 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 
-class KampBuild(versions: BuiltInVersions) : KampBase(versions) {
+class KampBuild {
 
-    private val plugins: MutableSet<Plugin> = mutableSetOf(builtIn.plugins.kamp)
+    private val plugins: MutableSet<Plugin> = mutableSetOf(BuiltInPlugins.kamp)
     private val dependencies: MutableSet<RawDependency> = mutableSetOf()
 
     fun dependencies(vararg dependencies: RawDependency) {
@@ -28,13 +28,14 @@ class KampBuild(versions: BuiltInVersions) : KampBase(versions) {
 
     //TODO may be add plugins block if needed
 
-    internal fun configure(project: Project) {
+    internal fun configure(versions: BuiltInVersions, project: Project) {
+        project.writeVersions(versions)
         val deps = dependencies + plugins.mapNotNull(Plugin::classpath)
         project.repositories.let { handler ->
             deps.mapNotNull(RawDependency::provider).forEach { it(handler) }
         }
         project.dependencies.let { handler ->
-            deps.map(RawDependency::string).forEach { handler.add("implementation", it) }
+            deps.map { it.string(versions) }.forEach { handler.add("implementation", it) }
         }
     }
 }

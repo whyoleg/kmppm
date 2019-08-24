@@ -25,17 +25,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.reflect.*
 
 @KampDSL
-abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
-    private val configuration: ProjectConfiguration,
-    versions: BuiltInVersions
-) : KampBase(versions), MainTargets {
+abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val configuration: ProjectConfiguration) : MainTargets {
     protected abstract val extPlugin: Plugin
     protected abstract val extPluginClass: KClass<KotlinExt>
 
     internal val targetConfigurations = mutableSetOf<TargetConfiguration>()
     internal val sources = mutableListOf<Source>()
     private val extensionBlocks = mutableListOf<KotlinExt.() -> Unit>()
-    private val plugins = mutableSetOf<Plugin>(builtIn.plugins.versioning)
+    private val plugins = mutableSetOf<Plugin>()
     private val packagers = mutableListOf<Packager>()
     private val settings = LanguageSettings()
     private val publishers = mutableListOf<Publisher>()
@@ -56,7 +53,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
     }
 
     fun packagers(block: PackagersBuilder.() -> Unit) {
-        packagers += PackagersBuilder(builtIn).apply(block).packagers
+        packagers += PackagersBuilder().apply(block).packagers
     }
 
     fun languageSettings(block: LanguageSettings.() -> Unit) {
@@ -64,7 +61,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
     }
 
     fun publishing(block: PublishersBuilder.() -> Unit) {
-        val builder = PublishersBuilder(configuration, builtIn).apply(block)
+        val builder = PublishersBuilder(configuration).apply(block)
         publishers += builder.publishers
         publications += builder.publications
     }
@@ -80,7 +77,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
         configurePlugins(project)
 
         project.group = configuration.group
-        project.version = configuration.version(project.versioning)
+        project.version = configuration.version(project)
 
         configureTargets(ext)
         configureDependencyProviders(project)
@@ -142,6 +139,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
     protected abstract fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceSetType: SourceSetType): KotlinSourceSet
 
     private fun configureSources(ext: KotlinExt, project: Project) {
+        val versions = project.readVersions()
         distinctSources()
             .flatMap { createSourceSets(it, ext) }
             .forEach { (mainSourceSet, targetSourceSets, list) ->
@@ -163,7 +161,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
                     val packages = dependencies.filterIsInstance<PackageDependency>()
                     targetSourceSets.forEach { (target, sourceSet) ->
                         //println("Try $target with packages: ${packages.joinToString(",", "[", "]")}")
-                        sourceSet.dependencies { packages(type, packages, target) }
+                        sourceSet.dependencies { packages(versions, type, packages, target) }
                     }
                 }
             }
@@ -243,7 +241,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(
                             mp.apply {
                                 groupId = configuration.group
                                 artifactId = configuration.artifact
-                                version = configuration.version(project.versioning)
+                                version = configuration.version(project)
 
                                 from(project.components.getByName("java"))
                                 artifact(sourcesJar)
