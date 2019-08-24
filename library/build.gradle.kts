@@ -11,7 +11,9 @@ plugins {
 }
 
 val v = "0.1.3-${versioning.info.build}"
+val o = false
 //val v = "0.1.3"
+//val o = true
 
 repositories {
     jcenter()
@@ -95,7 +97,7 @@ bintray {
 
     // Automatic publication enabled
     publish = true
-//    override = true
+    override = o
 
     // Set maven publication onto bintray plugin
     setPublications("bintray")
