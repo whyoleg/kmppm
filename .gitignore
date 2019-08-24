@@ -11,4 +11,3 @@ syntax: glob
 classes
 build/
 *.log
-build-cache

@@ -6,7 +6,7 @@ import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 import org.gradle.api.plugins.*
 
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage", "DEPRECATION")
 class JarPackager : Packager {
     var className: String? = null
     var name: String? = null
@@ -19,7 +19,6 @@ class JarPackager : Packager {
         val packageName = plainName.replace("-", ".")
         val name = this@JarPackager.name ?: plainName
         val className = this@JarPackager.className ?: "$group.$packageName.AppKt"
-        //println("Setup jar '$name' with main class '$className'")
         extensions.configure<JavaApplication>("application") { it.mainClassName = className }
         tasks.withType(ShadowJar::class.java) {
             it.baseName = name
