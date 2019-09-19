@@ -17,7 +17,6 @@ open class BuiltInPlugins {
     val docker = Plugin("com.google.cloud.tools.jib", BuiltInDependencies.docker)
     val detekt = Plugin("io.gitlab.arturbosch.detekt", BuiltInDependencies.detekt)
     val mavenPublish = Plugin("org.gradle.maven-publish", null)
-    val versioning = Plugin("net.nemerosa.versioning", BuiltInDependencies.versioning)
     val bintray = Plugin("com.jfrog.bintray", BuiltInDependencies.bintray)
     val javaPlugin = Plugin("org.gradle.java-gradle-plugin", null)
     val buildScan = Plugin("com.gradle.build-scan", BuiltInDependencies.buildScan)

@@ -1,11 +1,11 @@
 kampJvm {
     with(Plugins) {
-        plugins(versioning, mavenPublish, bintray, javaPlugin)
+        plugins(mavenPublish, bintray, javaPlugin)
     }
     source {
         main {
             with(Plugins) {
-                compileOnly(kotlinJvm, shadow, updates, docker, detekt, versioning, bintray, buildScan)
+                compileOnly(kotlinJvm, shadow, updates, docker, detekt, bintray, buildScan)
             }
         }
     }
@@ -14,6 +14,8 @@ kampJvm {
         bintray(publication) {
             repo = "kamp"
             override = false
+            val commitPostfix = System.getenv("GITHUB_SHA")?.let { "-$it" } ?: ""
+            version = "${configuration.version}$commitPostfix"
         }
     }
 }

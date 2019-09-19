@@ -4,10 +4,7 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") {
-    //    "0.1.4"
-    "0.1.4-${versioning.info.build}"
-}
+val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp", "0.1.5")
 
 @KampDSL
 fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {

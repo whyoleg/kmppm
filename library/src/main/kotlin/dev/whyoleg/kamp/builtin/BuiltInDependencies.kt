@@ -4,7 +4,7 @@ import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.classifier.*
 import dev.whyoleg.kamp.target.*
 
-open class BuiltInDependencies {
+open class BuiltInDependencies : Classifier {
     companion object : BuiltInDependencies()
 
     val kotlin by lazy(::Kotlin)
@@ -15,7 +15,7 @@ open class BuiltInDependencies {
 
         val plugin by lazy(::Plugin)
 
-        inner class Plugin {
+        inner class Plugin : Classifier {
             val gradle = raw("kotlin-gradle-plugin")
             val serialization = raw("kotlin-serialization")
         }
@@ -33,7 +33,7 @@ open class BuiltInDependencies {
 
         val plugin by lazy(::Plugin)
 
-        inner class Plugin {
+        inner class Plugin : Classifier {
             val atomicfu = raw("atomicfu-gradle-plugin", BuiltInVersions::atomicfu)
         }
 
@@ -63,7 +63,7 @@ open class BuiltInDependencies {
 
         val client by lazy(::Client)
 
-        inner class Client {
+        inner class Client : Classifier {
             val core = dependency("ktor-client-core")
             val websockets = dependency("ktor-client-websockets")
             val cio = dependency("ktor-client-cio", jvm())
@@ -111,8 +111,6 @@ open class BuiltInDependencies {
         BuiltInVersions::detekt,
         DependencyProviders.gradlePluginPortal
     )
-    val versioning =
-        RawDependency("gradle.plugin.net.nemerosa", "versioning", BuiltInVersions::versioning, DependencyProviders.gradlePluginPortal)
     val bintray = RawDependency("com.jfrog.bintray.gradle", "gradle-bintray-plugin", BuiltInVersions::bintray, DependencyProviders.jcenter)
 
     val kamp =
