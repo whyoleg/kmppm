@@ -10,16 +10,16 @@ buildscript {
             classpath(files)
         } else {
             repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-            classpath("dev.whyoleg.kamp:kamp:0.1.4")
+            classpath("dev.whyoleg.kamp:kamp:0.1.5")
         }
     }
 }
 
 @UseExperimental(KampInternal::class)
 kampBuildDev(BuiltInVersions(kotlin = "1.3.41")) {
-    require(BuiltInVersions().kamp == "0.1.4") { "BuiltIn kamp plugin version wrong" }
+    require(BuiltInVersions().kamp == "0.1.5") { "BuiltIn kamp plugin version wrong" }
     with(BuiltInPlugins) {
-        resolvePlugins(kotlinJvm, versioning, bintray, buildScan, updates)
+        resolvePlugins(kotlinJvm, bintray, buildScan, updates)
     }
     dependencies(BuiltInDependencies.kotlin.plugin.gradle)
 }

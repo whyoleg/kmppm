@@ -77,7 +77,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
         configurePlugins(project)
 
         project.group = configuration.group
-        project.version = configuration.version(project)
+        project.version = configuration.version
 
         configureTargets(ext)
         configureDependencyProviders(project)
@@ -229,7 +229,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
                             mp.apply {
                                 groupId = configuration.group
                                 artifactId = configuration.artifact
-                                version = configuration.version(project)
+                                version = configuration.version
 
                                 from(project.components.getByName("java"))
                                 artifact(sourcesJar)

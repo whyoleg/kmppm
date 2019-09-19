@@ -18,6 +18,7 @@ class BintrayPublisher internal constructor(
     var repo: String? = null
     var autoPublish: Boolean = true
     var override: Boolean = false
+    var version: String? = null
 
     override fun Project.configure() {
 
@@ -43,11 +44,9 @@ class BintrayPublisher internal constructor(
                 githubRepo = publication.githubUrl
 
                 version.apply {
-                    name = configuration.version(this@configure)
+                    name = this@BintrayPublisher.version ?: configuration.version
                     desc = publication.description
                     released = Date().toString()
-                    val tag = versioning.info.tag
-                    if (tag != null) vcsTag = tag
                 }
             }
         }
