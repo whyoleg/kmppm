@@ -13,9 +13,6 @@ kampJvm {
     publishing {
         bintray(publication) {
             repo = "kamp"
-            override = false
-            val commitPostfix = System.getenv("GITHUB_SHA")?.let { "-$it" } ?: ""
-            version = "${configuration.version}$commitPostfix"
         }
     }
 }

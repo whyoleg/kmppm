@@ -44,7 +44,7 @@ class BintrayPublisher internal constructor(
                 githubRepo = publication.githubUrl
 
                 version.apply {
-                    name = this@BintrayPublisher.version ?: configuration.version
+                    name = this@BintrayPublisher.version ?: configuration.version(this@configure)
                     desc = publication.description
                     released = Date().toString()
                 }

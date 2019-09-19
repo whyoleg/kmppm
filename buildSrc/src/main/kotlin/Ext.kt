@@ -4,7 +4,11 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp", "0.1.5")
+val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") {
+    val version = "0.1.6"
+    val commitPostfix = System.getenv("GITHUB_SHA")?.let { "-$it" } ?: ""
+    "$version$commitPostfix"
+}
 
 @KampDSL
 fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
