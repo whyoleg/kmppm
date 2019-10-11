@@ -5,7 +5,7 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp", "0.1.8")
+val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp", "0.1.9")
 
 @KampDSL
 fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {

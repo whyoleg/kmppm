@@ -1,5 +1,6 @@
 package dev.whyoleg.kamp.ext
 
+import dev.whyoleg.kamp.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.plugin.Plugin
@@ -37,7 +38,7 @@ class KampBuild internal constructor(applySelf: Boolean) {
     }
 
     internal fun configure(versionsKind: String, project: Project) {
-        if (versionsMap.isEmpty()) versionsMap += BuiltInVersionsKind.Default.run { name.toLowerCase() to versions }
+        if (versionsMap.isEmpty()) versionsMap += defaultVersionsKind to BuiltInVersions.Stable
         val buildVersions = versionsMap[versionsKind.toLowerCase()] ?: noVersionsRegistered(versionsKind)
         versionsMap.forEach { (kind, versions) ->
             project.writeVersions(kind, versions)

@@ -1,10 +1,12 @@
 package dev.whyoleg.kamp.version
 
+import dev.whyoleg.kamp.*
+
 class VersionsBuilder internal constructor() {
     internal val versionsMap: MutableMap<String, BuiltInVersions> = mutableMapOf()
 
     fun default(versions: BuiltInVersions) {
-        versionsMap += BuiltInVersionsKind.Default.name.toLowerCase() to versions
+        versionsMap += defaultVersionsKind to versions
     }
 
     infix fun String.use(versions: BuiltInVersions) {
@@ -13,4 +15,4 @@ class VersionsBuilder internal constructor() {
 
 }
 
-fun noVersionsRegistered(kind: String): Nothing = throw error("No versions registered for kind '${kind.toLowerCase()}'")
+internal fun noVersionsRegistered(kind: String): Nothing = throw error("No versions registered for kind '${kind.toLowerCase()}'")

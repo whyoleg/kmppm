@@ -2,11 +2,11 @@ package dev.whyoleg.kamp
 
 import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.ext.*
-import dev.whyoleg.kamp.version.*
 import org.gradle.api.*
 import org.gradle.api.initialization.*
 
-private val defaultVersionsKind = BuiltInVersionsKind.Default.name.toLowerCase()
+internal const val defaultVersionsKind = "default"
+
 @KampDSL
 fun Settings.kamp(block: KampSettings.() -> Unit): Unit = KampSettings().apply(block).configure(this)
 
@@ -40,7 +40,7 @@ annotation class KampInternal
 @KampInternal
 @KampDSL
 fun Project.kampBuildDev(
-    versionsKind: String = BuiltInVersionsKind.Default.name,
+    versionsKind: String = defaultVersionsKind,
     block: KampBuild.() -> Unit
 ) {
     val files = files("../library/build/classes/kotlin/main")
