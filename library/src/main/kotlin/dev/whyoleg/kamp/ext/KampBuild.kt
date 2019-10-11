@@ -7,8 +7,8 @@ import dev.whyoleg.kamp.plugin.Plugin
 import dev.whyoleg.kamp.version.*
 import org.gradle.api.*
 
-class KampBuild internal constructor(applySelf: Boolean) {
-    private val plugins: MutableSet<Plugin> = if (applySelf) mutableSetOf(BuiltInPlugins.kamp) else mutableSetOf()
+class KampBuild internal constructor() {
+    private val plugins: MutableSet<Plugin> = mutableSetOf(BuiltInPlugins.kamp)
     private val dependencies: MutableSet<RawDependency> = mutableSetOf()
     private val versionsMap: MutableMap<String, BuiltInVersions> = mutableMapOf()
 

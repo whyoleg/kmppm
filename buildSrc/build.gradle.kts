@@ -6,21 +6,25 @@ import dev.whyoleg.kamp.version.*
 plugins { `kotlin-dsl` }
 
 buildscript {
-    dependencies {
-        val files = files("../library/build/classes/kotlin/main")
-        if (files.singleFile.exists().also(::println)) {
-            classpath(files)
+    val bootstrap: (RepositoryHandler) -> String = { handler: RepositoryHandler ->
+        if (properties["dev.whyoleg.bootstrap"] == "true") {
+            handler.mavenLocal()
+            "local"
         } else {
-            repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-            classpath("dev.whyoleg.kamp:kamp:0.1.10")
+            handler.maven { setUrl("https://dl.bintray.com/whyoleg/kamp") }
+            "0.1.11"
         }
+    }
+    extra["bootstrap"] = bootstrap
+    dependencies {
+        classpath("dev.whyoleg.kamp:kamp:${bootstrap(repositories)}")
     }
 }
 
-@UseExperimental(KampInternal::class)
-kampBuildDev {
+kampBuild {
     registerVersions {
-        default(BuiltInVersions.Stable)
+        val bootstrap = properties["bootstrap"] as (RepositoryHandler) -> String
+        default(BuiltInVersions.Stable.copy(kamp = bootstrap(repositories)))
 
         //versions for dependencies check
         "stable" use BuiltInVersions.Stable
