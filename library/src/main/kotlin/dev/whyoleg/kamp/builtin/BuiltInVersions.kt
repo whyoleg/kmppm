@@ -4,7 +4,7 @@ import org.gradle.api.*
 import kotlin.reflect.full.*
 
 data class BuiltInVersions(
-    val kamp: String = "0.1.6",
+    val kamp: String = "0.1.7",
     val kotlin: String = "1.3.50",
     val coroutines: String = "1.3.1",
     val serialization: String = "0.13.0",
