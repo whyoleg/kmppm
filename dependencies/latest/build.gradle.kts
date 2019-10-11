@@ -8,8 +8,13 @@ import dev.whyoleg.kamp.target.Target
 import kotlin.reflect.*
 import kotlin.reflect.full.*
 
+repositories {
+    val eapProviders: List<DependencyProviderClassifier> = listOf(object : KotlinEapProviderClassifier {})
+    eapProviders.forEach { it.provider(this) }
+}
+
 @UseExperimental(ExperimentalStdlibApi::class)
-kampJvm(ProjectConfiguration("", "", "")) {
+kampJvm(ProjectConfiguration("", "", ""), "latest") {
     plugins(Plugins.updates)
 
     val rawType = typeOf<RawDependency>()

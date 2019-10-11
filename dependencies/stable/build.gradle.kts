@@ -9,7 +9,7 @@ import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 @UseExperimental(ExperimentalStdlibApi::class)
-kampJvm(ProjectConfiguration("", "", "")) {
+kampJvm(ProjectConfiguration("", "", ""), "stable") {
     plugins(Plugins.updates)
 
     val rawType = typeOf<RawDependency>()
