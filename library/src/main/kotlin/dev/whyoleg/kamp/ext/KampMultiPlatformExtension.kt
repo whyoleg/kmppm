@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.gradle.plugin.*
 import kotlin.reflect.*
 
 @KampDSL
-class KampMultiPlatformExtension(configuration: ProjectConfiguration) : KampExtension<KotlinMultiplatformExtension>(configuration) {
+class KampMultiPlatformExtension(configuration: ProjectConfiguration?) : KampExtension<KotlinMultiplatformExtension>(configuration) {
     override val extPlugin: Plugin = BuiltInPlugins.kotlinMpp
     override val extPluginClass: KClass<KotlinMultiplatformExtension> = KotlinMultiplatformExtension::class
 

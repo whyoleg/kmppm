@@ -12,7 +12,7 @@ buildscript {
             classpath(files)
         } else {
             repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-            classpath("dev.whyoleg.kamp:kamp:0.1.9")
+            classpath("dev.whyoleg.kamp:kamp:0.1.10")
         }
     }
 }

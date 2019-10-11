@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.gradle.plugin.*
 
 @KampDSL
 abstract class KampSinglePlatformExtension<KotlinExt : KotlinSingleTargetExtension, T : PlatformTarget, TO : TargetOptions>(
-    configuration: ProjectConfiguration,
+    configuration: ProjectConfiguration?,
     private val target: T,
     private val options: TO
 ) : KampExtension<KotlinExt>(configuration) {

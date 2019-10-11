@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.reflect.*
 
 @KampDSL
-abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val configuration: ProjectConfiguration) : MainTargets {
+abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val configuration: ProjectConfiguration?) : MainTargets {
     protected abstract val extPlugin: Plugin
     protected abstract val extPluginClass: KClass<KotlinExt>
 
@@ -62,6 +62,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
     }
 
     fun publishing(block: PublishersBuilder.() -> Unit) {
+        configuration ?: projectConfigurationRequiredForPublishing()
+
         val builder = PublishersBuilder(configuration).apply(block)
         publishers += builder.publishers
         publications += builder.publications
@@ -76,10 +78,10 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
 
     private fun configure(versionsKind: String, ext: KotlinExt, project: Project) {
         configurePlugins(project)
-
-        project.group = configuration.group
-        project.version = configuration.version(project)
-
+        configuration?.let {
+            project.group = it.group
+            project.version = it.version(project)
+        }
         configureTargets(ext)
         configureDependencyProviders(project)
         configureSources(versionsKind, ext, project)
@@ -217,6 +219,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
 
     private fun configurePublications(project: Project) {
         if (publications.isNotEmpty()) {
+            configuration ?: projectConfigurationRequiredForPublishing()
+
             val sourcesJar = project.tasks.create("sourcesJar", Jar::class.java) {
                 it.dependsOn(JavaPlugin.CLASSES_TASK_NAME)
                 it.archiveClassifier.set("sources")
@@ -279,3 +283,5 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
     }
 
 }
+
+private fun projectConfigurationRequiredForPublishing(): Nothing = error("ProjectConfiguration is required for publishing")
