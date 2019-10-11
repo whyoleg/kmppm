@@ -5,14 +5,19 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp", "0.1.10")
+const val jdkVersion = "1.8"
+
+private val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") {
+    if (properties["local"] == "true") "local"
+    else "0.1.11"
+}
 
 @KampDSL
-fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
+fun Project.configuredLibrary(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
     options {
-        jvmTarget = Versions.jdk
-        sourceCompatibility = Versions.jdk
-        targetCompatibility = Versions.jdk
+        jvmTarget = jdkVersion
+        sourceCompatibility = jdkVersion
+        targetCompatibility = jdkVersion
     }
     languageSettings {
         progressiveMode = true

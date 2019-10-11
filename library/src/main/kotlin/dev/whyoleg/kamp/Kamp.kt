@@ -14,7 +14,7 @@ fun Settings.kamp(block: KampSettings.() -> Unit): Unit = KampSettings().apply(b
 fun Project.kampBuild(
     versionsKind: String = defaultVersionsKind,
     block: KampBuild.() -> Unit
-): Unit = KampBuild(true).apply(block).configure(versionsKind, this)
+): Unit = KampBuild().apply(block).configure(versionsKind, this)
 
 @KampDSL
 fun Project.kampRoot(block: KampRoot.() -> Unit): Unit = KampRoot().apply(block).configure(this)
@@ -32,19 +32,3 @@ fun Project.kampJvm(
     versionsKind: String = defaultVersionsKind,
     block: KampJvmExtension.() -> Unit
 ): Unit = KampJvmExtension(configuration).apply(block).configure(versionsKind, this)
-
-@Experimental
-annotation class KampInternal
-
-@Deprecated("")
-@KampInternal
-@KampDSL
-fun Project.kampBuildDev(
-    versionsKind: String = defaultVersionsKind,
-    block: KampBuild.() -> Unit
-) {
-    val files = files("../library/build/classes/kotlin/main")
-    val localBuildExists = files.singleFile.exists()
-    if (localBuildExists) dependencies.add("implementation", (files("../library/build/classes/kotlin/main")))
-    KampBuild(!localBuildExists).apply(block).configure(versionsKind, this)
-}

@@ -1,18 +1,11 @@
-kampJvm {
-    with(Plugins) {
-        plugins(mavenPublish, bintray, javaPlugin)
-    }
-    source {
-        main {
-            with(Plugins) {
-                compileOnly(kotlinJvm, shadow, updates, docker, detekt, bintray, buildScan)
-            }
-        }
-    }
+import dev.whyoleg.kamp.plugin.*
 
+configuredLibrary {
+    with(BuiltInPlugins) {
+        plugins(mavenPublish, bintray, javaPlugin)
+        source { main { compileOnly(kotlinJvm, shadow, updates, docker, detekt, bintray, buildScan) } }
+    }
     publishing {
-        bintray(publication) {
-            repo = "kamp"
-        }
+        bintray(publication) { repo = "kamp" }
     }
 }
