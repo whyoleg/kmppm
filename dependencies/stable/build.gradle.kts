@@ -1,5 +1,4 @@
 import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.Dependency
 import dev.whyoleg.kamp.dependency.classifier.*
@@ -9,7 +8,7 @@ import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 @UseExperimental(ExperimentalStdlibApi::class)
-kampJvm(ProjectConfiguration("", "", ""), "stable") {
+kampJvm(versionsKind = "stable") {
     plugins(Plugins.updates)
 
     val rawType = typeOf<RawDependency>()

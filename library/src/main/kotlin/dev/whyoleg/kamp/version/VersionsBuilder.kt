@@ -15,4 +15,4 @@ class VersionsBuilder internal constructor() {
 
 }
 
-internal fun noVersionsRegistered(kind: String): Nothing = throw error("No versions registered for kind '${kind.toLowerCase()}'")
+internal fun noVersionsRegistered(kind: String): Nothing = error("No versions registered for kind '${kind.toLowerCase()}'")

@@ -1,5 +1,4 @@
 import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.Dependency
 import dev.whyoleg.kamp.dependency.classifier.*
@@ -14,7 +13,7 @@ repositories {
 }
 
 @UseExperimental(ExperimentalStdlibApi::class)
-kampJvm(ProjectConfiguration("", "", ""), "latest") {
+kampJvm(versionsKind = "latest") {
     plugins(Plugins.updates)
 
     val rawType = typeOf<RawDependency>()

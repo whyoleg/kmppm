@@ -21,14 +21,14 @@ fun Project.kampRoot(block: KampRoot.() -> Unit): Unit = KampRoot().apply(block)
 
 @KampDSL
 fun Project.kamp(
-    configuration: ProjectConfiguration,
+    configuration: ProjectConfiguration? = null,
     versionsKind: String = defaultVersionsKind,
     block: KampMultiPlatformExtension.() -> Unit
 ): Unit = KampMultiPlatformExtension(configuration).apply(block).configure(versionsKind, this)
 
 @KampDSL
 fun Project.kampJvm(
-    configuration: ProjectConfiguration,
+    configuration: ProjectConfiguration? = null,
     versionsKind: String = defaultVersionsKind,
     block: KampJvmExtension.() -> Unit
 ): Unit = KampJvmExtension(configuration).apply(block).configure(versionsKind, this)

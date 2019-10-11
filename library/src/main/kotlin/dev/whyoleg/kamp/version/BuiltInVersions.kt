@@ -23,7 +23,7 @@ data class BuiltInVersions(
 ) {
     companion object {
         val Stable: BuiltInVersions = BuiltInVersions(
-            kamp = "0.1.9",
+            kamp = "0.1.10",
             kotlin = "1.3.50",
             coroutines = "1.3.2",
             serialization = "0.13.0",
