@@ -1,7 +1,7 @@
 package dev.whyoleg.kamp.packager
 
 import com.google.cloud.tools.jib.gradle.*
-import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 

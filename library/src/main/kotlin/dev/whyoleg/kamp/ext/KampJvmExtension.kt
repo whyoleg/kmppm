@@ -1,7 +1,7 @@
 package dev.whyoleg.kamp.ext
 
 import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target

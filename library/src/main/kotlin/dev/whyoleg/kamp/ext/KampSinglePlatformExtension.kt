@@ -1,6 +1,7 @@
 package dev.whyoleg.kamp.ext
 
 import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.source.*
 import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*

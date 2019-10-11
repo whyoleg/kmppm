@@ -1,10 +1,10 @@
-package dev.whyoleg.kamp.builtin
+package dev.whyoleg.kamp.version
 
 import org.gradle.api.*
 import kotlin.reflect.full.*
 
 data class BuiltInVersions(
-    val kamp: String = "0.1.7",
+    val kamp: String = "0.1.8",
     val kotlin: String = "1.3.50",
     val coroutines: String = "1.3.1",
     val serialization: String = "0.13.0",
@@ -22,8 +22,9 @@ data class BuiltInVersions(
     val buildScan: String = "2.4.2"
 )
 
-fun Project.readVersions(): BuiltInVersions {
-    val file = rootDir.resolve("buildSrc/build/versions.properties")
+fun Project.readVersions(kind: String): BuiltInVersions {
+    val file = rootDir.resolve("buildSrc/build/versions/${kind.toLowerCase()}.properties")
+    if (!file.exists()) noVersionsRegistered(kind)
     println("Read versions from: ${file.absoluteFile}")
     val constructor = BuiltInVersions::class.primaryConstructor!!
     val parameters = constructor.parameters.associateBy { it.name!! }.toMap()
@@ -31,9 +32,10 @@ fun Project.readVersions(): BuiltInVersions {
     return constructor.callBy(arguments)
 }
 
-fun Project.writeVersions(versions: BuiltInVersions) {
-    buildDir.mkdirs()
-    val file = buildDir.resolve("versions.properties")
+fun Project.writeVersions(kind: String, versions: BuiltInVersions) {
+    val root = buildDir.resolve("versions")
+    root.mkdirs()
+    val file = root.resolve("${kind.toLowerCase()}.properties")
     println("Write versions to: ${file.absoluteFile}")
     val text = BuiltInVersions::class.memberProperties.joinToString("\n") { "${it.name}=${it.get(versions)}" }
     file.writeText(text)
