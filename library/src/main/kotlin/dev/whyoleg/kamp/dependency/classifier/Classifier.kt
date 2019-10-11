@@ -1,8 +1,8 @@
 package dev.whyoleg.kamp.dependency.classifier
 
-import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.target.*
+import dev.whyoleg.kamp.version.*
 
 interface Classifier : MainTargets, DependencyProviders
 

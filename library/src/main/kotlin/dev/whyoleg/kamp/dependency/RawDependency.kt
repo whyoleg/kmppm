@@ -1,7 +1,7 @@
 package dev.whyoleg.kamp.dependency
 
-import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.classifier.*
+import dev.whyoleg.kamp.version.*
 
 data class RawDependency(
     val group: String,

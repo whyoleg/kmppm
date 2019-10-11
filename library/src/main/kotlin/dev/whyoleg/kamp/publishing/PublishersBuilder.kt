@@ -1,6 +1,6 @@
 package dev.whyoleg.kamp.publishing
 
-import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.configuration.*
 
 class PublishersBuilder internal constructor(private val configuration: ProjectConfiguration) {
     internal val publishers: MutableList<Publisher> = mutableListOf()

@@ -2,8 +2,8 @@ package dev.whyoleg.kamp.ext
 
 import com.github.benmanes.gradle.versions.updates.*
 import com.gradle.scan.plugin.*
-import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 

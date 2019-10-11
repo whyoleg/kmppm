@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp
+package dev.whyoleg.kamp.configuration
 
 import org.gradle.api.*
 
@@ -7,3 +7,5 @@ data class ProjectConfiguration(val group: String, val artifact: String, val ver
 @Suppress("FunctionName")
 fun ProjectConfiguration(group: String, artifact: String, version: String): ProjectConfiguration =
     ProjectConfiguration(group, artifact) { version }
+
+fun noProjectConfigurationProvided(): Nothing = throw error("No ProjectConfiguration provided")

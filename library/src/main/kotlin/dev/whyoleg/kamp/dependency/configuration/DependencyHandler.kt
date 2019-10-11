@@ -1,8 +1,8 @@
 package dev.whyoleg.kamp.dependency.configuration
 
-import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.target.Target
+import dev.whyoleg.kamp.version.*
 import org.gradle.api.*
 import org.jetbrains.kotlin.gradle.plugin.*
 

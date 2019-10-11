@@ -1,7 +1,7 @@
 package dev.whyoleg.kamp.ext
 
 import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.configuration.*
 import dev.whyoleg.kamp.packager.*
@@ -14,6 +14,7 @@ import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
 import dev.whyoleg.kamp.target.configuration.*
+import dev.whyoleg.kamp.version.*
 import org.gradle.api.*
 import org.gradle.api.plugins.*
 import org.gradle.api.publish.*
@@ -68,12 +69,12 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
 
     //configuration
 
-    internal fun configure(project: Project) {
+    internal fun configure(versionsKind: String, project: Project) {
         project.apply { it.plugin(extPlugin.name) }
-        project.extensions.configure(extPluginClass.java) { configure(it, project) }
+        project.extensions.configure(extPluginClass.java) { configure(versionsKind, it, project) }
     }
 
-    private fun configure(ext: KotlinExt, project: Project) {
+    private fun configure(versionsKind: String, ext: KotlinExt, project: Project) {
         configurePlugins(project)
 
         project.group = configuration.group
@@ -81,7 +82,7 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
 
         configureTargets(ext)
         configureDependencyProviders(project)
-        configureSources(ext, project)
+        configureSources(versionsKind, ext, project)
         configurePackagers(project)
         configurePublications(project)
         configurePublishers(project)
@@ -138,8 +139,8 @@ abstract class KampExtension<KotlinExt : KotlinProjectExtension>(private val con
 
     protected abstract fun createSourceSet(ext: KotlinExt, multiTarget: MultiTarget<*>, sourceSetType: SourceSetType): KotlinSourceSet
 
-    private fun configureSources(ext: KotlinExt, project: Project) {
-        val versions = project.readVersions()
+    private fun configureSources(versionsKind: String, ext: KotlinExt, project: Project) {
+        val versions = project.readVersions(versionsKind)
         distinctSources()
             .flatMap { createSourceSets(it, ext) }
             .forEach { (mainSourceSet, targetSourceSets, list) ->

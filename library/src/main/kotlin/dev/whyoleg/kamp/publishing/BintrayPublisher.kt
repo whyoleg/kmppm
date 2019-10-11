@@ -1,8 +1,8 @@
 package dev.whyoleg.kamp.publishing
 
 import com.jfrog.bintray.gradle.*
-import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.configuration.*
+import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.plugin.Plugin
 import org.gradle.api.*
 import java.util.*

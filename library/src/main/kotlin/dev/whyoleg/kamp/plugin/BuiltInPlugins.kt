@@ -1,6 +1,6 @@
-package dev.whyoleg.kamp.builtin
+package dev.whyoleg.kamp.plugin
 
-import dev.whyoleg.kamp.plugin.*
+import dev.whyoleg.kamp.dependency.*
 
 open class BuiltInPlugins {
     companion object : BuiltInPlugins()
