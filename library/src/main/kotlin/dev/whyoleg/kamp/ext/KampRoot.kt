@@ -5,6 +5,7 @@ import com.gradle.scan.plugin.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.plugin.Plugin
+import dev.whyoleg.kamp.version.*
 import org.gradle.api.*
 
 @Suppress("UnstableApiUsage")
@@ -12,6 +13,7 @@ class KampRoot {
 
     private val plugins: MutableSet<Plugin> = mutableSetOf()
     private val buildScans = mutableListOf<BuildScanExtension.() -> Unit>()
+    private val versionUpdaters = mutableListOf<VersionUpdater>()
 
     fun plugins(vararg plugins: Plugin) {
         this.plugins += plugins
@@ -29,6 +31,10 @@ class KampRoot {
 
     fun buildScan(block: BuildScanExtension.() -> Unit) {
         buildScans += block
+    }
+
+    fun versionUpdate(block: VersionUpdatersBuilder.() -> Unit) {
+        versionUpdaters += VersionUpdatersBuilder().apply(block).updaters
     }
 
     internal fun configure(project: Project) {
@@ -51,6 +57,10 @@ class KampRoot {
 
         if (buildScans.isNotEmpty()) project.extensions.configure<BuildScanExtension>("buildScan") { buildScan ->
             buildScans.forEach { buildScan.it() }
+        }
+
+        versionUpdaters.forEach { updater ->
+            project.tasks.register(updater.taskName) { it.doLast { updater.update(project) } }
         }
     }
 }
