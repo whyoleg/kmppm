@@ -6,6 +6,8 @@ import dev.whyoleg.kamp.plugin.*
 import dev.whyoleg.kamp.sourceset.*
 import dev.whyoleg.kamp.target.*
 import dev.whyoleg.kamp.target.Target
+import dev.whyoleg.kamp.version.*
+import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 kampRoot {
@@ -16,14 +18,44 @@ kampRoot {
         termsOfServiceAgree = "yes"
         publishAlways()
     }
+
+    versionUpdate {
+        val finders = listOf(
+            VersionFinder(
+                filePath = "buildSrc/src/main/kotlin/Ext.kt",
+                textBeforeLine = "private val configuration = ProjectConfiguration",
+                lineStart = " ",
+                lineEnd = ""
+            ),
+            VersionFinder(
+                filePath = "buildSrc/build.gradle.kts",
+                textBeforeLine = "https://dl.bintray.com/whyoleg/kamp",
+                lineStart = " ",
+                lineEnd = ""
+            ),
+            VersionFinder(
+                filePath = "library/src/main/kotlin/dev/whyoleg/kamp/version/BuiltInVersions.kt",
+                textBeforeLine = "val Stable: BuiltInVersions",
+                lineStart = " ",
+                lineEnd = ","
+            )
+        )
+        listOf(
+            "Major" to Version::incrementMajor,
+            "Minor" to Version::incrementMinor,
+            "Patch" to Version::incrementPatch
+        ).forEach { (name, update) ->
+            register("update${name}Version", finders, update)
+        }
+    }
 }
 
 @UseExperimental(ExperimentalStdlibApi::class)
 val collectedDependencies: SourceSetBuilder<JvmTarget>.() -> Unit = {
     main {
-        val rawType = kotlin.reflect.typeOf<RawDependency>()
-        val classifierType = kotlin.reflect.typeOf<Classifier>()
-        val depType = kotlin.reflect.typeOf<Dependency>()
+        val rawType = typeOf<RawDependency>()
+        val classifierType = typeOf<Classifier>()
+        val depType = typeOf<Dependency>()
 
         fun Classifier.dependencies(): List<Dependency> {
             val props = this::class.memberProperties

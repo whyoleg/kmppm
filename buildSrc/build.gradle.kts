@@ -12,13 +12,11 @@ buildscript {
             "local"
         } else {
             handler.maven { setUrl("https://dl.bintray.com/whyoleg/kamp") }
-            "0.1.11"
+            "0.1.12"
         }
     }
     extra["bootstrap"] = bootstrap
-    dependencies {
-        classpath("dev.whyoleg.kamp:kamp:${bootstrap(repositories)}")
-    }
+    dependencies.classpath("dev.whyoleg.kamp:kamp:${bootstrap(repositories)}")
 }
 
 kampBuild {
