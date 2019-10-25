@@ -117,4 +117,6 @@ open class BuiltInDependencies : Classifier {
         RawDependency("dev.whyoleg.kamp", "kamp", BuiltInVersions::kamp, DependencyProviders.maven("https://dl.bintray.com/whyoleg/kamp"))
 
     val buildScan = RawDependency("com.gradle", "build-scan-plugin", BuiltInVersions::buildScan, DependencyProviders.gradlePluginPortal)
+
+    val androidPlugin = RawDependency("com.android.tools.build", "gradle", BuiltInVersions::android, DependencyProviders.google)
 }

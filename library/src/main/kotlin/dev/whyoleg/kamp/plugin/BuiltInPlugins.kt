@@ -21,5 +21,7 @@ open class BuiltInPlugins {
     val javaPlugin = Plugin("org.gradle.java-gradle-plugin", null)
     val buildScan = Plugin("com.gradle.build-scan", BuiltInDependencies.buildScan)
 
+    val androidLib = Plugin("com.android.library", BuiltInDependencies.androidPlugin)
+
     internal val kamp = Plugin("dev.whyoleg.kamp", BuiltInDependencies.kamp)
 }

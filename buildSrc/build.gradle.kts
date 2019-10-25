@@ -12,7 +12,7 @@ buildscript {
             "local"
         } else {
             handler.maven { setUrl("https://dl.bintray.com/whyoleg/kamp") }
-            "0.1.12"
+            "0.1.13"
         }
     }
     extra["bootstrap"] = bootstrap

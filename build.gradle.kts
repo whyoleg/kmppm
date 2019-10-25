@@ -23,21 +23,24 @@ kampRoot {
         val finders = listOf(
             VersionFinder(
                 filePath = "buildSrc/src/main/kotlin/Ext.kt",
-                textBeforeLine = "private val configuration = ProjectConfiguration",
-                lineStart = " ",
-                lineEnd = ""
+                textBeforeVersion = "private val configuration = ProjectConfiguration",
+                offset = 1,
+                lineStart = " \"",
+                lineEnd = "\""
             ),
             VersionFinder(
                 filePath = "buildSrc/build.gradle.kts",
-                textBeforeLine = "https://dl.bintray.com/whyoleg/kamp",
-                lineStart = " ",
-                lineEnd = ""
+                textBeforeVersion = "https://dl.bintray.com/whyoleg/kamp",
+                offset = 1,
+                lineStart = " \"",
+                lineEnd = "\""
             ),
             VersionFinder(
                 filePath = "library/src/main/kotlin/dev/whyoleg/kamp/version/BuiltInVersions.kt",
-                textBeforeLine = "val Stable: BuiltInVersions",
-                lineStart = " ",
-                lineEnd = ","
+                textBeforeVersion = "val Stable: BuiltInVersions",
+                offset = 1,
+                lineStart = "kamp = \"",
+                lineEnd = "\","
             )
         )
         listOf(

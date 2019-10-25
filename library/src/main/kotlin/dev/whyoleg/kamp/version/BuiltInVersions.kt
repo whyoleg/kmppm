@@ -19,11 +19,12 @@ data class BuiltInVersions(
     val logback: String,
     val slf4j: String,
     val bintray: String,
-    val buildScan: String
+    val buildScan: String,
+    val android: String
 ) {
     companion object {
         val Stable: BuiltInVersions = BuiltInVersions(
-            kamp = "0.1.12",
+            kamp = "0.1.13",
             kotlin = "1.3.50",
             coroutines = "1.3.2",
             serialization = "0.13.0",
@@ -38,14 +39,16 @@ data class BuiltInVersions(
             logback = "1.2.3",
             slf4j = "1.7.26",
             bintray = "1.8.4",
-            buildScan = "2.4.2"
+            buildScan = "2.4.2",
+            android = "3.5.0"
         )
         val Latest: BuiltInVersions = Stable.copy(
             kotlin = "1.3.60-eap-23",
             ktor = "1.3.0-beta-1",
             koin = "2.1.0-alpha-1",
             logback = "1.3.0-alpha4",
-            slf4j = "2.0.0-alpha1"
+            slf4j = "2.0.0-alpha1",
+            android = "3.5.0"
         )
     }
 }
