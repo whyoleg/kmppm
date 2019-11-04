@@ -8,35 +8,54 @@ interface GroupVersionClassifier : GroupClassifier {
     val version: (BuiltInVersions) -> String
 }
 
-fun GroupVersionClassifier.raw(name: String, provider: DependencyProvider): RawDependency = raw(name, version, provider)
-
-fun <T : PlatformTarget> GroupVersionClassifier.dependency(name: String, provider: DependencyProvider, target: TargetWithPostfix<T>): TargetDependency<T> =
-    raw(name, provider)(target)
+fun GroupVersionClassifier.raw(
+    name: String,
+    provider: DependencyProvider? = null
+): RawDependency = raw(name, version, provider)
 
 fun <T : PlatformTarget> GroupVersionClassifier.dependency(
     name: String,
-    provider: DependencyProvider,
-    targets: Set<TargetWithPostfix<T>>
+    target: TargetWithPostfix<T>,
+    provider: DependencyProvider? = null
+): TargetDependency<T> = raw(name, provider)(target)
+
+fun <T : PlatformTarget> GroupVersionClassifier.dependency(
+    name: String,
+    targets: Set<TargetWithPostfix<T>>,
+    provider: DependencyProvider? = null
 ): TargetDependency<T> = raw(name, provider)(targets)
 
 fun <T : PlatformTarget> GroupVersionClassifier.dependency(
     name: String,
-    provider: DependencyProvider,
-    vararg targets: TargetWithPostfix<T>
+    vararg targets: TargetWithPostfix<T>,
+    provider: DependencyProvider? = null
 ): TargetDependency<T> = raw(name, provider)(*targets)
 
-fun GroupVersionClassifier.dependency(name: String, provider: DependencyProvider, target: TargetWithPostfix<*>): MultiDependency = raw(name, provider)(target)
-fun GroupVersionClassifier.dependency(name: String, provider: DependencyProvider, targets: Set<TargetWithPostfix<*>>): MultiDependency =
-    raw(name, provider)(targets)
+fun GroupVersionClassifier.dependency(
+    name: String,
+    target: TargetWithPostfix<*>,
+    provider: DependencyProvider? = null
+): MultiDependency = raw(name, provider)(target)
 
-fun GroupVersionClassifier.dependency(name: String, provider: DependencyProvider, vararg targets: TargetWithPostfix<*>): MultiDependency =
-    raw(name, provider)(*targets)
+fun GroupVersionClassifier.dependency(
+    name: String,
+    targets: Set<TargetWithPostfix<*>>,
+    provider: DependencyProvider? = null
+): MultiDependency = raw(name, provider)(targets)
+
+fun GroupVersionClassifier.dependency(
+    name: String,
+    provider: DependencyProvider,
+    vararg targets: TargetWithPostfix<*>
+): MultiDependency = raw(name, provider)(*targets)
 
 
-fun <C> C.dependency(name: String, provider: DependencyProvider): MultiDependency where C : GroupVersionClassifier, C : MultiTargetClassifier =
-    raw(name, provider)(targets)
+fun <C> C.dependency(
+    name: String,
+    provider: DependencyProvider? = null
+): MultiDependency where C : GroupVersionClassifier, C : MultiTargetClassifier = raw(name, provider)(targets)
 
 fun <C, T : PlatformTarget> C.dependency(
     name: String,
-    provider: DependencyProvider
+    provider: DependencyProvider? = null
 ): TargetDependency<T> where C : GroupVersionClassifier, C : TargetClassifier<T> = raw(name, provider)(targets)

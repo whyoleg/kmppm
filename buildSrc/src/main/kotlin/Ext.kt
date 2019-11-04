@@ -8,7 +8,7 @@ import org.gradle.api.*
 const val jdkVersion = "1.8"
 
 private val configuration = ProjectConfiguration("dev.whyoleg.kamp", "kamp") {
-    if (properties["local"] == "true") "local" else "0.1.13"
+    if (properties["local"] == "true") "local" else "0.1.14"
 }
 
 @KampDSL

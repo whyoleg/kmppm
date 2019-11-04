@@ -20,12 +20,12 @@ fun MultiTargetClassifier.dependency(
     group: String,
     name: String,
     version: (BuiltInVersions) -> String,
-    provider: DependencyProvider
+    provider: DependencyProvider? = null
 ): MultiDependency = RawDependency(group, name, version, provider)(targets)
 
 fun <T : PlatformTarget> TargetClassifier<T>.dependency(
     group: String,
     name: String,
     version: (BuiltInVersions) -> String,
-    provider: DependencyProvider
+    provider: DependencyProvider? = null
 ): TargetDependency<T> = RawDependency(group, name, version, provider)(targets)
