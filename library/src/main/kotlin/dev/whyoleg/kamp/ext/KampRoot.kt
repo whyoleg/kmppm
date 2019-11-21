@@ -60,7 +60,10 @@ class KampRoot {
         }
 
         versionUpdaters.forEach { updater ->
-            project.tasks.register(updater.taskName) { it.doLast { updater.update(project) } }
+            project.tasks.register(updater.taskName) {
+                it.group = "version"
+                it.doLast { updater.update(project) }
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ import dev.whyoleg.kamp.plugin.*
 
 configuredLibrary {
     with(BuiltInPlugins) {
-        plugins(mavenPublish, bintray, javaPlugin)
+        plugins(javaPlugin)
         source { main { compileOnly(kotlinJvm, shadow, updates, docker, detekt, bintray, buildScan) } }
     }
     publishing {

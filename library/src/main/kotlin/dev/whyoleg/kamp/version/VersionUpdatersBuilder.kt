@@ -63,7 +63,7 @@ internal fun MutableList<String>.replaceLineAfterContained(text: String, offset:
     this[versionLineIndex] = block(this[versionLineIndex])
 }
 
-internal fun String.version(): Version {
+fun String.version(): Version {
     val components = split(".")
     require(components.size == 3) { "Version must be in format 'x.y.z' but was '$this'" }
     val (major, minor, patch) = components.map {

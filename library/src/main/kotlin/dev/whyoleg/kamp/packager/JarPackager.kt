@@ -11,6 +11,7 @@ class JarPackager : Packager {
     var className: String? = null
     var name: String? = null
     var minimize: Boolean = false
+    var useVersion: Boolean = true
 
     override val plugins: Set<Plugin> = with(BuiltInPlugins) { setOf(shadow, application) }
 
@@ -22,7 +23,7 @@ class JarPackager : Packager {
         extensions.configure<JavaApplication>("application") { it.mainClassName = className }
         tasks.withType(ShadowJar::class.java) {
             it.baseName = name
-            it.version = this.version.toString()
+            it.version = if (useVersion) this.version.toString() else null
             it.classifier = null
             if (minimize) it.minimize()
         }

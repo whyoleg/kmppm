@@ -43,10 +43,11 @@ kampRoot {
                 lineEnd = "\","
             )
         )
-        listOf(
+        listOf<Pair<String, (Version) -> Version>>(
             "Major" to Version::incrementMajor,
             "Minor" to Version::incrementMinor,
-            "Patch" to Version::incrementPatch
+            "Patch" to Version::incrementPatch,
+            "Full" to { System.getProperty("NEW_VERSION").version() }
         ).forEach { (name, update) ->
             register("update${name}Version", finders, update)
         }

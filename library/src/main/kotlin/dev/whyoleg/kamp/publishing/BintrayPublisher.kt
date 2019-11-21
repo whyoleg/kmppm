@@ -11,7 +11,7 @@ class BintrayPublisher internal constructor(
     private val publication: Publication,
     private val configuration: ProjectConfiguration
 ) : Publisher {
-    override val plugins: Set<Plugin> = with(BuiltInPlugins) { setOf(bintray, mavenPublish, javaPlugin) }
+    override val plugins: Set<Plugin> = with(BuiltInPlugins) { setOf(bintray, mavenPublish) }
 
     var user: String? = null
     var key: String? = null
