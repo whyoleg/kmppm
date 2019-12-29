@@ -15,11 +15,11 @@ interface WithArtifact {
 fun Group.artifact(artifact: String, artifactProvider: RepositoryProvider? = null): GroupWithArtifact =
     object : GroupWithArtifact, Group by this, WithArtifact by WithArtifact(artifact, artifactProvider) {}
 
-fun GroupWithTargets.artifact(artifact: String, artifactProvider: RepositoryProvider? = null): GroupWithTargetsArtifact =
-    object : GroupWithTargetsArtifact, GroupWithTargets by this, WithArtifact by WithArtifact(artifact, artifactProvider) {}
+fun GroupWithPlatforms.artifact(artifact: String, artifactProvider: RepositoryProvider? = null): GroupWithPlatformsArtifact =
+    object : GroupWithPlatformsArtifact, GroupWithPlatforms by this, WithArtifact by WithArtifact(artifact, artifactProvider) {}
 
 fun GroupWithVersion.artifact(artifact: String, artifactProvider: RepositoryProvider? = null): GroupWithVersionArtifact =
     object : GroupWithVersionArtifact, GroupWithVersion by this, WithArtifact by WithArtifact(artifact, artifactProvider) {}
 
-fun GroupWithVersionTargets.artifact(artifact: String, artifactProvider: RepositoryProvider? = null): Dependency =
-    object : Dependency, GroupWithVersionTargets by this, WithArtifact by WithArtifact(artifact, artifactProvider) {}
+fun GroupWithVersionPlatforms.artifact(artifact: String, artifactProvider: RepositoryProvider? = null): KampDependency =
+    object : KampDependency, GroupWithVersionPlatforms by this, WithArtifact by WithArtifact(artifact, artifactProvider) {}

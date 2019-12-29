@@ -5,31 +5,31 @@ import dev.whyoleg.kamp.version.*
 open class BuiltInDependencies(val builtInVersions: BuiltInVersions = BuiltInVersions.Stable) : DependencyBuilder() {
     companion object : BuiltInDependencies()
 
-    val oldTargetsStyle = listOf(common("common"), jvm(), js("js"))
+    val oldPlatformsStyle = listOf(common("common"), jvm(), js("js"))
 
     val kotlin by lazy(::Kotlin)
 
     inner class Kotlin : GroupWithVersion by group("org.jetbrains.kotlin", "mavenCentral").version(builtInVersions.kotlin) {
         val plugin by lazy(::Plugin)
 
-        inner class Plugin : GroupWithVersionTargets by jvm {
+        inner class Plugin : GroupWithVersionPlatforms by jvm {
             val gradle = artifact("kotlin-gradle-plugin")
             val serialization = artifact("kotlin-serialization")
         }
 
-        val stdlib = artifact("kotlin-stdlib").targets(oldTargetsStyle)
-        val stdlib8 = stdlib.targets(common("common"), jvm("jdk8"), js("js"))
+        val stdlib = artifact("kotlin-stdlib").platforms(oldPlatformsStyle)
+        val stdlib8 = stdlib.platforms(common("common"), jvm("jdk8"), js("js"))
         val test = stdlib.artifact("kotlin-test")
-        val annotations = artifact("kotlin-test").targets(common("annotations-common"), jvm("junit"))
+        val annotations = artifact("kotlin-test").platforms(common("annotations-common"), jvm("junit"))
         val reflect = artifact("kotlin-reflect").jvm
     }
 
     val kotlinx by lazy(::Kotlinx)
 
-    inner class Kotlinx : GroupWithTargets by group("org.jetbrains.kotlinx", "mavenCentral").targets(oldTargetsStyle) {
+    inner class Kotlinx : GroupWithPlatforms by group("org.jetbrains.kotlinx", "mavenCentral").platforms(oldPlatformsStyle) {
         val plugin by lazy(::Plugin)
 
-        inner class Plugin : GroupWithTargets by jvm {
+        inner class Plugin : GroupWithPlatforms by jvm {
             val atomicfu = artifact("atomicfu-gradle-plugin").version(builtInVersions.atomicfu)
         }
 
@@ -43,13 +43,13 @@ open class BuiltInDependencies(val builtInVersions: BuiltInVersions = BuiltInVer
     inner class Coroutines : GroupWithVersion by group("org.jetbrains.kotlinx", "mavenCentral").version(builtInVersions.coroutines) {
         val javaFX = artifact("kotlinx-coroutines-javafx").jvm
         val slf4j = artifact("kotlinx-coroutines-slf4j").jvm
-        val core = artifact("kotlinx-coroutines").targets(common("core-common"), jvm("core"), android("android"))
-        val core8 = core.targets(common("core-common"), jvm("jdk8"), android("android"))
+        val core = artifact("kotlinx-coroutines").platforms(common("core-common"), jvm("core"), android("android"))
+        val core8 = core.platforms(common("core-common"), jvm("jdk8"), android("android"))
     }
 
     val ktor by lazy(::Ktor)
 
-    inner class Ktor : GroupWithVersionTargets by group("io.ktor").version(builtInVersions.ktor).targets(jvm("jvm"), common()) {
+    inner class Ktor : GroupWithVersionPlatforms by group("io.ktor").version(builtInVersions.ktor).platforms(jvm("jvm"), common()) {
         val client by lazy(::Client)
 
         inner class Client {
@@ -61,7 +61,7 @@ open class BuiltInDependencies(val builtInVersions: BuiltInVersions = BuiltInVer
 
     val koin by lazy(::Koin)
 
-    inner class Koin : GroupWithVersionTargets by group("org.koin", "jcenter").version(builtInVersions.koin).jvm {
+    inner class Koin : GroupWithVersionPlatforms by group("org.koin", "jcenter").version(builtInVersions.koin).jvm {
         val core = artifact("koin-core")
         val ext = artifact("koin-core-ext")
         val slf4j = artifact("koin-logger-slf4j")
@@ -84,7 +84,7 @@ open class BuiltInDependencies(val builtInVersions: BuiltInVersions = BuiltInVer
             group("io.github.microutils", "mavenCentral")
                 .artifact("kotlin-logging")
                 .version(builtInVersions.microutilsLogging)
-                .targets(common("common"), jvm())
+                .platforms(common("common"), jvm())
     }
 
     val shadow =

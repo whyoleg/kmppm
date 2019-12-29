@@ -15,11 +15,11 @@ interface WithVersion {
 fun Group.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersion =
     object : GroupWithVersion, Group by this, WithVersion by WithVersion(version, versionProvider) {}
 
-fun GroupWithTargets.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersionTargets =
-    object : GroupWithVersionTargets, GroupWithTargets by this, WithVersion by WithVersion(version, versionProvider) {}
+fun GroupWithPlatforms.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersionPlatforms =
+    object : GroupWithVersionPlatforms, GroupWithPlatforms by this, WithVersion by WithVersion(version, versionProvider) {}
 
 fun GroupWithArtifact.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersionArtifact =
     object : GroupWithVersionArtifact, GroupWithArtifact by this, WithVersion by WithVersion(version, versionProvider) {}
 
-fun GroupWithTargetsArtifact.version(version: String, versionProvider: RepositoryProvider? = null): Dependency =
-    object : Dependency, GroupWithTargetsArtifact by this, WithVersion by WithVersion(version, versionProvider) {}
+fun GroupWithPlatformsArtifact.version(version: String, versionProvider: RepositoryProvider? = null): KampDependency =
+    object : KampDependency, GroupWithPlatformsArtifact by this, WithVersion by WithVersion(version, versionProvider) {}
