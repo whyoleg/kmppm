@@ -6,18 +6,23 @@ import dev.whyoleg.kamp.platform.KampPlatform.*
 
 inline class KotlinVersion(val value: String) {
     companion object {
-        val Stable = KotlinVersion("1.3.61")
-        val EAP = KotlinVersion("1.3.70-eap-42")
+        val stable = KotlinVersion("1.3.61")
+        val eap = KotlinVersion("1.3.70-eap-42")
     }
 }
 
 class KotlinModule(version: KotlinVersion) {
     val dependencies = KotlinDependencies(version)
     val plugins = KotlinPlugins(dependencies)
+
+    companion object {
+        val eapProvider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/kotlin-eap")
+        val devProvider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/kotlin-dev")
+    }
 }
 
 class KotlinDependencies(version: KotlinVersion) :
-    GroupWithVersion by group("org.jetbrains.kotlin", "mavenCentral").version(version.value) {
+    GroupWithVersion by group("org.jetbrains.kotlin", RepositoryProviders.mavenCentral).version(version.value) {
 
     val gradlePlugin = artifact("kotlin-gradle-plugin").jvm
     val serializationPlugin = artifact("kotlin-serialization").jvm

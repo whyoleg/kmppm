@@ -1,16 +1,20 @@
 package dev.whyoleg.kamp.dependencies
 
+import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
-import dev.whyoleg.kamp.version.*
 
 inline class ExposedVersion(val value: String) {
     companion object {
-        val Stable = KtorVersion("0.20.2")
+        val stable = KtorVersion("0.20.2")
     }
 }
 
 class ExposedDependencies(version: ExposedVersion) :
-    GroupWithVersionPlatforms by group("org.jetbrains.exposed").version(version.value).jvm {
+    GroupWithVersionPlatforms by group("org.jetbrains.exposed", provider).version(version.value).jvm {
+
+    companion object {
+        val provider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/exposed")
+    }
 
     val core = artifact("exposed-core")
     val dao = artifact("exposed-dao")

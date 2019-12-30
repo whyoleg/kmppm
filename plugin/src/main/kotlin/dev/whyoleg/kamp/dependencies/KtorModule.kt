@@ -1,18 +1,23 @@
 package dev.whyoleg.kamp.dependencies
 
+import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 import dev.whyoleg.kamp.platform.KampPlatform.*
-import dev.whyoleg.kamp.version.*
 
 inline class KtorVersion(val value: String) {
     companion object {
-        val Stable = KtorVersion("1.2.6")
-        val RC = KtorVersion("1.3.0-rc2")
+        val stable = KtorVersion("1.2.6")
+        val rc = KtorVersion("1.3.0-rc2")
     }
 }
 
 class KtorDependencies(version: KtorVersion) :
-    GroupWithVersionPlatforms by group("io.ktor").version(version.value).platforms(jvm("jvm"), common()) {
+    GroupWithVersionPlatforms by group("io.ktor", provider).version(version.value).platforms(jvm("jvm"), common()) {
+
+    companion object {
+        val provider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/ktor")
+    }
+
     val client by lazy(::Client)
 
     inner class Client {

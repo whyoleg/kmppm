@@ -11,7 +11,7 @@ data class KotlinxVersions(
     val cli: String
 ) {
     companion object {
-        val Stable = KotlinxVersions(
+        val stable = KotlinxVersions(
             coroutines = "1.3.3",
             serialization = "0.14.0",
             atomicfu = "0.14.1",
@@ -23,10 +23,14 @@ data class KotlinxVersions(
 class KotlinxModule(versions: KotlinxVersions) {
     val dependencies = KotlinxDependencies(versions)
     val plugins = KotlinxPlugins(dependencies)
+
+    companion object {
+        val provider = RepositoryProviders.maven("https://kotlin.bintray.com/kotlinx")
+    }
 }
 
 class KotlinxDependencies(private val versions: KotlinxVersions) :
-    GroupWithPlatforms by group("org.jetbrains.kotlinx", "mavenCentral").platforms(common("common"), jvm(), js("js")) {
+    GroupWithPlatforms by group("org.jetbrains.kotlinx", KotlinxModule.provider).platforms(common("common"), jvm(), js("js")) {
 
     val serialization by lazy(::Serialization)
 

@@ -3,7 +3,7 @@ import dev.whyoleg.kamp.platform.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
 fun KotlinMultiplatformExtension.test() {
-    val kotlin = KotlinModule(KotlinVersion.Stable)
+    val kotlin = KotlinModule(KotlinVersion.stable)
     listOf(jvm(), js()).dependencies("main") {
 
     }

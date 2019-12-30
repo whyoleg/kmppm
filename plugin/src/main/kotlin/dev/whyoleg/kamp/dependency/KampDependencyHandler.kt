@@ -2,6 +2,7 @@ package dev.whyoleg.kamp.dependency
 
 import org.gradle.api.artifacts.*
 import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.plugin.mpp.*
 
 interface KampDependencyHandler {
     fun api(dependencyNotation: KampDependency): Dependency?
@@ -22,35 +23,44 @@ internal class PlatformKampDependencyHandler(
     private val platformType: KotlinPlatformType,
     private val handler: KotlinDependencyHandler
 ) : KampDependencyHandler {
+
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun provide(dependencyNotation: KampDependency) {
+        //TODO setup some configuration for it?
+        dependencyNotation.provider?.let {
+            it((handler as DefaultKotlinDependencyHandler).project.repositories)
+        }
+    }
+
     override fun api(dependencyNotation: KampDependency): Dependency? =
-        dependencyNotation.notation(platformType)?.let(handler::api)
+        dependencyNotation.also(::provide).notation(platformType)?.let(handler::api)
 
     override fun api(
         dependencyNotation: KampDependency,
         configure: ExternalModuleDependency.() -> Unit
-    ): ExternalModuleDependency? = dependencyNotation.notation(platformType)?.let { handler.api(it, configure) }
+    ): ExternalModuleDependency? = dependencyNotation.also(::provide).notation(platformType)?.let { handler.api(it, configure) }
 
     override fun implementation(dependencyNotation: KampDependency): Dependency? =
-        dependencyNotation.notation(platformType)?.let(handler::implementation)
+        dependencyNotation.also(::provide).notation(platformType)?.let(handler::implementation)
 
     override fun implementation(
         dependencyNotation: KampDependency,
         configure: ExternalModuleDependency.() -> Unit
-    ): ExternalModuleDependency? = dependencyNotation.notation(platformType)?.let { handler.implementation(it, configure) }
+    ): ExternalModuleDependency? = dependencyNotation.also(::provide).notation(platformType)?.let { handler.implementation(it, configure) }
 
     override fun compileOnly(dependencyNotation: KampDependency): Dependency? =
-        dependencyNotation.notation(platformType)?.let(handler::compileOnly)
+        dependencyNotation.also(::provide).notation(platformType)?.let(handler::compileOnly)
 
     override fun compileOnly(
         dependencyNotation: KampDependency,
         configure: ExternalModuleDependency.() -> Unit
-    ): ExternalModuleDependency? = dependencyNotation.notation(platformType)?.let { handler.compileOnly(it, configure) }
+    ): ExternalModuleDependency? = dependencyNotation.also(::provide).notation(platformType)?.let { handler.compileOnly(it, configure) }
 
     override fun runtimeOnly(dependencyNotation: KampDependency): Dependency? =
-        dependencyNotation.notation(platformType)?.let(handler::runtimeOnly)
+        dependencyNotation.also(::provide).notation(platformType)?.let(handler::runtimeOnly)
 
     override fun runtimeOnly(
         dependencyNotation: KampDependency,
         configure: ExternalModuleDependency.() -> Unit
-    ): ExternalModuleDependency? = dependencyNotation.notation(platformType)?.let { handler.runtimeOnly(it, configure) }
+    ): ExternalModuleDependency? = dependencyNotation.also(::provide).notation(platformType)?.let { handler.runtimeOnly(it, configure) }
 }
