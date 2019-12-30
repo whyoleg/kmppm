@@ -1,4 +1,6 @@
-package dev.whyoleg.kamp.dependency
+package dev.whyoleg.kamp.dependency.builder
+
+import dev.whyoleg.kamp.dependency.*
 
 interface WithArtifact {
     val artifact: String

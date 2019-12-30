@@ -1,5 +1,6 @@
-package dev.whyoleg.kamp.dependency
+package dev.whyoleg.kamp.dependency.builder
 
+import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.platform.*
 
 interface WithPlatforms {
