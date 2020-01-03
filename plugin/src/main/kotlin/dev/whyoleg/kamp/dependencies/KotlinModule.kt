@@ -16,6 +16,7 @@ class KotlinModule(version: KotlinVersion) {
     val plugins = KotlinPlugins(dependencies)
 
     companion object {
+        val stable: KotlinModule by lazy { KotlinModule(KotlinVersion.stable) }
         val eapProvider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/kotlin-eap")
         val devProvider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/kotlin-dev")
     }
@@ -23,6 +24,9 @@ class KotlinModule(version: KotlinVersion) {
 
 class KotlinDependencies(version: KotlinVersion) :
     GroupWithVersion by group("org.jetbrains.kotlin", RepositoryProviders.mavenCentral).version(version.value) {
+    companion object {
+        val stable: KotlinDependencies by lazy { KotlinModule.stable.dependencies }
+    }
 
     val gradlePlugin = artifact("kotlin-gradle-plugin").jvm
     val serializationPlugin = artifact("kotlin-serialization").jvm
@@ -35,6 +39,10 @@ class KotlinDependencies(version: KotlinVersion) :
 }
 
 class KotlinPlugins(dependencies: KotlinDependencies) {
+    companion object {
+        val stable: KotlinPlugins by lazy { KotlinModule.stable.plugins }
+    }
+
     val kotlinMpp = KampPlugin("kotlin-multiplatform", dependencies.gradlePlugin)
     val kotlinJvm = KampPlugin("org.jetbrains.kotlin.jvm", dependencies.gradlePlugin)
     val serialization = KampPlugin("kotlinx-serialization", dependencies.serializationPlugin)
