@@ -10,8 +10,4 @@ buildscript {
 
 modules {
     "plugin"()
-    "deps" {
-        "st"()
-        "dev"()
-    }
 }

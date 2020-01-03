@@ -4,9 +4,4 @@ import dev.whyoleg.kamp.module.*
 
 object Modules {
     val plugin = Module(":plugin")
-
-    object Deps {
-        val st = Module(":deps:st")
-        val dev = Module(":deps:dev")
-    }
 }
