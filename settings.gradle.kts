@@ -1,3 +1,6 @@
+import dev.whyoleg.kamp.dependencies.*
+import dev.whyoleg.kamp.dependency.*
+
 buildscript {
     repositories {
         mavenLocal()
@@ -11,3 +14,8 @@ buildscript {
 modules {
     "plugin"()
 }
+
+resolvePlugins(
+    KotlinPlugins.stable.kotlinJvm,
+    BuiltInPlugins.stable.kamp
+)
