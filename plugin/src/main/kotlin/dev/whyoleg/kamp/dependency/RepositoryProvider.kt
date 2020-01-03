@@ -1,6 +1,7 @@
 package dev.whyoleg.kamp.dependency
 
 import org.gradle.api.artifacts.dsl.*
+import org.gradle.api.artifacts.repositories.*
 
 typealias RepositoryProvider = RepositoryHandler.() -> Unit
 
@@ -22,5 +23,40 @@ object RepositoryProviders {
     @Suppress("UnstableApiUsage")
     val gradlePluginPortal: RepositoryProvider = { gradlePluginPortal() }
 
-    fun maven(url: String): RepositoryProvider = { maven { it.setUrl(url) } }
+    fun maven(block: MavenArtifactRepository.() -> Unit): RepositoryProvider = { maven(block) }
+    fun maven(url: String): RepositoryProvider = maven { setUrl(url) }
+    fun bintray(org: String, user: String, repo: String): RepositoryProvider = maven { setUrl("https://$org.bintray.com/$user/$repo") }
+
+
+    fun bintray(user: String, repo: String): RepositoryProvider = bintray("dl", user, repo)
+
+    fun bintrayPublish(
+        user: String,
+        repo: String,
+        name: String,
+        bintrayUser: String,
+        bintrayApiKey: String,
+        publish: Boolean = false,
+        override: Boolean = false
+    ): RepositoryProvider = maven {
+        setUrl("https://api.bintray.com/maven/$user/$repo/$name/;publish=${if (publish) 1 else 0};override=${if (override) 1 else 0}")
+        credentials {
+            it.username = bintrayUser
+            it.password = bintrayApiKey
+        }
+    }
+
+    fun bintrayPublish(
+        user: String,
+        repo: String,
+        name: String,
+        publish: Boolean = false,
+        override: Boolean = false
+    ): RepositoryProvider = maven {
+        setUrl("https://api.bintray.com/maven/$user/$repo/$name/;publish=${if (publish) 1 else 0};override=${if (override) 1 else 0}")
+        credentials {
+            it.username = System.getenv("BINTRAY_USER")
+            it.password = System.getenv("BINTRAY_API_KEY")
+        }
+    }
 }
