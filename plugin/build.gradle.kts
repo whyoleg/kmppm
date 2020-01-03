@@ -1,8 +1,13 @@
-import dev.whyoleg.kamp.plugin.*
+import dev.whyoleg.kamp.dependencies.*
+import dev.whyoleg.kamp.dependency.*
 
-configuredLibrary {
-    with(BuiltInPlugins) {
-        plugins(javaPlugin)
-        source { main { compileOnly(kotlinJvm, shadow, updates, docker, detekt, bintray, buildScan) } }
+plugins {
+    use(Plugins.pluginModule)
+}
+
+kotlin {
+    target.dependenciesMain {
+        implementation(KotlinDependencies.stable.gradlePlugin)
+        //        source { main { compileOnly(kotlinJvm, shadow, updates, docker, detekt, bintray, buildScan) } }
     }
 }
