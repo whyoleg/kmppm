@@ -32,4 +32,18 @@ fun KotlinMultiplatformExtension.test() {
 
     }
     publication(Publication("", ""))
+    metadata {
+
+    }
+    jvm {
+        val s2 = optionsMain()
+        optionsTest {
+
+        }
+    }
+    targets.all {
+        it.commonOptionsMain {
+
+        }
+    }
 }
