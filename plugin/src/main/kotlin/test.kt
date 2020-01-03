@@ -46,4 +46,9 @@ fun KotlinMultiplatformExtension.test() {
 
         }
     }
+
+    jvmMain.languageSettings.apiVersion = "1"
+    sourceSets.all {
+        it.languageSettings.apiVersion = "2"
+    }
 }
