@@ -1,11 +1,13 @@
 import dev.whyoleg.kamp.dependencies.*
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.platform.*
+import dev.whyoleg.kamp.publication.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
 fun KotlinMultiplatformExtension.test() {
     val kotlin = KotlinModule(KotlinVersion.stable)
     val apiProject = KampProjectDependency("123")
+
     listOf(jvm(), js()).dependencies("main") {
         implementation(apiProject) {
 
@@ -29,4 +31,5 @@ fun KotlinMultiplatformExtension.test() {
     listOf(jvmMain, jsMain).dependencies(KampPlatform.common) {
 
     }
+    publication(Publication("", ""))
 }
