@@ -55,4 +55,12 @@ object KotlinExperimentalAnnotations {
     val ExperimentalUnsignedTypes = ExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
     val ExperimentalContracts = ExperimentalAnnotation("kotlin.contracts.ExperimentalContracts")
     val ExperimentalTime = ExperimentalAnnotation("kotlin.time.ExperimentalTime")
+
+    val All = listOf(
+        Experimental,
+        ExperimentalStdlibApi,
+        ExperimentalUnsignedTypes,
+        ExperimentalContracts,
+        ExperimentalTime
+    )
 }

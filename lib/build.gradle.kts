@@ -1,6 +1,7 @@
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.modules.*
 import org.jetbrains.kotlin.config.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     use(Plugins.pluginModule)
@@ -11,6 +12,11 @@ kotlin {
         dependenciesMain {
             implementation(KotlinDependencies.Stable.gradlePlugin)
             compileOnly(BuiltInDependencies.Stable.shadow)
+            // val k = kotlinJvm.classpath!!.copy(version = { "1.3.41" })
+            //                val c = k.copy(name = "kotlin-compiler-embeddable")
+            //                implementation(k(Target.jvm.invoke()))
+            //                compileOnly(c(Target.jvm.invoke()))
+            //                compileOnly(shadow)
         }
         options {
             progressive()

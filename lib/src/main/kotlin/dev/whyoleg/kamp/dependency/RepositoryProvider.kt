@@ -34,29 +34,15 @@ object RepositoryProviders {
         user: String,
         repo: String,
         name: String,
-        bintrayUser: String,
-        bintrayApiKey: String,
         publish: Boolean = false,
-        override: Boolean = false
+        override: Boolean = false,
+        bintrayUser: String? = null,
+        bintrayApiKey: String? = null
     ): RepositoryProvider = maven {
         setUrl("https://api.bintray.com/maven/$user/$repo/$name/;publish=${if (publish) 1 else 0};override=${if (override) 1 else 0}")
         credentials {
-            it.username = bintrayUser
-            it.password = bintrayApiKey
-        }
-    }
-
-    fun bintrayPublish(
-        user: String,
-        repo: String,
-        name: String,
-        publish: Boolean = false,
-        override: Boolean = false
-    ): RepositoryProvider = maven {
-        setUrl("https://api.bintray.com/maven/$user/$repo/$name/;publish=${if (publish) 1 else 0};override=${if (override) 1 else 0}")
-        credentials {
-            it.username = System.getenv("BINTRAY_USER")
-            it.password = System.getenv("BINTRAY_API_KEY")
+            it.username = bintrayUser ?: System.getenv("BINTRAY_USER")
+            it.password = bintrayApiKey ?: System.getenv("BINTRAY_API_KEY")
         }
     }
 }

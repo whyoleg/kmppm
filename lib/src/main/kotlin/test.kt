@@ -1,8 +1,8 @@
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.modules.*
-import dev.whyoleg.kamp.options.*
 import dev.whyoleg.kamp.platform.*
 import dev.whyoleg.kamp.publication.*
+import org.jetbrains.kotlin.config.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
 fun KotlinMultiplatformExtension.test() {

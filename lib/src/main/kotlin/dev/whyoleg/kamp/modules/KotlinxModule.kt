@@ -69,4 +69,13 @@ object KotlinxExperimentalAnnotations {
     val InternalCoroutinesApi = ExperimentalAnnotation("kotlinx.coroutines.InternalCoroutinesApi")
     val FlowPreview = ExperimentalAnnotation("kotlinx.coroutines.FlowPreview")
     val ImplicitReflectionSerializer = ExperimentalAnnotation("kotlinx.serialization.ImplicitReflectionSerializer")
+
+    val All = listOf(
+        ObsoleteCoroutinesApi,
+        ExperimentalCoroutinesApi,
+        InternalCoroutinesApi,
+        FlowPreview,
+        ImplicitReflectionSerializer
+    )
+
 }

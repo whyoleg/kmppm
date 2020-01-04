@@ -38,12 +38,12 @@ class BuiltInModule(builtInVersions: BuiltInVersions) {
 
 class BuiltInDependencies(builtInVersions: BuiltInVersions) {
     companion object {
-        val stable: BuiltInDependencies by lazy { BuiltInModule.Stable.dependencies }
+        val Stable: BuiltInDependencies by lazy { BuiltInModule.Stable.dependencies }
     }
 
     val shadow =
         group("com.github.jengelman.gradle.plugins")
-            .artifact("shadow", RepositoryProviders.mavenCentral)
+            .artifact("shadow", RepositoryProviders.gradlePluginPortal)
             .version(builtInVersions.shadow).jvm
 
     val bintray =
@@ -81,7 +81,7 @@ class BuiltInDependencies(builtInVersions: BuiltInVersions) {
 
 class BuiltInPlugins(dependencies: BuiltInDependencies) {
     companion object {
-        val stable: BuiltInPlugins by lazy { BuiltInModule.Stable.plugins }
+        val Stable: BuiltInPlugins by lazy { BuiltInModule.Stable.plugins }
     }
 
     val shadow = KampPlugin("com.github.johnrengelman.shadow", dependencies.shadow)

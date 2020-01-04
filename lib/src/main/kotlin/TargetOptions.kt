@@ -1,4 +1,5 @@
 import dev.whyoleg.kamp.options.*
+import org.jetbrains.kotlin.config.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
@@ -6,6 +7,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.*
 fun KotlinTarget.commonOptions(compilation: String): KotlinCommonOptions = compilations.getByName(compilation).kotlinOptions
 fun KotlinTarget.commonOptionsMain(): KotlinCommonOptions = commonOptions("main")
 fun KotlinTarget.commonOptionsTest(): KotlinCommonOptions = commonOptions("test")
+
+fun KotlinTarget.commonOptions(block: KotlinCommonOptions.() -> Unit) {
+    compilations.all { it.kotlinOptions(block) }
+}
 
 fun KotlinTarget.commonOptions(compilation: String, block: KotlinCommonOptions.() -> Unit) {
     compilations.getByName(compilation).kotlinOptions(block)
@@ -29,6 +34,10 @@ fun <T : KotlinCommonOptions> KotlinOnlyTarget<out KotlinCompilation<T>>.options
     compilations.getByName("test").kotlinOptions
 
 
+fun <T : KotlinCommonOptions> KotlinOnlyTarget<out KotlinCompilation<T>>.options(block: T.() -> Unit) {
+    compilations.all { it.kotlinOptions(block) }
+}
+
 fun <T : KotlinCommonOptions> KotlinOnlyTarget<out KotlinCompilation<T>>.options(compilation: String, block: T.() -> Unit) {
     compilations.getByName(compilation).kotlinOptions(block)
 }
@@ -41,10 +50,13 @@ fun <T : KotlinCommonOptions> KotlinOnlyTarget<out KotlinCompilation<T>>.options
     compilations.getByName("test").kotlinOptions(block)
 }
 
-
 fun KotlinAndroidTarget.options(compilation: String): KotlinJvmOptions = compilations.getByName(compilation).kotlinOptions
 fun KotlinAndroidTarget.optionsMain(): KotlinJvmOptions = options("main")
 fun KotlinAndroidTarget.optionsTest(): KotlinJvmOptions = options("test")
+
+fun KotlinAndroidTarget.options(block: KotlinJvmOptions.() -> Unit) {
+    compilations.all { it.kotlinOptions(block) }
+}
 
 fun KotlinAndroidTarget.options(compilation: String, block: KotlinJvmOptions.() -> Unit) {
     compilations.getByName(compilation).kotlinOptions(block)
@@ -58,12 +70,31 @@ fun KotlinAndroidTarget.optionsTest(block: KotlinJvmOptions.() -> Unit) {
     options("test", block)
 }
 
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.options(compilation: String): T = compilations.getByName(compilation).kotlinOptions
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.optionsMain(): T = options("main")
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.optionsTest(): T = options("test")
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.options(compilation: String, block: T.() -> Unit) {
+    compilations.getByName(compilation).kotlinOptions(block)
+}
+
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.options(block: T.() -> Unit) {
+    compilations.all { it.kotlinOptions(block) }
+}
+
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.optionsMain(block: T.() -> Unit) {
+    options("main", block)
+}
+
+fun <T : KotlinCommonOptions> KotlinWithJavaTarget<T>.optionsTest(block: T.() -> Unit) {
+    options("main", block)
+}
+
 fun KotlinCommonToolOptions.progressive() {
     freeCompilerArgs += "-progressive"
 }
 
 fun KotlinCommonToolOptions.enableLanguageFeatures(features: Iterable<LanguageFeature>) {
-    freeCompilerArgs += features.map { "-XXLanguage:+${it.value}" }
+    freeCompilerArgs += features.map { "-XXLanguage:+${it.name}" }
 }
 
 fun KotlinCommonToolOptions.useExperimentalAnnotations(annotations: Iterable<ExperimentalAnnotation>) {
@@ -76,7 +107,7 @@ fun KotlinCommonToolOptions.compilerArguments(arguments: Iterable<CompilerArgume
 
 
 fun LanguageSettingsBuilder.enableLanguageFeatures(features: Iterable<LanguageFeature>) {
-    features.forEach { enableLanguageFeature(it.value) }
+    features.forEach { enableLanguageFeature(it.name) }
 }
 
 fun LanguageSettingsBuilder.useExperimentalAnnotations(annotations: Iterable<ExperimentalAnnotation>) {
