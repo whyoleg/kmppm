@@ -4,24 +4,24 @@ import dev.whyoleg.kamp.dependency.*
 
 interface WithVersion {
     val version: String
-    val versionProvider: RepositoryProvider?
+    val versionProviders: Set<RepositoryProvider>
 
     companion object {
-        internal operator fun invoke(version: String, versionProvider: RepositoryProvider? = null): WithVersion = object : WithVersion {
+        internal operator fun invoke(version: String, versionProvider: Array<out RepositoryProvider>): WithVersion = object : WithVersion {
             override val version: String get() = version
-            override val versionProvider: RepositoryProvider? get() = versionProvider
+            override val versionProviders: Set<RepositoryProvider> get() = versionProvider.toSet()
         }
     }
 }
 
-fun Group.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersion =
+fun Group.version(version: String, vararg versionProvider: RepositoryProvider): GroupWithVersion =
     object : GroupWithVersion, Group by this, WithVersion by WithVersion(version, versionProvider) {}
 
-fun GroupWithPlatforms.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersionPlatforms =
+fun GroupWithPlatforms.version(version: String, vararg versionProvider: RepositoryProvider): GroupWithVersionPlatforms =
     object : GroupWithVersionPlatforms, GroupWithPlatforms by this, WithVersion by WithVersion(version, versionProvider) {}
 
-fun GroupWithArtifact.version(version: String, versionProvider: RepositoryProvider? = null): GroupWithVersionArtifact =
+fun GroupWithArtifact.version(version: String, vararg versionProvider: RepositoryProvider): GroupWithVersionArtifact =
     object : GroupWithVersionArtifact, GroupWithArtifact by this, WithVersion by WithVersion(version, versionProvider) {}
 
-fun GroupWithPlatformsArtifact.version(version: String, versionProvider: RepositoryProvider? = null): KampDependency =
+fun GroupWithPlatformsArtifact.version(version: String, vararg versionProvider: RepositoryProvider): KampDependency =
     object : KampDependency, GroupWithPlatformsArtifact by this, WithVersion by WithVersion(version, versionProvider) {}

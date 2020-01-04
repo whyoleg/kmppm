@@ -13,10 +13,11 @@ inline class KtorVersion(val value: String) {
 }
 
 class KtorDependencies(version: KtorVersion) :
-    GroupWithVersionPlatforms by group("io.ktor", provider).version(version.value).platforms(jvm("jvm"), common()) {
-
+    GroupWithVersionPlatforms by group("io.ktor", Provider).version(version.value).platforms(jvm("jvm"), common()) {
     companion object {
-        val provider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/ktor")
+        val Provider = RepositoryProviders.bintray("kotlin", "ktor")
+        val Stable: KtorDependencies by lazy { KtorDependencies(KtorVersion.Stable) }
+        val RC: KtorDependencies by lazy { KtorDependencies(KtorVersion.RC) }
     }
 
     val client by lazy(::Client)

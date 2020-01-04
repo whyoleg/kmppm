@@ -5,15 +5,16 @@ import dev.whyoleg.kamp.dependency.builder.*
 
 inline class ExposedVersion(val value: String) {
     companion object {
-        val Stable = KtorVersion("0.20.2")
+        val Stable = ExposedVersion("0.20.2")
     }
 }
 
 class ExposedDependencies(version: ExposedVersion) :
-    GroupWithVersionPlatforms by group("org.jetbrains.exposed", provider).version(version.value).jvm {
+    GroupWithVersionPlatforms by group("org.jetbrains.exposed", Provider).version(version.value).jvm {
 
     companion object {
-        val provider = RepositoryProviders.maven("https://dl.bintray.com/kotlin/exposed")
+        val Provider = RepositoryProviders.bintray("kotlin", "exposed")
+        val Stable: ExposedDependencies by lazy { ExposedDependencies(ExposedVersion.Stable) }
     }
 
     val core = artifact("exposed-core")

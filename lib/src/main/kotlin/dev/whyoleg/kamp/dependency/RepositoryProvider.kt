@@ -25,10 +25,8 @@ object RepositoryProviders {
 
     fun maven(block: MavenArtifactRepository.() -> Unit): RepositoryProvider = { maven(block) }
     fun maven(url: String): RepositoryProvider = maven { setUrl(url) }
-    fun bintray(org: String, user: String, repo: String): RepositoryProvider = maven { setUrl("https://$org.bintray.com/$user/$repo") }
-
-
-    fun bintray(user: String, repo: String): RepositoryProvider = bintray("dl", user, repo)
+    fun bintray(user: String, repo: String): RepositoryProvider = maven("https://dl.bintray.com/$user/$repo")
+    fun bintrayOrg(org: String, repo: String): RepositoryProvider = maven("https://$org.bintray.com/$repo")
 
     fun bintrayPublish(
         user: String,

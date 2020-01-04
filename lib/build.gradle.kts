@@ -1,7 +1,6 @@
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.modules.*
 import org.jetbrains.kotlin.config.*
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     use(Plugins.pluginModule)
@@ -10,13 +9,9 @@ plugins {
 kotlin {
     target {
         dependenciesMain {
-            implementation(KotlinDependencies.Stable.gradlePlugin)
+            implementation(Dependencies.kotlin.dependencies.gradlePlugin)
+            compileOnly(Dependencies.kotlin.dependencies.compilerEmbeddable)
             compileOnly(BuiltInDependencies.Stable.shadow)
-            // val k = kotlinJvm.classpath!!.copy(version = { "1.3.41" })
-            //                val c = k.copy(name = "kotlin-compiler-embeddable")
-            //                implementation(k(Target.jvm.invoke()))
-            //                compileOnly(c(Target.jvm.invoke()))
-            //                compileOnly(shadow)
         }
         options {
             progressive()
@@ -31,6 +26,7 @@ kotlin {
 
 jvmPublication(publication, publisher.provider(publish = false)) {
     artifactId = "kamp"
+    if (properties["dev.whyoleg.bootstrap.publish"].toString().toBoolean()) version = "bootstrap"
 }
 
 createBintrayPublishTask(publisher)

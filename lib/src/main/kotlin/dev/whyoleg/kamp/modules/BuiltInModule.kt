@@ -15,13 +15,13 @@ data class BuiltInVersions(
 ) {
     companion object {
         val Stable: BuiltInVersions = BuiltInVersions(
-            kamp = "0.2-local",
-            gradleVersions = "0.26.0",
+            kamp = "0.2.0",
+            gradleVersions = "0.27.0",
             jib = "1.6.1",
-            shadow = "5.1.0",
+            shadow = "5.2.0",
             detekt = "1.1.1",
             bintray = "1.8.4",
-            buildScan = "2.4.2",
+            buildScan = "3.1.1",
             androidPlugin = "3.5.0"
         )
     }
@@ -74,8 +74,8 @@ class BuiltInDependencies(builtInVersions: BuiltInVersions) {
             .version(builtInVersions.androidPlugin).jvm
 
     val kamp =
-        group("dev.whyoleg.kamp") //TODO FIX IT
-            .artifact("plugin", RepositoryProviders.mavenLocal)//maven("https://dl.bintray.com/whyoleg/kamp"))
+        group("dev.whyoleg.kamp")
+            .artifact("kamp", RepositoryProviders.mavenCentral, RepositoryProviders.bintray("whyoleg", "kamp"))
             .version(builtInVersions.kamp).jvm
 }
 

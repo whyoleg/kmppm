@@ -1,2 +1,2 @@
 #!/bin/bash
-./gradlew publishToMavenLocal -Plocal=true -Pdev.whyoleg.bootstrap=false
+./gradlew publishKampPublicationToMavenLocal -Pdev.whyoleg.bootstrap.publish=true -Pdev.whyoleg.bootstrap=false

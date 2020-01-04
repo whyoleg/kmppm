@@ -4,17 +4,17 @@ import dev.whyoleg.kamp.dependency.*
 
 interface Group {
     val group: String
-    val groupProvider: RepositoryProvider?
+    val groupProviders: Set<RepositoryProvider>
 
     companion object {
-        internal operator fun invoke(group: String, groupProvider: RepositoryProvider? = null): Group = object : Group {
+        internal operator fun invoke(group: String, groupProvider: Array<out RepositoryProvider>): Group = object : Group {
             override val group: String get() = group
-            override val groupProvider: RepositoryProvider? get() = groupProvider
+            override val groupProviders: Set<RepositoryProvider> get() = groupProvider.toSet()
         }
     }
 }
 
-fun group(group: String, groupProvider: RepositoryProvider? = null): Group = Group(group, groupProvider)
+fun group(group: String, vararg groupProvider: RepositoryProvider): Group = Group(group, groupProvider)
 
 interface GroupWithVersion : Group, WithVersion
 interface GroupWithPlatforms : Group, WithPlatforms

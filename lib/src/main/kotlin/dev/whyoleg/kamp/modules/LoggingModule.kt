@@ -23,6 +23,11 @@ data class LoggingVersions(
 }
 
 class LoggingDependencies(versions: LoggingVersions) {
+    companion object {
+        val Stable: LoggingDependencies by lazy { LoggingDependencies(LoggingVersions.Stable) }
+        val Alpha: LoggingDependencies by lazy { LoggingDependencies(LoggingVersions.Alpha) }
+    }
+
     val logging =
         group("io.github.microutils", RepositoryProviders.mavenCentral)
             .artifact("kotlin-logging")

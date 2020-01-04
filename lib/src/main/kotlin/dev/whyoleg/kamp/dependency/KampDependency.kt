@@ -11,4 +11,4 @@ fun KampDependency.notation(platformType: KotlinPlatformType): String? =
         "$group:$artifact$p:$version"
     }
 
-val KampDependency.provider: RepositoryProvider? get() = artifactProvider ?: versionProvider ?: groupProvider
+val KampDependency.providers: Set<RepositoryProvider> get() = artifactProviders + versionProviders + groupProviders

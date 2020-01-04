@@ -26,12 +26,16 @@ class KotlinxModule(versions: KotlinxVersions) {
     val plugins = KotlinxPlugins(dependencies)
 
     companion object {
-        val provider = RepositoryProviders.maven("https://kotlin.bintray.com/kotlinx")
+        val Provider = RepositoryProviders.bintrayOrg("kotlin", "kotlinx")
+        val Stable: KotlinxModule by lazy { KotlinxModule(KotlinxVersions.Stable) }
     }
 }
 
 class KotlinxDependencies(private val versions: KotlinxVersions) :
-    GroupWithPlatforms by group("org.jetbrains.kotlinx", KotlinxModule.provider).platforms(common("common"), jvm(), js("js")) {
+    GroupWithPlatforms by group("org.jetbrains.kotlinx", KotlinxModule.Provider).platforms(common("common"), jvm(), js("js")) {
+    companion object {
+        val Stable: KotlinxDependencies by lazy { KotlinxModule.Stable.dependencies }
+    }
 
     val serialization by lazy(::Serialization)
 
@@ -60,6 +64,10 @@ class KotlinxDependencies(private val versions: KotlinxVersions) :
 }
 
 class KotlinxPlugins(dependencies: KotlinxDependencies) {
+    companion object {
+        val Stable: KotlinxPlugins by lazy { KotlinxModule.Stable.plugins }
+    }
+
     val atomicfu by lazy { KampPlugin("kotlinx-atomicfu", dependencies.atomicfu.plugin) }
 }
 

@@ -12,6 +12,11 @@ inline class KoinVersion(val value: String) {
 
 class KoinDependencies(version: KoinVersion) :
     GroupWithVersionPlatforms by group("org.koin", RepositoryProviders.jcenter).version(version.value).jvm {
+    companion object {
+        val Stable: KoinDependencies by lazy { KoinDependencies(KoinVersion.Stable) }
+        val Alpha: KoinDependencies by lazy { KoinDependencies(KoinVersion.Alpha) }
+    }
+
     val core = artifact("koin-core")
     val ext = artifact("koin-core-ext")
     val slf4j = artifact("koin-logger-slf4j")

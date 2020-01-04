@@ -34,7 +34,7 @@ internal class PlatformKampDependencyHandler(
     @Suppress("NOTHING_TO_INLINE")
     private inline fun provide(dependency: KampDependency) {
         //TODO setup some configuration for it?
-        dependency.provider?.let {
+        dependency.providers.forEach {
             it((handler as DefaultKotlinDependencyHandler).project.repositories)
         }
     }
