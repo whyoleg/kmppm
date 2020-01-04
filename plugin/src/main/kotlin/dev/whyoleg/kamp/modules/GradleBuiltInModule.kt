@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 

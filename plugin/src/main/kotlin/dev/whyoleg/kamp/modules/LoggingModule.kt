@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
@@ -10,12 +10,12 @@ data class LoggingVersions(
     val slf4j: String
 ) {
     companion object {
-        val stable = LoggingVersions(
+        val Stable = LoggingVersions(
             microutilsLogging = "1.7.8",
             logback = "1.2.6",
             slf4j = "1.7.26"
         )
-        val alpha = stable.copy(
+        val Alpha = Stable.copy(
             logback = "1.3.0-alpha4",
             slf4j = "2.0.0-alpha1"
         )

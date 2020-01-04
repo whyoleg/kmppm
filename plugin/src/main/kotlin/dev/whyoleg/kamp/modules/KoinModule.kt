@@ -1,12 +1,12 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 
 inline class KoinVersion(val value: String) {
     companion object {
-        val stable = KoinVersion("2.0.1")
-        val alpha = KoinVersion("2.1.0-alpha-8")
+        val Stable = KoinVersion("2.0.1")
+        val Alpha = KoinVersion("2.1.0-alpha-8")
     }
 }
 

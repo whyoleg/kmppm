@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
@@ -14,8 +14,8 @@ data class BuiltInVersions(
     val androidPlugin: String
 ) {
     companion object {
-        val stable: BuiltInVersions = BuiltInVersions(
-            kamp = "0.1.16",
+        val Stable: BuiltInVersions = BuiltInVersions(
+            kamp = "0.2-local",
             gradleVersions = "0.26.0",
             jib = "1.6.1",
             shadow = "5.1.0",
@@ -28,11 +28,18 @@ data class BuiltInVersions(
 }
 
 class BuiltInModule(builtInVersions: BuiltInVersions) {
+    companion object {
+        val Stable: BuiltInModule by lazy { BuiltInModule(BuiltInVersions.Stable) }
+    }
+
     val dependencies = BuiltInDependencies(builtInVersions)
     val plugins = BuiltInPlugins(dependencies)
 }
 
 class BuiltInDependencies(builtInVersions: BuiltInVersions) {
+    companion object {
+        val stable: BuiltInDependencies by lazy { BuiltInModule.Stable.dependencies }
+    }
 
     val shadow =
         group("com.github.jengelman.gradle.plugins")
@@ -67,12 +74,15 @@ class BuiltInDependencies(builtInVersions: BuiltInVersions) {
             .version(builtInVersions.androidPlugin).jvm
 
     val kamp =
-        group("dev.whyoleg.kamp")
-            .artifact("kamp", RepositoryProviders.maven("https://dl.bintray.com/whyoleg/kamp"))
+        group("dev.whyoleg.kamp") //TODO FIX IT
+            .artifact("plugin", RepositoryProviders.mavenLocal)//maven("https://dl.bintray.com/whyoleg/kamp"))
             .version(builtInVersions.kamp).jvm
 }
 
 class BuiltInPlugins(dependencies: BuiltInDependencies) {
+    companion object {
+        val stable: BuiltInPlugins by lazy { BuiltInModule.Stable.plugins }
+    }
 
     val shadow = KampPlugin("com.github.johnrengelman.shadow", dependencies.shadow)
     val gradleVersions = KampPlugin("com.github.ben-manes.versions", dependencies.gradleVersions)
@@ -84,6 +94,6 @@ class BuiltInPlugins(dependencies: BuiltInDependencies) {
 
     val androidLib = KampPlugin("com.android.library", dependencies.androidPlugin)
 
-    internal val kamp = KampPlugin("dev.whyoleg.kamp", dependencies.kamp)
+    val kamp = KampPlugin("dev.whyoleg.kamp", dependencies.kamp)
 }
 
