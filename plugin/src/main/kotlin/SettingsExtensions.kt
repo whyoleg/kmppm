@@ -1,5 +1,5 @@
 import dev.whyoleg.kamp.dependency.*
-import dev.whyoleg.kamp.module.*
+import dev.whyoleg.kamp.project.*
 import org.gradle.api.initialization.*
 import java.io.*
 

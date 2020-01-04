@@ -1,3 +1,4 @@
+import dev.whyoleg.kamp.options.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
@@ -57,30 +58,28 @@ fun KotlinAndroidTarget.optionsTest(block: KotlinJvmOptions.() -> Unit) {
     options("test", block)
 }
 
-fun KotlinMultiplatformExtension.t() {
-    jvm {
-        optionsMain {
-
-        }
-    }
-    js {
-        optionsMain {
-
-        }
-    }
-    androidNativeArm32 {
-        optionsMain {
-
-        }
-    }
-    android {
-        optionsMain {
-
-        }
-    }
-    metadata {
-        optionsMain {
-
-        }
-    }
+fun KotlinCommonToolOptions.progressive() {
+    freeCompilerArgs += "-progressive"
 }
+
+fun KotlinCommonToolOptions.enableLanguageFeatures(features: Iterable<LanguageFeature>) {
+    freeCompilerArgs += features.map { "-XXLanguage:+${it.value}" }
+}
+
+fun KotlinCommonToolOptions.useExperimentalAnnotations(annotations: Iterable<ExperimentalAnnotation>) {
+    freeCompilerArgs += annotations.map { "-Xuse-experimental=${it.value}" }
+}
+
+fun KotlinCommonToolOptions.compilerArguments(arguments: Iterable<CompilerArgument>) {
+    freeCompilerArgs += arguments.map { "-X${it.value}" }
+}
+
+
+fun LanguageSettingsBuilder.enableLanguageFeatures(features: Iterable<LanguageFeature>) {
+    features.forEach { enableLanguageFeature(it.value) }
+}
+
+fun LanguageSettingsBuilder.useExperimentalAnnotations(annotations: Iterable<ExperimentalAnnotation>) {
+    annotations.forEach { useExperimentalAnnotation(it.value) }
+}
+

@@ -1,4 +1,4 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
@@ -14,7 +14,7 @@ data class BuiltInVersions(
     val androidPlugin: String
 ) {
     companion object {
-        val stable: BuiltInVersions = BuiltInVersions(
+        val Stable: BuiltInVersions = BuiltInVersions(
             kamp = "0.2-local",
             gradleVersions = "0.26.0",
             jib = "1.6.1",
@@ -29,7 +29,7 @@ data class BuiltInVersions(
 
 class BuiltInModule(builtInVersions: BuiltInVersions) {
     companion object {
-        val stable: BuiltInModule by lazy { BuiltInModule(BuiltInVersions.stable) }
+        val Stable: BuiltInModule by lazy { BuiltInModule(BuiltInVersions.Stable) }
     }
 
     val dependencies = BuiltInDependencies(builtInVersions)
@@ -38,7 +38,7 @@ class BuiltInModule(builtInVersions: BuiltInVersions) {
 
 class BuiltInDependencies(builtInVersions: BuiltInVersions) {
     companion object {
-        val stable: BuiltInDependencies by lazy { BuiltInModule.stable.dependencies }
+        val stable: BuiltInDependencies by lazy { BuiltInModule.Stable.dependencies }
     }
 
     val shadow =
@@ -81,7 +81,7 @@ class BuiltInDependencies(builtInVersions: BuiltInVersions) {
 
 class BuiltInPlugins(dependencies: BuiltInDependencies) {
     companion object {
-        val stable: BuiltInPlugins by lazy { BuiltInModule.stable.plugins }
+        val stable: BuiltInPlugins by lazy { BuiltInModule.Stable.plugins }
     }
 
     val shadow = KampPlugin("com.github.johnrengelman.shadow", dependencies.shadow)

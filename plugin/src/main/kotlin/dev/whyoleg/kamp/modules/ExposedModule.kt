@@ -1,11 +1,11 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 
 inline class ExposedVersion(val value: String) {
     companion object {
-        val stable = KtorVersion("0.20.2")
+        val Stable = KtorVersion("0.20.2")
     }
 }
 

@@ -1,8 +1,8 @@
-package dev.whyoleg.kamp.module
+package dev.whyoleg.kamp.project
 
 import dev.whyoleg.kamp.dependency.*
 
-typealias Module = KampProjectDependency
+typealias ProjectModule = KampProjectDependency
 
 @PublishedApi
 internal data class ModuleResolveResult(val modules: List<ModuleWithPath>, val cls: String)
@@ -50,7 +50,7 @@ internal constructor(
                 ?.let { if (it[0].isDigit()) "_$it" else it }
         return when {
             inner.isNotEmpty() -> listOf("", "object ${n?.capitalize() ?: "Modules"} {") + inner.classes() + "}"
-            n != null          -> listOf("val $n = Module(\"$gradleName\")")
+            n != null          -> listOf("val $n = ProjectModule(\"$gradleName\")")
             else               -> error("No modules in root")
         }
     }

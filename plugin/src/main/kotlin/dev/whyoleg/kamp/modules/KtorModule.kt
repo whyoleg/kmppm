@@ -1,13 +1,14 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
+import dev.whyoleg.kamp.options.*
 import dev.whyoleg.kamp.platform.KampPlatform.*
 
 inline class KtorVersion(val value: String) {
     companion object {
-        val stable = KtorVersion("1.2.6")
-        val rc = KtorVersion("1.3.0-rc2")
+        val Stable = KtorVersion("1.2.6")
+        val RC = KtorVersion("1.3.0-rc2")
     }
 }
 
@@ -25,4 +26,8 @@ class KtorDependencies(version: KtorVersion) :
         val websockets = artifact("ktor-client-websockets")
         val cio = artifact("ktor-client-cio").jvm
     }
+}
+
+object KtorExperimentalAnnotations {
+    val KtorExperimentalAPI = ExperimentalAnnotation("io.ktor.util.KtorExperimentalAPI")
 }

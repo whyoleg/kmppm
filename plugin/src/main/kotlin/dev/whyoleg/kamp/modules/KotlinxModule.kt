@@ -1,7 +1,8 @@
-package dev.whyoleg.kamp.dependencies
+package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
+import dev.whyoleg.kamp.options.*
 import dev.whyoleg.kamp.platform.KampPlatform.*
 
 data class KotlinxVersions(
@@ -11,7 +12,7 @@ data class KotlinxVersions(
     val cli: String
 ) {
     companion object {
-        val stable = KotlinxVersions(
+        val Stable = KotlinxVersions(
             coroutines = "1.3.3",
             serialization = "0.14.0",
             atomicfu = "0.14.1",
@@ -60,4 +61,12 @@ class KotlinxDependencies(private val versions: KotlinxVersions) :
 
 class KotlinxPlugins(dependencies: KotlinxDependencies) {
     val atomicfu by lazy { KampPlugin("kotlinx-atomicfu", dependencies.atomicfu.plugin) }
+}
+
+object KotlinxExperimentalAnnotations {
+    val ObsoleteCoroutinesApi = ExperimentalAnnotation("kotlinx.coroutines.ObsoleteCoroutinesApi")
+    val ExperimentalCoroutinesApi = ExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
+    val InternalCoroutinesApi = ExperimentalAnnotation("kotlinx.coroutines.InternalCoroutinesApi")
+    val FlowPreview = ExperimentalAnnotation("kotlinx.coroutines.FlowPreview")
+    val ImplicitReflectionSerializer = ExperimentalAnnotation("kotlinx.serialization.ImplicitReflectionSerializer")
 }

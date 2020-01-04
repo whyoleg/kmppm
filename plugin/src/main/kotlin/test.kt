@@ -1,11 +1,12 @@
-import dev.whyoleg.kamp.dependencies.*
 import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.modules.*
+import dev.whyoleg.kamp.options.*
 import dev.whyoleg.kamp.platform.*
 import dev.whyoleg.kamp.publication.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
 fun KotlinMultiplatformExtension.test() {
-    val kotlin = KotlinModule(KotlinVersion.stable)
+    val kotlin = KotlinModule(KotlinVersion.Stable)
     val apiProject = KampProjectDependency("123")
 
     listOf(jvm(), js()).dependencies("main") {
@@ -43,12 +44,28 @@ fun KotlinMultiplatformExtension.test() {
     }
     targets.all {
         it.commonOptionsMain {
-
+            enableLanguageFeatures(listOf(LanguageFeature.InlineClasses))
+            useExperimentalAnnotations(
+                listOf(
+                    KotlinExperimentalAnnotations.ExperimentalContracts,
+                    KotlinExperimentalAnnotations.ExperimentalTime
+                )
+            )
+            progressive()
         }
     }
 
     jvmMain.languageSettings.apiVersion = "1"
     sourceSets.all {
         it.languageSettings.apiVersion = "2"
+        it.languageSettings.apply {
+            enableLanguageFeatures(listOf(LanguageFeature.InlineClasses))
+            useExperimentalAnnotations(
+                listOf(
+                    KotlinExperimentalAnnotations.ExperimentalContracts,
+                    KotlinExperimentalAnnotations.ExperimentalTime
+                )
+            )
+        }
     }
 }
