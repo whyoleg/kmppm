@@ -1,37 +1,16 @@
-import dev.whyoleg.kamp.*
 import dev.whyoleg.kamp.dependency.*
-import dev.whyoleg.kamp.plugin.*
-import dev.whyoleg.kamp.version.*
+import dev.whyoleg.kamp.dependency.builder.*
+import dev.whyoleg.kamp.modules.*
 
 plugins { `kotlin-dsl` }
 
 buildscript {
-    val bootstrap: (RepositoryHandler) -> String = { handler: RepositoryHandler ->
-        if (properties["dev.whyoleg.bootstrap"] == "true") {
-            handler.mavenLocal()
-            "local"
-        } else {
-            handler.maven { setUrl("https://dl.bintray.com/whyoleg/kamp") }
-            "0.1.11"
-        }
-    }
-    extra["bootstrap"] = bootstrap
-    dependencies {
-        classpath("dev.whyoleg.kamp:kamp:${bootstrap(repositories)}")
-    }
+    repositories { mavenLocal() }
+    val kampVersion = if (properties["dev.whyoleg.bootstrap"].toString().toBoolean()) "bootstrap" else "0.2.0"
+    dependencies { classpath("dev.whyoleg.kamp:kamp:$kampVersion") }
 }
 
-kampBuild {
-    registerVersions {
-        val bootstrap = properties["bootstrap"] as (RepositoryHandler) -> String
-        default(BuiltInVersions.Stable.copy(kamp = bootstrap(repositories)))
-
-        //versions for dependencies check
-        "stable" use BuiltInVersions.Stable
-        "latest" use BuiltInVersions.Latest
-    }
-    with(BuiltInPlugins) {
-        resolvePlugins(kotlinJvm, bintray, buildScan, updates)
-    }
-    dependencies(BuiltInDependencies.kotlin.plugin.gradle)
+kotlin.target.dependenciesMain {
+    val kampVersion = if (properties["dev.whyoleg.bootstrap"].toString().toBoolean()) "bootstrap" else "0.2.0"
+    implementation(BuiltInDependencies.Stable.kamp.version(kampVersion, RepositoryProviders.mavenLocal))
 }

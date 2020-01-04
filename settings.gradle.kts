@@ -1,5 +1,7 @@
-import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.modules.*
 
-kamp {
-    modules(Modules)
+modules {
+    "lib"()
 }
+
+resolvePlugins(Plugins.rootModule + Plugins.pluginModule)
