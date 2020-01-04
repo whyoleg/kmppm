@@ -1,6 +1,6 @@
-import dev.whyoleg.kamp.dependencies.*
+import dev.whyoleg.kamp.modules.*
 import dev.whyoleg.kamp.dependency.*
 
 object Plugins {
-    val pluginModule = listOf(KotlinPlugins.stable.kotlinJvm, GradleBuiltInPlugins.javaPlugin)
+    val pluginModule = listOf(KotlinPlugins.Stable.kotlinJvm, GradleBuiltInPlugins.javaPlugin, GradleBuiltInPlugins.mavenPublish)
 }

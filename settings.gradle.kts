@@ -1,5 +1,4 @@
-import dev.whyoleg.kamp.dependencies.*
-import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.modules.*
 
 buildscript {
     repositories {
@@ -12,10 +11,10 @@ buildscript {
 }
 
 modules {
-    "plugin"()
+    "lib"()
 }
 
 resolvePlugins(
-    KotlinPlugins.stable.kotlinJvm,
-    BuiltInPlugins.stable.kamp
+    KotlinPlugins.Stable.kotlinJvm,
+    BuiltInPlugins.Stable.kamp
 )

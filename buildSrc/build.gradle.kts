@@ -1,5 +1,4 @@
-import dev.whyoleg.kamp.dependencies.*
-import dev.whyoleg.kamp.dependency.*
+import dev.whyoleg.kamp.modules.*
 
 plugins { `kotlin-dsl` }
 
@@ -12,8 +11,6 @@ repositories {
     mavenCentral()
 }
 
-kotlin {
-    target.dependenciesMain {
-        implementation(BuiltInDependencies.stable.kamp)
-    }
+kotlin.target.dependenciesMain {
+    implementation(BuiltInDependencies.Stable.kamp)
 }

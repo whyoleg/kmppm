@@ -22,7 +22,7 @@
 //    versionUpdate {
 //        val finders = listOf(
 //            VersionFinder(
-//                filePath = "buildSrc/src/main/kotlin/Ext.kt",
+//                filePath = "buildSrc/src/main/kotlin/Publishing.kt",
 //                textBeforeVersion = "private val configuration = ProjectConfiguration",
 //                offset = 1,
 //                lineStart = " \"",
