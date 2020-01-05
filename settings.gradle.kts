@@ -1,5 +1,3 @@
-import dev.whyoleg.kamp.modules.*
-
 modules {
     "lib"()
 }

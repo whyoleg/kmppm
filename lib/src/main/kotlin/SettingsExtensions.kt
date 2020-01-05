@@ -9,7 +9,7 @@ inline fun Settings.modules(block: ModuleContext.() -> Unit) {
         include(name)
         path?.let { project(name).projectDir = rootDir.resolve(it) }
     }
-    rootDir.resolve("buildSrc/src/main/kotlin").also(File::mkdirs).resolve("Modules.kt").writeText(cls)
+    rootDir.resolve("buildSrc/src/main/kotlin").also(File::mkdirs).resolve("ProjectModules.kt").writeText(cls)
 }
 
 @Suppress("UnstableApiUsage")

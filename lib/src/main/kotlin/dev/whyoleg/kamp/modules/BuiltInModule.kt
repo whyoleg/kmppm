@@ -15,7 +15,7 @@ data class BuiltInVersions(
 ) {
     companion object {
         val Stable: BuiltInVersions = BuiltInVersions(
-            kamp = "0.2.0",
+            kamp = "0.2.1-pre-3",
             gradleVersions = "0.27.0",
             jib = "1.6.1",
             shadow = "5.2.0",

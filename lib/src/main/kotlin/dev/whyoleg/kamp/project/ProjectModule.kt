@@ -33,7 +33,9 @@ internal constructor(
 ) {
     inline operator fun String.invoke(path: String? = null, ignore: Boolean = false, block: ModuleContext.() -> Unit = {}) {
         val n = toLowerCase()
-        inner += ModuleContext(n, "$gradleName:$n", path, ignore).apply(block)
+        val separator = if (path == null) ":" else "-"
+        val moduleName = if (gradleName.isBlank()) ":$n" else "$gradleName$separator$n"
+        inner += ModuleContext(n, moduleName, path, ignore).apply(block)
     }
 
     internal fun modules(): List<ModuleWithPath> {
@@ -49,8 +51,11 @@ internal constructor(
                 ?.joinToString("")
                 ?.let { if (it[0].isDigit()) "_$it" else it }
         return when {
-            inner.isNotEmpty() -> listOf("", "object ${n?.capitalize() ?: "Modules"} {") + inner.classes() + "}"
-            n != null          -> listOf("val $n = ProjectModule(\"$gradleName\")")
+            inner.isNotEmpty() ->
+                (if (n != null) listOf("val $n = ProjectModule(\"$gradleName\")") else emptyList()) +
+                        listOf("", "object ${n?.capitalize() ?: "ProjectModules"} {") + inner.classes() + "}"
+            n != null
+                               -> listOf("val $n = ProjectModule(\"$gradleName\")")
             else               -> error("No modules in root")
         }
     }

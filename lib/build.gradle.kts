@@ -1,4 +1,3 @@
-import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.modules.*
 import org.jetbrains.kotlin.config.*
 
@@ -24,7 +23,7 @@ kotlin {
     }
 }
 
-jvmPublication(publication, publisher.provider(publish = false)) {
+jvmPublication(publication, publisher.provider(publish = true)) {
     artifactId = "kamp"
     if (properties["dev.whyoleg.bootstrap.publish"].toString().toBoolean()) version = "bootstrap"
 }
