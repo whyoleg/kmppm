@@ -3,6 +3,7 @@ package dev.whyoleg.kamp.modules
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 import dev.whyoleg.kamp.options.*
+import dev.whyoleg.kamp.platform.*
 import dev.whyoleg.kamp.platform.KampPlatform.*
 
 data class KotlinxVersions(
@@ -33,37 +34,73 @@ class KotlinxModule(versions: KotlinxVersions) {
     }
 }
 
-class KotlinxDependencies(private val versions: KotlinxVersions) :
-    GroupWithPlatforms by group("org.jetbrains.kotlinx", KotlinxModule.Provider).platforms(common("common"), jvm(), js("js")) {
+class KotlinxDependencies(private val versions: KotlinxVersions) : Group by group("org.jetbrains.kotlinx", KotlinxModule.Provider) {
     companion object {
         val Stable: KotlinxDependencies by lazy { KotlinxModule.Stable.dependencies }
     }
 
     val serialization by lazy(::Serialization)
 
-    inner class Serialization : GroupWithVersionPlatforms by version(versions.serialization) {
+    inner class Serialization : GroupWithVersionPlatforms by version(versions.serialization).platforms(KampPlatform.oldStyle()) {
         val runtime = artifact("kotlinx-serialization-runtime")
         val configParser = artifact("kotlinx-serialization-runtime-configparser").jvm
     }
 
     val atomicfu by lazy(::Atomicfu)
 
-    inner class Atomicfu : GroupWithVersionPlatforms by version(versions.atomicfu) {
-        val atomicfu = artifact("atomicfu") //TODO name
+    inner class Atomicfu : GroupWithVersionPlatforms by version(versions.atomicfu).platforms(KampPlatform.oldStyle()) {
+        val runtime = artifact("atomicfu")
         val plugin = artifact("atomicfu-gradle-plugin").jvm
     }
 
     val coroutines by lazy(::Coroutines)
 
     inner class Coroutines : GroupWithVersion by version(versions.coroutines) {
-        val javaFX = artifact("kotlinx-coroutines-javafx").jvm
-        val slf4j = artifact("kotlinx-coroutines-slf4j").jvm
-        val core = artifact("kotlinx-coroutines").platforms(common("core-common"), jvm("core"), android("android"))
-        val core8 = core.platforms(common("core-common"), jvm("jdk8"), android("android"))
+        val core = artifact("kotlinx-coroutines-core").platforms(KampPlatform.oldStyle())
+
+        val test = artifact("kotlinx-coroutines-test").jvm
+        val debug = artifact("kotlinx-coroutines-debug").jvm
+
+        val ui by lazy(::UI)
+
+        inner class UI {
+            val android = artifact("kotlinx-coroutines-android").android
+            val javaFX = artifact("kotlinx-coroutines-javafx").jvm
+            val swing = artifact("kotlinx-coroutines-swing").jvm
+        }
+
+        val integration by lazy(::Integration)
+
+        inner class Integration : GroupWithVersionPlatforms by jvm {
+            val slf4j = artifact("kotlinx-coroutines-slf4j")
+            val playServices = artifact("kotlinx-coroutines-play-services")
+            val guava = artifact("kotlinx-coroutines-guava")
+            val jdk8 = artifact("kotlinx-coroutines-jdk8")
+        }
+
+        val reactive by lazy(::Reactive)
+
+        inner class Reactive : GroupWithVersionPlatforms by jvm {
+            val reactiveStreams = artifact("kotlinx-coroutines-reactive")
+            val reactor = artifact("kotlinx-coroutines-reactor")
+            val rx2 = artifact("kotlinx-coroutines-rx2")
+        }
     }
 
-    val cli = artifact("kotlinx-cli", KotlinModule.DevProvider).version(versions.cli).platforms(common(), jvm("jvm"), js("js"))
-    val immutableCollections = artifact("kotlinx-collections-immutable").version(versions.immutableCollections).platforms(jvm("jvm"))
+    val cli by lazy(::Cli)
+
+    inner class Cli : GroupWithVersionArtifact by artifact("kotlinx-cli", KotlinModule.DevProvider).version(versions.cli) {
+        val metadata = platforms(common())
+        val jvm = platforms(jvm("jvm"))
+    }
+
+    val immutableCollections by lazy(::ImmutableCollections)
+
+    inner class ImmutableCollections :
+        GroupWithVersionArtifact by artifact("kotlinx-collections-immutable").version(versions.immutableCollections) {
+        val metadata = platforms(common())
+        val jvm = platforms(jvm("jvm"))
+    }
 }
 
 class KotlinxPlugins(dependencies: KotlinxDependencies) {

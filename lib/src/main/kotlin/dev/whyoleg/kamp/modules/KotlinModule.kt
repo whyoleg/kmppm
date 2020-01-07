@@ -35,8 +35,9 @@ class KotlinDependencies(version: KotlinVersion) :
     val serializationPlugin = artifact("kotlin-serialization").jvm
     val compilerEmbeddable = artifact("kotlin-compiler-embeddable").jvm
 
-    val stdlib = artifact("kotlin-stdlib").platforms(common("common"), jvm(), js("js"))
-    val stdlib8 = stdlib.platforms(common("common"), jvm("jdk8"), js("js"))
+    val stdlib = artifact("kotlin-stdlib").platforms(common("common"), jvm(), android(), js("js"))
+    val stdlibJdk7 = artifact("kotlin-stdlib-jdk7").jvm
+    val stdlibJdk8 = artifact("kotlin-stdlib-jdk8").jvm
     val test = stdlib.artifact("kotlin-test")
     val annotations = test.platforms(common("annotations-common"), jvm("junit"))
     val reflect = artifact("kotlin-reflect").jvm
