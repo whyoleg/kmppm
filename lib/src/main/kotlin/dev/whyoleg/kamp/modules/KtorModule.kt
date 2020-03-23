@@ -7,8 +7,7 @@ import dev.whyoleg.kamp.platform.KampPlatform.*
 
 inline class KtorVersion(val value: String) {
     companion object {
-        val Stable = KtorVersion("1.2.6")
-        val RC = KtorVersion("1.3.0-rc2")
+        val Stable = KtorVersion("1.3.2")
     }
 }
 
@@ -17,7 +16,6 @@ class KtorDependencies(version: KtorVersion) :
     companion object {
         val Provider = RepositoryProviders.bintray("kotlin", "ktor")
         val Stable: KtorDependencies by lazy { KtorDependencies(KtorVersion.Stable) }
-        val RC: KtorDependencies by lazy { KtorDependencies(KtorVersion.RC) }
     }
 
     val client by lazy(::Client)

@@ -2,6 +2,7 @@ package dev.whyoleg.kamp.modules
 
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
+import dev.whyoleg.kamp.platform.KampPlatform.*
 
 data class BuiltInVersions(
     val kamp: String,
@@ -15,14 +16,14 @@ data class BuiltInVersions(
 ) {
     companion object {
         val Stable: BuiltInVersions = BuiltInVersions(
-            kamp = "0.2.1-pre-4",
+            kamp = "0.2.1-pre-5",
             gradleVersions = "0.27.0",
             jib = "1.6.1",
             shadow = "5.2.0",
             detekt = "1.1.1",
             bintray = "1.8.4",
             buildScan = "3.1.1",
-            androidPlugin = "3.5.0"
+            androidPlugin = "3.5.3"
         )
     }
 }
@@ -42,41 +43,21 @@ class BuiltInDependencies(builtInVersions: BuiltInVersions) {
     }
 
     val shadow =
-        group("com.github.jengelman.gradle.plugins")
-            .artifact("shadow", RepositoryProviders.gradlePluginPortal)
-            .version(builtInVersions.shadow).jvm
-
+        dependency("com.github.jengelman.gradle.plugins", "shadow", builtInVersions.shadow, jvm(), RepositoryProviders.gradlePluginPortal)
     val bintray =
-        group("com.jfrog.bintray.gradle")
-            .artifact("gradle-bintray-plugin", RepositoryProviders.jcenter)
-            .version(builtInVersions.bintray).jvm
-
+        dependency("com.jfrog.bintray.gradle", "gradle-bintray-plugin", builtInVersions.bintray, jvm(), RepositoryProviders.jcenter)
     val gradleVersions =
-        group("com.github.ben-manes")
-            .artifact("gradle-versions-plugin", RepositoryProviders.gradlePluginPortal)
-            .version(builtInVersions.gradleVersions).jvm
+        dependency("com.github.ben-manes", "gradle-versions-plugin", builtInVersions.gradleVersions, jvm(), RepositoryProviders.gradlePluginPortal)
     val detekt =
-        group("io.gitlab.arturbosch.detekt")
-            .artifact("detekt-gradle-plugin", RepositoryProviders.gradlePluginPortal)
-            .version(builtInVersions.detekt).jvm
+        dependency("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", builtInVersions.detekt, jvm(), RepositoryProviders.gradlePluginPortal)
     val buildScan =
-        group("com.gradle")
-            .artifact("build-scan-plugin", RepositoryProviders.gradlePluginPortal)
-            .version(builtInVersions.buildScan).jvm
-
+        dependency("com.gradle", "build-scan-plugin", builtInVersions.buildScan, jvm(), RepositoryProviders.gradlePluginPortal)
     val jib =
-        group("gradle.plugin.com.google.cloud.tools")
-            .artifact("jib-gradle-plugin", RepositoryProviders.google)
-            .version(builtInVersions.jib).jvm
+        dependency("gradle.plugin.com.google.cloud.tools", "jib-gradle-plugin", builtInVersions.jib, jvm(), RepositoryProviders.google)
     val androidPlugin =
-        group("com.android.tools.build")
-            .artifact("gradle", RepositoryProviders.google)
-            .version(builtInVersions.androidPlugin).jvm
-
+        dependency("com.android.tools.build", "gradle", builtInVersions.androidPlugin, jvm(), RepositoryProviders.google)
     val kamp =
-        group("dev.whyoleg.kamp")
-            .artifact("kamp", RepositoryProviders.mavenCentral, RepositoryProviders.bintray("whyoleg", "kamp"))
-            .version(builtInVersions.kamp).jvm
+        dependency("dev.whyoleg.kamp", "kamp", builtInVersions.kamp, jvm(), RepositoryProviders.bintray("whyoleg", "kamp"), RepositoryProviders.mavenLocal)
 }
 
 class BuiltInPlugins(dependencies: BuiltInDependencies) {

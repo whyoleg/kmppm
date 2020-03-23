@@ -11,15 +11,17 @@ data class KotlinxVersions(
     val serialization: String,
     val atomicfu: String,
     val cli: String,
-    val immutableCollections: String
+    val immutableCollections: String,
+    val benchmark: String
 ) {
     companion object {
         val Stable = KotlinxVersions(
-            coroutines = "1.3.3",
-            serialization = "0.14.0",
-            atomicfu = "0.14.1",
-            cli = "0.2.0-dev-7",
-            immutableCollections = "0.3"
+            coroutines = "1.3.5",
+            serialization = "0.20.0",
+            atomicfu = "0.14.2",
+            cli = "0.2.1",
+            immutableCollections = "0.3.1",
+            benchmark = "0.2.0-dev-8"
         )
     }
 }
@@ -101,6 +103,16 @@ class KotlinxDependencies(private val versions: KotlinxVersions) : Group by grou
         val metadata = platforms(common())
         val jvm = platforms(jvm("jvm"))
     }
+
+    val benchmark by lazy(::Benchmark)
+
+    inner class Benchmark :
+        GroupWithVersionArtifact by artifact("kotlinx.benchmark.runtime").version(versions.benchmark) {
+        val metadata = platforms(common())
+        val jvm = platforms(jvm("jvm"))
+
+        val plugin = artifact("kotlinx.benchmark.gradle").jvm
+    }
 }
 
 class KotlinxPlugins(dependencies: KotlinxDependencies) {
@@ -109,6 +121,7 @@ class KotlinxPlugins(dependencies: KotlinxDependencies) {
     }
 
     val atomicfu by lazy { KampPlugin("kotlinx-atomicfu", dependencies.atomicfu.plugin) }
+    val benchmark by lazy { KampPlugin("kotlinx.benchmark", dependencies.benchmark.plugin) }
 }
 
 object KotlinxExperimentalAnnotations {

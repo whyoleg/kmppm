@@ -3,13 +3,13 @@ import dev.whyoleg.kamp.project.*
 import org.gradle.api.initialization.*
 import java.io.*
 
-inline fun Settings.modules(block: ModuleContext.() -> Unit) {
+inline fun Settings.modules(className: String = "ProjectModules", block: ModuleBuilder.() -> Unit) {
     val (modules, cls) = resolveModules(block)
     modules.forEach { (name, path) ->
         include(name)
         path?.let { project(name).projectDir = rootDir.resolve(it) }
     }
-    rootDir.resolve("buildSrc/src/main/kotlin").also(File::mkdirs).resolve("ProjectModules.kt").writeText(cls)
+    rootDir.resolve("buildSrc/src/main/kotlin").also(File::mkdirs).resolve("$className.kt").writeText(cls)
 }
 
 @Suppress("UnstableApiUsage")

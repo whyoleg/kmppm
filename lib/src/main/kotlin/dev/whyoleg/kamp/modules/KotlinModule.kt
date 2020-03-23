@@ -7,8 +7,8 @@ import dev.whyoleg.kamp.platform.KampPlatform.*
 
 inline class KotlinVersion(val value: String) {
     companion object {
-        val Stable = KotlinVersion("1.3.61")
-        val Eap = KotlinVersion("1.3.70-eap-42")
+        val Stable = KotlinVersion("1.3.70")
+        val Eap = KotlinVersion("1.4-M1")
     }
 }
 
@@ -33,6 +33,7 @@ class KotlinDependencies(version: KotlinVersion) :
 
     val gradlePlugin = artifact("kotlin-gradle-plugin").jvm
     val serializationPlugin = artifact("kotlin-serialization").jvm
+    val allOpenPlugin = artifact("kotlin-allopen").jvm
     val compilerEmbeddable = artifact("kotlin-compiler-embeddable").jvm
 
     val stdlib = artifact("kotlin-stdlib").platforms(common("common"), jvm(), android(), js("js"))
@@ -52,6 +53,7 @@ class KotlinPlugins(dependencies: KotlinDependencies) {
     val kotlinMpp = KampPlugin("kotlin-multiplatform", dependencies.gradlePlugin)
     val kotlinJvm = KampPlugin("org.jetbrains.kotlin.jvm", dependencies.gradlePlugin)
     val serialization = KampPlugin("kotlinx-serialization", dependencies.serializationPlugin)
+    val allOpen = KampPlugin("org.jetbrains.kotlin.plugin.allopen", dependencies.allOpenPlugin)
 }
 
 object KotlinExperimentalAnnotations {
