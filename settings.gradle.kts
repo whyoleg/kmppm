@@ -1,5 +1,55 @@
-modules {
-    "lib"()
+import dev.whyoleg.kamp.settings.*
+
+pluginManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    fun v(name: String): String = extra["kamp.version.$name"] as String
+    plugins {
+        kotlin("jvm") version KotlinVersion.CURRENT.toString()
+        id("com.github.ben-manes.versions") version v("updates")
+    }
 }
 
-resolvePlugins(Plugins.rootModule + Plugins.pluginModule)
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    fun v(name: String): String = extra["kamp.version.$name"] as String
+    dependencies {
+        classpath("dev.whyoleg.kamp:kamp-settings:${v("kamp")}")
+    }
+}
+
+kamp {
+    versions()
+    modules {
+        val kamp = "kamp".prefixedModule
+        val feature = "kamp-feature".prefixedModule
+
+        kamp("settings")
+        kamp("publication")
+        kamp("dependencies")
+        kamp("build-plugin")
+
+        folder("kamp-features", "Features") {
+            feature("kotlin")
+            feature("kotlinx")
+            feature("exposed")
+            feature("ktor")
+            feature("logging")
+            feature("shadow")
+            feature("updates")
+            feature("jib")
+            feature("android")
+            feature("gradle")
+            feature("kamp")
+        }
+    }
+}

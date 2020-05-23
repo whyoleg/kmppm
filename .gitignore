@@ -10,4 +10,8 @@ syntax: glob
 .gradle
 classes
 build/
+!kamp-build-plugin/src/main/kotlin/dev/whyoleg/kamp/build/
 *.log
+
+/buildSrc/src/main/kotlin/KampVersions.kt
+/buildSrc/src/main/kotlin/KampModules.kt
