@@ -3,7 +3,7 @@ plugins {
 }
 
 configureFeature("shadow") {
-    target.dependenciesMain {
+    target.kampSourceSetMain.dependencies {
         compileOnly(Dependencies.shadow)
     }
 }

@@ -3,7 +3,7 @@ plugins {
 }
 
 configureKotlin("dependencies", true) {
-    target.dependenciesMain {
+    target.kampSourceSetMain.dependencies {
         api(Dependencies.kotlin.plugin)
     }
 }

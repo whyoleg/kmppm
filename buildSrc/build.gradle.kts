@@ -1,47 +1,27 @@
-//import dev.whyoleg.kamp.dependency.*
-//import dev.whyoleg.kamp.dependency.builder.*
-//import dev.whyoleg.kamp.modules.*
-
-//plugins { `kotlin-dsl` }
-
-//buildscript {
-//    val kampVersion = if (properties["dev.whyoleg.bootstrap"].toString().toBoolean()) {
-//        repositories { mavenLocal() }
-//        "bootstrap"
-//    } else {
-//        repositories { maven("https://dl.bintray.com/whyoleg/kamp") }
-//        "0.2.1-pre-5"
-//    }
-//    dependencies { classpath("dev.whyoleg.kamp:kamp:$kampVersion") }
-//}
-
-//kotlin.target.dependenciesMain {
-//    val kampVersion = if (properties["dev.whyoleg.bootstrap"].toString().toBoolean()) "bootstrap" else "0.2.1-pre-5"
-//    implementation(BuiltInDependencies.Stable.kamp.version(kampVersion, RepositoryProviders.mavenLocal))
-//}
 buildscript {
     repositories {
-        mavenLocal()
+        maven("https://dl.bintray.com/whyoleg/kamp")
     }
     dependencies {
-        classpath("dev.whyoleg.kamp:kamp-build-plugin:0.3.0-1")
+        classpath("dev.whyoleg.kamp:kamp-build:0.3.0.beta.1")
     }
 }
 
 plugins {
     `kotlin-dsl`
-//    id("dev.whyoleg.kamp.build")
 }
 
-kotlinDslPluginOptions { experimentalWarning.set(false) }
+kotlinDslPluginOptions {
+    experimentalWarning.set(false)
+}
 
 repositories {
-    mavenLocal()
+    maven("https://dl.bintray.com/whyoleg/kamp")
     mavenCentral()
     gradlePluginPortal()
 }
 
-kamp {
+kampBuild {
     publication = true
     features {
         kotlin = true

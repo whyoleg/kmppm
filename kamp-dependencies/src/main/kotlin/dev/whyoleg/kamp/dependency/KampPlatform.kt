@@ -28,6 +28,10 @@ enum class KampPlatform(val platformType: KotlinPlatformType) {
                 js("js"),
                 native("native")
             )
+
+        private val map = KampPlatform.values().associateBy(KampPlatform::platformType)
+
+        operator fun invoke(platformType: KotlinPlatformType): KampPlatform = map.getValue(platformType)
     }
 }
 

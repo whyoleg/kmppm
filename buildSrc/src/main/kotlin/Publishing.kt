@@ -12,10 +12,12 @@ internal val publication = Publication(
     vcsUrl = "git@github.com:whyoleg/kamp.git"
 )
 
-val publisher = BintrayPublisher("whyoleg", "kamp", "kamp")
+val kampPublisher = BintrayPublisher("whyoleg", "kamp", "kamp")
+val featurePublisher = BintrayPublisher("whyoleg", "kamp", "kamp-features")
 
 inline fun Project.configurePublication(
     artifactId: String,
+    publisher: BintrayPublisher,
     crossinline block: MavenPublication.() -> Unit = {}
 ) {
     jvmPublication(publication, publisher) {

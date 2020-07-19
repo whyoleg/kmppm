@@ -7,38 +7,38 @@ inline fun Project.configureKotlin(
     gradleApi: Boolean = false,
     crossinline block: KotlinJvmProjectExtension.() -> Unit = {}
 ) {
-    extensions.configure<KotlinJvmProjectExtension> {
-        sourceSets.getByName("main") {
-            languageSettings.apply {
-                languageVersion = "1.3"
-                apiVersion = "1.3"
-                enableLanguageFeature("NewInference")
-                enableLanguageFeature("InlineClasses")
-            }
-        }
-        target {
-            compilations.all {
-                kotlinOptions {
-                    jvmTarget = "1.6"
-                    languageVersion = "1.3"
-                    apiVersion = "1.3"
-                }
-            }
-            dependenciesMain {
-                api(Dependencies.kotlin.stdlib)
-            }
-        }
-        apply(block)
-    }
-    if (artifactId != null) configurePublication(artifactId)
+    configureDefault(block)
+    if (artifactId != null) configurePublication(artifactId, kampPublisher)
     if (gradleApi) dependencies { "api"(gradleApi()) }
 }
 
 inline fun Project.configureFeature(artifactId: String? = null, crossinline block: KotlinJvmProjectExtension.() -> Unit = {}) {
-    configureKotlin(artifactId?.let { "feature-$it" }) {
-        apply(block)
-        target.dependenciesMain {
+    configureDefault {
+        target.kampSourceSetMain.dependencies {
             api(KampModules.dependencies)
         }
+        apply(block)
+    }
+    if (artifactId != null) configurePublication("feature-$artifactId", featurePublisher)
+}
+
+@PublishedApi
+internal inline fun Project.configureDefault(crossinline block: KotlinJvmProjectExtension.() -> Unit = {}) {
+    extensions.configure<KotlinJvmProjectExtension> {
+        languageSettings {
+            languageVersion = "1.3"
+            apiVersion = "1.3"
+            enableLanguageFeature("NewInference")
+            enableLanguageFeature("InlineClasses")
+        }
+        kotlinOptions {
+            jvmTarget = "1.6"
+            languageVersion = "1.3"
+            apiVersion = "1.3"
+        }
+        target.kampSourceSetMain.dependencies {
+            api(Dependencies.kotlin.stdlib)
+        }
+        apply(block)
     }
 }

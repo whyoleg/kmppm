@@ -1,8 +1,6 @@
-import dev.whyoleg.kamp.settings.*
-
 pluginManagement {
     repositories {
-        mavenLocal()
+        maven("https://dl.bintray.com/whyoleg/kamp")
         mavenCentral()
         gradlePluginPortal()
     }
@@ -16,7 +14,7 @@ pluginManagement {
 
 buildscript {
     repositories {
-        mavenLocal()
+        maven("https://dl.bintray.com/whyoleg/kamp")
         mavenCentral()
         gradlePluginPortal()
     }
@@ -36,7 +34,7 @@ kamp {
         kamp("settings")
         kamp("publication")
         kamp("dependencies")
-        kamp("build-plugin")
+        kamp("build")
 
         folder("kamp-features", "Features") {
             feature("kotlin")
